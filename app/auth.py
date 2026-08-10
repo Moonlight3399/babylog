@@ -180,6 +180,7 @@ def api_register(admin):
 @admin_required
 def api_admin_users(admin):
     users = User.query.order_by(User.id.asc()).all()
+    baby_map = {b.id: b.name for b in Baby.query.all()}
     return jsonify({
         'users': [
             {
@@ -188,6 +189,7 @@ def api_admin_users(admin):
                 'role': u.role,
                 'identity': u.identity,
                 'baby_id': u.baby_id,
+                'baby_name': baby_map.get(u.baby_id),
                 'created_at': u.created_at.isoformat() if u.created_at else None,
             }
             for u in users
@@ -295,7 +297,11 @@ def api_change_password(user):
 def api_admin_babies(admin):
     babies = Baby.query.order_by(Baby.id.asc()).all()
     return jsonify({
-        'babies': [{'id': b.id, 'name': b.name} for b in babies]
+        'babies': [{
+            'id': b.id,
+            'name': b.name,
+            'user_count': User.query.filter_by(baby_id=b.id).count(),
+        } for b in babies]
     })
 
 
