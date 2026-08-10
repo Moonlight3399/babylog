@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宝宝喂养日常记录</title>
+    <style>
+        /* 邮件全局重置，兼容各大邮箱 */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #fff7fb;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .wrapper {
+            max-width: 620px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(255,179,204,0.18);
+        }
+        .header {
+            background: linear-gradient(135deg, #ffb6c1 0%, #ffcce0 100%);
+            padding: 28px 24px;
+            text-align: center;
+        }
+        .header h1 {
+            margin:0;
+            color:#ffffff;
+            font-size:24px;
+            font-weight:600;
+        }
+        .header p {
+            margin:8px 0 0;
+            color:#fff;
+            font-size:14px;
+            opacity:0.92;
+        }
+        .content {
+            padding:24px;
+        }
+        .note-text {
+            font-size:14px;
+            color:#777;
+            margin-bottom:18px;
+        }
+        /* 表格样式 可爱风 */
+        .baby-table {
+            width:100%;
+        }
+        .baby-table th {
+            background-color: #ffe6ef;
+            color:#c25478;
+            padding:14px 8px;
+            text-align:center;
+            font-size:13px;
+        }
+        .baby-table td {
+            padding:14px 8px;
+            text-align:center;
+            font-size:13px;
+            color:#444;
+            border-bottom:1px solid #f8e8ef;
+        }
+        .baby-table tr:nth-child(even) td {
+            background-color:#fff7fa;
+        }
+        .footer {
+            padding:20px;
+            text-align:center;
+            font-size:12px;
+            color:#aaa;
+        }
+    </style>
+</head>
+<body>
+    <table class="wrapper">
+        <tr>
+            <td class="header">
+                <h1>🍼 宝宝喂养&作息记录</h1>
+                <p>{日期}</p>
+            </td>
+        </tr>
+        <tr>
+            <td class="content">
+                <p class="note-text">{AI生成内容}</p>
+                <table class="baby-table">
+                    <thead>
+                        <tr>
+                            <th>喝奶次数</th>
+                            <th>总奶量(ml)</th>
+                            <th>睡眠总时长</th>
+                            <th>大便次数</th>
+                            <th>小便次数</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{变量1}</td>
+                            <td>{变量2}</td>
+                            <td>{变量3}</td>
+                            <td>{变量4}</td>
+                            <td>{变量5}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="footer">
+                💖 宝宝健康记录模板 · 邮件版
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

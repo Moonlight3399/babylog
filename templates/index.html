@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>BabyLog</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="/static/manifest.json">
+    <meta name="theme-color" content="#FF69B4">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="BabyLog">
+    <link rel="apple-touch-icon" href="/static/icons/192x192.png">
+    <link rel="icon" type="image/png" href="/static/icons/192x192.png">
+
+    <link rel="stylesheet" href="/static/style.css?v=3">
+</head>
+<body class="app-body">
+    <!-- 内容区 -->
+    <div class="app-content" id="appContent">
+
+        <!-- 快捷键页 -->
+        <div class="tab-page active" id="page-actions">
+            <div class="page-header">
+                <h2>快捷记录</h2>
+                <p class="page-subtitle" id="todayDate"></p>
+            </div>
+            <div class="actions-grid">
+                <button class="action-btn formula-btn" data-event="formula">
+                    <span class="action-icon">🍼</span>
+                    <span class="action-label">喝奶粉</span>
+                </button>
+                <button class="action-btn sleep-btn" data-event="sleep_start">
+                    <span class="action-icon">😴</span>
+                    <span class="action-label">开始睡</span>
+                </button>
+                <button class="action-btn wake-btn" data-event="sleep_end">
+                    <span class="action-icon">🌞</span>
+                    <span class="action-label">睡醒了</span>
+                </button>
+                <button class="action-btn poop-btn" data-event="poop">
+                    <span class="action-icon">💩</span>
+                    <span class="action-label">大便了</span>
+                </button>
+                <button class="action-btn pee-btn" data-event="pee">
+                    <span class="action-icon">💧</span>
+                    <span class="action-label">小便了</span>
+                </button>
+            </div>
+            <div id="actionToast" class="toast"></div>
+        </div>
+
+        <!-- 每日统计页 -->
+        <div class="tab-page" id="page-stats">
+            <div class="page-header">
+                <h2>今日统计</h2>
+                <p class="page-subtitle" id="statsDate"></p>
+            </div>
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <div class="stat-icon">🍼</div>
+                    <div class="stat-value" id="stat-formula-count">0</div>
+                    <div class="stat-label">喝奶粉 (次)</div>
+                </div>
+                <div class="stat-card highlight">
+                    <div class="stat-icon">📏</div>
+                    <div class="stat-value" id="stat-formula-total">0</div>
+                    <div class="stat-label">总奶量 (ml)</div>
+                </div>
+                <div class="stat-card sleep-stat">
+                    <div class="stat-icon">😴</div>
+                    <div class="stat-value" id="stat-sleep-duration">0</div>
+                    <div class="stat-label">睡眠时长</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💩</div>
+                    <div class="stat-value" id="stat-poop">0</div>
+                    <div class="stat-label">大便</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💧</div>
+                    <div class="stat-value" id="stat-pee">0</div>
+                    <div class="stat-label">小便</div>
+                </div>
+                <div class="stat-card add-card" id="addRecordCard">
+                    <div class="stat-icon">＋</div>
+                    <div class="stat-value" style="font-size:0.85rem;color:#CCC;">手动添加</div>
+                </div>
+            </div>
+            <div class="records-list" id="recordsList">
+                <h3>今日记录</h3>
+                <div id="recordsContainer"></div>
+            </div>
+        </div>
+
+        <!-- 用户页 -->
+        <div class="tab-page" id="page-user">
+            <div class="page-header">
+                <h2>用户</h2>
+            </div>
+            <div class="user-card">
+                <div class="user-avatar">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                        <circle cx="24" cy="24" r="23" fill="#FFB6C1" stroke="#FF69B4" stroke-width="2"/>
+                        <circle cx="24" cy="18" r="7" fill="#FF69B4"/>
+                        <ellipse cx="24" cy="34" rx="12" ry="8" fill="#FF69B4"/>
+                    </svg>
+                </div>
+                <div class="user-name" id="userName">---</div>
+                <div class="user-role" id="userRole">普通用户</div>
+                <button class="btn btn-outline btn-full" id="logoutBtn">退出登录</button>
+            </div>
+
+            <!-- 管理员：用户管理 -->
+            <div class="export-card admin-panel" id="adminPanel" style="display:none;">
+                <h3 class="export-title">👥 用户管理</h3>
+                <div id="adminUserList"></div>
+            </div>
+
+            <div class="export-card">
+                <h3 class="export-title">导出数据</h3>
+                <div class="export-row">
+                    <div class="export-field">
+                        <label class="input-label">开始日期</label>
+                        <input type="date" id="exportStart" class="input-md" max="">
+                    </div>
+                    <div class="export-field">
+                        <label class="input-label">结束日期</label>
+                        <input type="date" id="exportEnd" class="input-md" max="">
+                    </div>
+                </div>
+                <div class="export-mode">
+                    <button class="export-mode-btn active" data-mode="detail">详细信息</button>
+                    <button class="export-mode-btn" data-mode="summary">汇总信息</button>
+                </div>
+                <button class="btn btn-primary btn-full" id="exportBtn">导出 CSV</button>
+            </div>
+        </div>
+
+        <!-- 历史记录页 -->
+        <div class="tab-page" id="page-history">
+            <div class="page-header">
+                <h2>历史记录</h2>
+                <div class="history-date-row">
+                    <button class="date-arrow" id="histPrevDay">&lt;</button>
+                    <input type="date" id="histDate" class="input-md date-input">
+                    <button class="date-arrow" id="histNextDay">&gt;</button>
+                </div>
+            </div>
+            <div class="stats-grid" id="histStatsGrid">
+                <div class="stat-card">
+                    <div class="stat-icon">🍼</div>
+                    <div class="stat-value" id="hist-formula-count">0</div>
+                    <div class="stat-label">喝奶粉 (次)</div>
+                </div>
+                <div class="stat-card highlight">
+                    <div class="stat-icon">📏</div>
+                    <div class="stat-value" id="hist-formula-total">0</div>
+                    <div class="stat-label">总奶量 (ml)</div>
+                </div>
+                <div class="stat-card sleep-stat">
+                    <div class="stat-icon">😴</div>
+                    <div class="stat-value" id="hist-sleep-duration">0</div>
+                    <div class="stat-label">睡眠时长</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💩</div>
+                    <div class="stat-value" id="hist-poop">0</div>
+                    <div class="stat-label">大便</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💧</div>
+                    <div class="stat-value" id="hist-pee">0</div>
+                    <div class="stat-label">小便</div>
+                </div>
+                <div class="stat-card add-card" id="histAddCard">
+                    <div class="stat-icon">＋</div>
+                    <div class="stat-value" style="font-size:0.85rem;color:#CCC;">手动添加</div>
+                </div>
+            </div>
+            <div class="records-list" id="histRecordsList">
+                <h3>记录条目</h3>
+                <div id="histRecordsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底边栏 -->
+    <nav class="bottom-nav" id="bottomNav">
+        <button class="nav-item active" data-tab="actions">
+            <span class="nav-icon">⚡</span>
+            <span class="nav-label">快捷键</span>
+        </button>
+        <button class="nav-item" data-tab="stats">
+            <span class="nav-icon">📊</span>
+            <span class="nav-label">今日统计</span>
+        </button>
+        <button class="nav-item" data-tab="history">
+            <span class="nav-icon">📅</span>
+            <span class="nav-label">历史记录</span>
+        </button>
+        <button class="nav-item" data-tab="user">
+            <span class="nav-icon">👤</span>
+            <span class="nav-label">用户</span>
+        </button>
+    </nav>
+
+    <!-- 奶粉量弹窗 -->
+    <div class="modal-overlay" id="formulaModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>🍼 喝奶粉</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <label class="input-label" for="formulaAmount">奶粉量 (ml)</label>
+                <input type="number" id="formulaAmount" class="input-lg" placeholder="输入毫升数" inputmode="numeric" min="1" autocomplete="off">
+                <div id="formulaError" class="form-error" style="display:none;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="modalCancel">取消</button>
+                <button class="btn btn-primary" id="modalConfirm">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑时间弹窗 -->
+    <div class="modal-overlay" id="editTimeModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="editTimeTitle">编辑时间</h3>
+                <button class="modal-close" id="editTimeClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <label class="input-label" for="editTimeInput">时间 (HH:MM)</label>
+                <input type="time" id="editTimeInput" class="input-lg" autocomplete="off">
+                <div id="editTimeError" class="form-error" style="display:none;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="editTimeCancel">取消</button>
+                <button class="btn btn-primary" id="editTimeConfirm">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 手动添加记录弹窗 -->
+    <div class="modal-overlay" id="addRecordModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>手动添加记录</h3>
+                <button class="modal-close" id="addRecordClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <label class="input-label">事件类型</label>
+                <div class="type-picker" id="typePicker">
+                    <button class="type-option" data-type="formula">🍼 喝奶粉</button>
+                    <button class="type-option" data-type="sleep_start">😴 开始睡</button>
+                    <button class="type-option" data-type="sleep_end">🌞 睡醒了</button>
+                    <button class="type-option" data-type="poop">💩 大便了</button>
+                    <button class="type-option" data-type="pee">💧 小便了</button>
+                </div>
+                <div id="addRecordFormula" class="add-formula-group hidden">
+                    <label class="input-label" for="addFormulaAmount">奶粉量 (ml)</label>
+                    <input type="number" id="addFormulaAmount" class="input-lg input-sm" placeholder="输入毫升数" inputmode="numeric" min="1" autocomplete="off">
+                </div>
+                <div class="add-datetime">
+                    <div class="datetime-field">
+                        <label class="input-label" for="addDate">日期</label>
+                        <input type="date" id="addDate" class="input-md" max="">
+                    </div>
+                    <div class="datetime-field">
+                        <label class="input-label" for="addTime">时间</label>
+                        <input type="time" id="addTime" class="input-md">
+                    </div>
+                </div>
+                <div id="addRecordError" class="form-error" style="display:none;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="addRecordCancel">取消</button>
+                <button class="btn btn-primary" id="addRecordConfirm">确认添加</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast-global" id="globalToast"></div>
+
+    <script>
+    // ========== 日期显示 ==========
+    function getTodayStr() {
+        const d = new Date();
+        return d.getFullYear() + '-' +
+               String(d.getMonth() + 1).padStart(2, '0') + '-' +
+               String(d.getDate()).padStart(2, '0');
+    }
+    function formatTodayCN() {
+        const d = new Date();
+        const week = ['日', '一', '二', '三', '四', '五', '六'];
+        return d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日 星期' + week[d.getDay()];
+    }
+
+    document.getElementById('todayDate').textContent = formatTodayCN();
+    document.getElementById('statsDate').textContent = formatTodayCN();
+
+    // ========== Tab 切换 ==========
+    const pages = {
+        actions: document.getElementById('page-actions'),
+        stats: document.getElementById('page-stats'),
+        history: document.getElementById('page-history'),
+        user: document.getElementById('page-user'),
+    };
+    const navItems = document.querySelectorAll('.nav-item');
+    let currentContext = 'daily'; // 'daily' | 'history'
+
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const tab = item.dataset.tab;
+            Object.values(pages).forEach(p => p.classList.remove('active'));
+            pages[tab].classList.add('active');
+            navItems.forEach(n => n.classList.remove('active'));
+            item.classList.add('active');
+
+            if (tab === 'stats') { currentContext = 'daily'; loadDailyStats(); }
+            if (tab === 'history') { currentContext = 'history'; loadHistoryStats(); }
+            if (tab === 'user') loadUser();
+        });
+    });
+
+    // ========== Toast ==========
+    let toastTimer;
+    let pendingUndoCallback = null;
+    const toastEl = document.getElementById('globalToast');
+
+    toastEl.addEventListener('click', (e) => {
+        if (e.target.classList.contains('toast-undo')) {
+            const cb = pendingUndoCallback;
+            if (!cb) return;
+            pendingUndoCallback = null;
+            toastEl.className = 'toast-global';
+            clearTimeout(toastTimer);
+            cb();
+        }
+    });
+
+    function showToast(msg, isError = false, undoCallback = null) {
+        pendingUndoCallback = undoCallback;
+        if (undoCallback) {
+            toastEl.innerHTML = msg + ' <span class="toast-undo">撤回</span>';
+        } else {
+            toastEl.textContent = msg;
+        }
+        toastEl.className = 'toast-global show' + (isError ? ' error' : '');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+            toastEl.className = 'toast-global';
+            pendingUndoCallback = null;
+        }, 8000);
+    }
+
+    // ========== 快捷记录按钮 ==========
+    document.querySelectorAll('.action-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const event = btn.dataset.event;
+            if (event === 'formula') {
+                openFormulaModal();
+            } else {
+                submitRecord(event, null);
+            }
+        });
+    });
+
+    function submitRecord(eventType, formulaAmount) {
+        const body = { event_type: eventType };
+        if (formulaAmount !== null) body.formula_amount = formulaAmount;
+
+        fetch('/api/record', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.ok) {
+                const labels = { formula: '🍼 喝奶粉 ' + (formulaAmount || 0) + 'ml', sleep_start: '😴 开始睡', sleep_end: '🌞 睡醒了', poop: '💩 大便了', pee: '💧 小便了' };
+                showToast(labels[eventType] + ' 已记录', false, () => {
+                    fetch('/api/record/undo', { method: 'POST' })
+                        .then(r => r.json())
+                        .then(d => {
+                            if (d.ok) {
+                                showToast('已撤回');
+                                refreshCurrentContext();
+                            } else {
+                                showToast(d.error || '撤回失败', true);
+                            }
+                        })
+                        .catch(() => showToast('网络错误', true));
+                });
+                refreshCurrentContext();
+            } else {
+                showToast(data.error || '记录失败', true);
+            }
+        })
+        .catch(() => showToast('网络错误', true));
+    }
+
+    // ========== 奶粉量弹窗 ==========
+    const formulaModal = document.getElementById('formulaModal');
+    const formulaInput = document.getElementById('formulaAmount');
+    const formulaError = document.getElementById('formulaError');
+
+    function openFormulaModal() {
+        formulaModal.classList.add('show');
+        formulaInput.value = '';
+        formulaError.style.display = 'none';
+        // 延迟 focus 确保弹窗动画完成
+        setTimeout(() => formulaInput.focus(), 100);
+    }
+
+    function closeFormulaModal() {
+        formulaModal.classList.remove('show');
+    }
+
+    document.getElementById('modalClose').addEventListener('click', closeFormulaModal);
+    document.getElementById('modalCancel').addEventListener('click', closeFormulaModal);
+    formulaModal.addEventListener('click', (e) => {
+        if (e.target === formulaModal) closeFormulaModal();
+    });
+
+    document.getElementById('modalConfirm').addEventListener('click', () => {
+        const val = parseInt(formulaInput.value);
+        formulaError.style.display = 'none';
+        if (isNaN(val) || val <= 0) {
+            formulaError.textContent = '请输入有效的奶粉量';
+            formulaError.style.display = 'block';
+            formulaInput.focus();
+            return;
+        }
+        closeFormulaModal();
+        submitRecord('formula', val);
+    });
+
+    formulaInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            document.getElementById('modalConfirm').click();
+        }
+    });
+
+    // ========== 编辑时间弹窗 ==========
+    const editTimeModal = document.getElementById('editTimeModal');
+    const editTimeInput = document.getElementById('editTimeInput');
+    const editTimeError = document.getElementById('editTimeError');
+    let editingRecordId = null;
+
+    function openEditTimeModal(id, currentTime, eventType) {
+        editingRecordId = id;
+        editTimeInput.value = currentTime;
+        editTimeError.style.display = 'none';
+        const labels = { formula: '🍼 喝奶粉', sleep_start: '😴 开始睡', sleep_end: '🌞 睡醒了', poop: '💩 大便了', pee: '💧 小便了' };
+        document.getElementById('editTimeTitle').textContent = '编辑时间 - ' + (labels[eventType] || eventType);
+        editTimeModal.classList.add('show');
+        setTimeout(() => editTimeInput.focus(), 100);
+    }
+
+    function closeEditTimeModal() {
+        editTimeModal.classList.remove('show');
+        editingRecordId = null;
+    }
+
+    document.getElementById('editTimeClose').addEventListener('click', closeEditTimeModal);
+    document.getElementById('editTimeCancel').addEventListener('click', closeEditTimeModal);
+    editTimeModal.addEventListener('click', (e) => {
+        if (e.target === editTimeModal) closeEditTimeModal();
+    });
+
+    document.getElementById('editTimeConfirm').addEventListener('click', () => {
+        const newTime = editTimeInput.value.trim();
+        editTimeError.style.display = 'none';
+
+        if (!newTime || !/^\d{2}:\d{2}$/.test(newTime)) {
+            editTimeError.textContent = '请输入有效时间 (HH:MM)';
+            editTimeError.style.display = 'block';
+            return;
+        }
+
+        fetch('/api/record/' + editingRecordId, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ event_time: newTime }),
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.ok) {
+                closeEditTimeModal();
+                showToast('时间已更新');
+                refreshCurrentContext();
+            } else {
+                editTimeError.textContent = data.error || '更新失败';
+                editTimeError.style.display = 'block';
+            }
+        })
+        .catch(() => {
+            editTimeError.textContent = '网络错误';
+            editTimeError.style.display = 'block';
+        });
+    });
+
+    editTimeInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            document.getElementById('editTimeConfirm').click();
+        }
+    });
+
+    // ========== 每日统计 ==========
+    function loadDailyStats() {
+        loadStatsFor(getTodayStr(), 'stat-', 'recordsContainer');
+    }
+
+    function loadStats() { loadDailyStats(); } // 兼容旧调用
+
+    // ========== 历史记录 ==========
+    function getHistoryDate() {
+        return document.getElementById('histDate').value;
+    }
+
+    function loadHistoryStats() {
+        const date = getHistoryDate();
+        if (!date) return;
+        loadStatsFor(date, 'hist-', 'histRecordsContainer');
+    }
+
+    // ========== 通用统计/记录加载 ==========
+    function loadStatsFor(date, prefix, recordsContainerId) {
+        fetch('/api/stats?date=' + date)
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById(prefix + 'formula-count').textContent = data.count_formula;
+                document.getElementById(prefix + 'formula-total').textContent = data.total_formula;
+                const mins = data.total_sleep_minutes || 0;
+                const h = Math.floor(mins / 60);
+                const m = mins % 60;
+                document.getElementById(prefix + 'sleep-duration').textContent =
+                    h > 0 ? h + 'h ' + m + 'm' : m + 'm';
+                document.getElementById(prefix + 'poop').textContent = data.count_poop;
+                document.getElementById(prefix + 'pee').textContent = data.count_pee;
+            });
+
+        loadRecordsFor(date, recordsContainerId);
+    }
+
+    function loadRecordsFor(date, containerId) {
+        fetch('/api/records?date=' + date)
+            .then(r => r.json())
+            .then(data => {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                if (data.records.length === 0) {
+                    container.innerHTML = '<p class="empty-msg">暂无记录</p>';
+                } else {
+                    container.innerHTML = data.records.map(r => {
+                        let detail = '';
+                        if (r.event_type === 'formula' && r.formula_amount) {
+                            detail = ' <span class="record-detail">' + r.formula_amount + 'ml</span>';
+                        }
+                        return '<div class="record-item">' +
+                            '<span class="record-icon">' + getEventIcon(r.event_type) + '</span>' +
+                            '<span class="record-label">' + r.event_label + '</span>' +
+                            detail +
+                            '<button class="record-time-btn" data-id="' + r.id + '" data-time="' + r.event_time + '" data-type="' + r.event_type + '">' + r.event_time + '</button>' +
+                            '<button class="record-del-btn" data-id="' + r.id + '">✕</button>' +
+                        '</div>';
+                    }).join('');
+
+                    container.querySelectorAll('.record-time-btn').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            openEditTimeModal(btn.dataset.id, btn.dataset.time, btn.dataset.type);
+                        });
+                    });
+                    container.querySelectorAll('.record-del-btn').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            deleteRecord(btn.dataset.id);
+                        });
+                    });
+                }
+            });
+    }
+
+    function deleteRecord(id) {
+        if (!confirm('确定删除这条记录？')) return;
+        fetch('/api/record/' + id, { method: 'DELETE' })
+            .then(r => r.json())
+            .then(data => {
+                if (data.ok) {
+                    showToast('记录已删除');
+                    refreshCurrentContext();
+                } else {
+                    showToast(data.error || '删除失败', true);
+                }
+            })
+            .catch(() => showToast('网络错误', true));
+    }
+
+    function refreshCurrentContext() {
+        if (currentContext === 'daily') loadDailyStats();
+        else loadHistoryStats();
+    }
+
+    function getEventIcon(type) {
+        const m = { formula: '🍼', sleep_start: '😴', sleep_end: '🌞', poop: '💩', pee: '💧' };
+        return m[type] || '📌';
+    }
+
+    // ========== 用户信息 ==========
+    function loadUser() {
+        fetch('/api/user')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('userName').textContent = data.username;
+                const roleEl = document.getElementById('userRole');
+                roleEl.textContent = data.role === 'admin' ? '管理员' : '普通用户';
+                roleEl.className = 'user-role ' + (data.role === 'admin' ? 'role-admin' : 'role-user');
+                if (data.role === 'admin') {
+                    document.getElementById('adminPanel').style.display = 'block';
+                    loadAdminUsers();
+                } else {
+                    document.getElementById('adminPanel').style.display = 'none';
+                }
+            });
+    }
+
+    // ========== 管理员：用户管理 ==========
+    function loadAdminUsers() {
+        fetch('/api/admin/users')
+            .then(r => r.json())
+            .then(data => {
+                const list = document.getElementById('adminUserList');
+                list.innerHTML = '';
+                const currentName = document.getElementById('userName').textContent;
+                data.users.forEach(u => {
+                    const isSelf = u.username === currentName;
+                    const row = document.createElement('div');
+                    row.className = 'admin-user-row';
+                    row.innerHTML = `
+                        <div class="admin-user-info">
+                            <span class="admin-user-name">${u.username}</span>
+                            <span class="admin-user-role ${u.role === 'admin' ? 'role-admin' : 'role-user'}">${u.role === 'admin' ? '管理员' : '普通用户'}</span>
+                        </div>
+                        ${isSelf ? '' : `<button class="admin-user-del" data-id="${u.id}" data-name="${u.username}">删除</button>`}
+                    `;
+                    list.appendChild(row);
+                });
+                list.querySelectorAll('.admin-user-del').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const id = btn.dataset.id;
+                        const name = btn.dataset.name;
+                        if (confirm(`确定删除用户「${name}」及其所有记录？`)) {
+                            fetch('/api/admin/users/' + id, { method: 'DELETE' })
+                                .then(r => r.json())
+                                .then(d => {
+                                    if (d.ok) { showToast('已删除用户'); loadAdminUsers(); }
+                                    else { showToast(d.error || '删除失败', true); }
+                                });
+                        }
+                    });
+                });
+            });
+    }
+
+    // ========== CSV 导出 ==========
+    (function() {
+        const exportStart = document.getElementById('exportStart');
+        const exportEnd = document.getElementById('exportEnd');
+        const today = getTodayStr();
+        exportStart.max = today;
+        exportEnd.max = today;
+        exportStart.value = today;
+        exportEnd.value = today;
+
+        let exportMode = 'detail';
+
+        document.querySelectorAll('.export-mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.export-mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                exportMode = btn.dataset.mode;
+            });
+        });
+
+        document.getElementById('exportBtn').addEventListener('click', () => {
+            const start = exportStart.value;
+            const end = exportEnd.value;
+            if (!start || !end) {
+                showToast('请选择日期范围', true);
+                return;
+            }
+            if (start > end) {
+                showToast('开始日期不能晚于结束日期', true);
+                return;
+            }
+
+            const url = '/api/export/csv?start=' + start + '&end=' + end + '&mode=' + exportMode;
+
+            fetch(url)
+                .then(r => {
+                    if (!r.ok) return r.json().then(d => { throw new Error(d.error); });
+                    return r.blob();
+                })
+                .then(blob => {
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = 'baby_' + start + '_' + end + '_' + (exportMode === 'summary' ? '汇总' : '详细') + '.csv';
+                    a.click();
+                    URL.revokeObjectURL(a.href);
+                    showToast('导出成功');
+                })
+                .catch(err => showToast(err.message || '导出失败', true));
+        });
+    })();
+
+    // ========== 手动添加记录弹窗 ==========
+    const addRecordModal = document.getElementById('addRecordModal');
+    let selectedAddType = null;
+
+    // 每日统计 + 卡片
+    document.getElementById('addRecordCard').addEventListener('click', () => {
+        openAddRecordModal(getTodayStr());
+    });
+
+    // 历史记录 + 卡片
+    document.getElementById('histAddCard').addEventListener('click', () => {
+        openAddRecordModal(getHistoryDate());
+    });
+
+    function openAddRecordModal(defaultDate) {
+        selectedAddType = null;
+        document.getElementById('addRecordError').style.display = 'none';
+        document.getElementById('addRecordFormula').classList.add('hidden');
+        document.getElementById('addFormulaAmount').value = '';
+
+        const now = new Date();
+        const today = getTodayStr();
+        document.getElementById('addDate').max = today;
+        document.getElementById('addDate').value = defaultDate || today;
+        document.getElementById('addTime').value =
+            String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+
+        document.querySelectorAll('#typePicker .type-option').forEach(b => b.classList.remove('selected'));
+        addRecordModal.classList.add('show');
+    }
+
+    function closeAddRecordModal() {
+        addRecordModal.classList.remove('show');
+    }
+
+    document.getElementById('addRecordClose').addEventListener('click', closeAddRecordModal);
+    document.getElementById('addRecordCancel').addEventListener('click', closeAddRecordModal);
+    addRecordModal.addEventListener('click', (e) => {
+        if (e.target === addRecordModal) closeAddRecordModal();
+    });
+
+    // 事件类型选择
+    document.querySelectorAll('#typePicker .type-option').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('#typePicker .type-option').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedAddType = btn.dataset.type;
+            document.getElementById('addRecordError').style.display = 'none';
+
+            const formulaGroup = document.getElementById('addRecordFormula');
+            if (selectedAddType === 'formula') {
+                formulaGroup.classList.remove('hidden');
+            } else {
+                formulaGroup.classList.add('hidden');
+            }
+        });
+    });
+
+    // 确认添加
+    document.getElementById('addRecordConfirm').addEventListener('click', () => {
+        const errDiv = document.getElementById('addRecordError');
+        errDiv.style.display = 'none';
+
+        if (!selectedAddType) {
+            errDiv.textContent = '请选择事件类型';
+            errDiv.style.display = 'block';
+            return;
+        }
+
+        const body = {
+            event_type: selectedAddType,
+            event_date: document.getElementById('addDate').value,
+            event_time: document.getElementById('addTime').value,
+        };
+
+        if (selectedAddType === 'formula') {
+            const val = parseInt(document.getElementById('addFormulaAmount').value);
+            if (isNaN(val) || val <= 0) {
+                errDiv.textContent = '请输入有效的奶粉量';
+                errDiv.style.display = 'block';
+                return;
+            }
+            body.formula_amount = val;
+        }
+
+        // 不能添加未来时间
+        const chosenDt = new Date(body.event_date + 'T' + body.event_time + ':00');
+        if (chosenDt > new Date()) {
+            errDiv.textContent = '不能添加未来时间的记录';
+            errDiv.style.display = 'block';
+            return;
+        }
+
+        fetch('/api/record', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.ok) {
+                closeAddRecordModal();
+                showToast('记录已添加', false, () => {
+                    fetch('/api/record/undo', { method: 'POST' })
+                        .then(r => r.json())
+                        .then(d => {
+                            if (d.ok) {
+                                showToast('已撤回');
+                                refreshCurrentContext();
+                            } else {
+                                showToast(d.error || '撤回失败', true);
+                            }
+                        })
+                        .catch(() => showToast('网络错误', true));
+                });
+                refreshCurrentContext();
+            } else {
+                errDiv.textContent = data.error || '添加失败';
+                errDiv.style.display = 'block';
+            }
+        })
+        .catch(() => {
+            errDiv.textContent = '网络错误';
+            errDiv.style.display = 'block';
+        });
+    });
+
+    // ========== 历史记录日期选择 ==========
+    const histDateInput = document.getElementById('histDate');
+    histDateInput.max = getTodayStr();
+    histDateInput.value = getTodayStr();
+
+    // 初始加载历史
+    loadHistoryStats();
+
+    function checkFutureDate() {
+        const today = getTodayStr();
+        if (histDateInput.value > today) {
+            histDateInput.value = today;
+            showToast('还没到那天呢', true);
+            return true;
+        }
+        return false;
+    }
+
+    histDateInput.addEventListener('change', () => {
+        if (!checkFutureDate()) loadHistoryStats();
+    });
+
+    document.getElementById('histPrevDay').addEventListener('click', () => {
+        const d = new Date(histDateInput.value + 'T00:00:00');
+        d.setDate(d.getDate() - 1);
+        histDateInput.value = d.getFullYear() + '-' +
+            String(d.getMonth() + 1).padStart(2, '0') + '-' +
+            String(d.getDate()).padStart(2, '0');
+        loadHistoryStats();
+    });
+
+    document.getElementById('histNextDay').addEventListener('click', () => {
+        const d = new Date(histDateInput.value + 'T00:00:00');
+        d.setDate(d.getDate() + 1);
+        const newVal = d.getFullYear() + '-' +
+            String(d.getMonth() + 1).padStart(2, '0') + '-' +
+            String(d.getDate()).padStart(2, '0');
+        if (newVal > getTodayStr()) {
+            showToast('还没到那天呢', true);
+            return;
+        }
+        histDateInput.value = newVal;
+        loadHistoryStats();
+    });
+
+    // ========== 退出 ==========
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+        if (!confirm('确定退出登录？')) return;
+        await fetch('/api/logout', { method: 'POST' });
+        window.location.href = '/login';
+    });
+
+    // ========== 初始加载 ==========
+    loadStats();
+    loadUser();
+    </script>
+
+    <!-- Service Worker -->
+    <script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
+    </script>
+
+</body>
+</html>

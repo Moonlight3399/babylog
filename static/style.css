@@ -1,0 +1,867 @@
+/* ========================================
+   BabyLog - 移动端样式
+   ======================================== */
+
+/* --- Reset & Base --- */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: #FFF5F7;
+    color: #333;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+input, button {
+    font-family: inherit;
+    font-size: inherit;
+}
+
+/* --- Login Page --- */
+.login-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #FFB6C1 0%, #FFD1D8 50%, #FFF5F7 100%);
+}
+
+.login-container {
+    width: 100%;
+    max-width: 360px;
+    padding: 32px 24px;
+    text-align: center;
+}
+
+.login-logo {
+    margin-bottom: 12px;
+}
+
+.login-title {
+    font-size: 1.8rem;
+    color: #FF69B4;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.login-subtitle {
+    font-size: 0.9rem;
+    color: #D4869C;
+    margin-bottom: 28px;
+}
+
+.login-form {
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px 20px;
+    box-shadow: 0 8px 30px rgba(255, 105, 180, 0.15);
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #FDDDE6;
+    border-radius: 12px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    background: #FFFBFD;
+}
+
+.form-group input:focus {
+    border-color: #FF69B4;
+}
+
+.login-error {
+    color: #E74C3C;
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* --- Buttons --- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.btn:active {
+    transform: scale(0.96);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #FF69B4, #FF85C2);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+}
+
+.btn-secondary {
+    background: #F0F0F0;
+    color: #666;
+}
+
+.btn-outline {
+    background: #fff;
+    color: #FF69B4;
+    border: 2px solid #FFB6C1;
+}
+
+.btn-full {
+    width: 100%;
+}
+
+/* --- App Layout --- */
+.app-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-bottom: 70px;
+    background: #FFF5F7;
+}
+
+.app-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+/* --- Page Header --- */
+.page-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.page-header h2 {
+    font-size: 1.4rem;
+    color: #FF69B4;
+    font-weight: 700;
+}
+
+.page-subtitle {
+    font-size: 0.85rem;
+    color: #C495A5;
+    margin-top: 4px;
+}
+
+/* --- History Date Picker --- */
+.history-date-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.date-arrow {
+    width: 36px;
+    height: 36px;
+    border: 2px solid #FDDDE6;
+    border-radius: 50%;
+    background: #fff;
+    color: #FF69B4;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+}
+
+.date-arrow:active {
+    background: #FFF0F5;
+    border-color: #FF69B4;
+}
+
+.date-input {
+    max-width: 160px;
+    text-align: center;
+}
+
+/* --- Tab Pages --- */
+.tab-page {
+    display: none;
+}
+
+.tab-page.active {
+    display: block;
+}
+
+/* --- Action Buttons Grid --- */
+.actions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 20px 22px;
+    border: none;
+    border-radius: 18px;
+    font-size: 1.15rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.12s;
+    color: #fff;
+    -webkit-user-select: none;
+    user-select: none;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+.action-btn:active {
+    transform: scale(0.97);
+    opacity: 0.9;
+}
+
+.action-icon {
+    font-size: 1.6rem;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 14px;
+    flex-shrink: 0;
+}
+
+.formula-btn { background: linear-gradient(135deg, #FF9A9E, #FFB6C1); }
+.sleep-btn   { background: linear-gradient(135deg, #A18CD1, #C4B5E0); }
+.wake-btn    { background: linear-gradient(135deg, #FAD961, #F7B733); }
+.poop-btn    { background: linear-gradient(135deg, #A8D8B9, #7EC8A0); }
+.pee-btn     { background: linear-gradient(135deg, #89CFF0, #A8D8EA); }
+
+/* --- Bottom Nav --- */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    background: #fff;
+    border-top: 1px solid #FDE4EC;
+    padding: 6px 0 env(safe-area-inset-bottom, 8px);
+    z-index: 100;
+    box-shadow: 0 -2px 12px rgba(255, 105, 180, 0.06);
+}
+
+.nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 6px 2px;
+    border: none;
+    background: none;
+    color: #B0B0B0;
+    cursor: pointer;
+    transition: color 0.15s;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.nav-item.active {
+    color: #FF69B4;
+}
+
+.nav-icon {
+    font-size: 1.4rem;
+}
+
+.nav-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+/* --- Stats Grid --- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px 12px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(255, 105, 180, 0.06);
+}
+
+.stat-card.highlight {
+    background: linear-gradient(135deg, #FFF0F5, #FFE4EC);
+    border: 2px solid #FFB6C1;
+}
+
+.stat-icon {
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #FF69B4;
+    margin-bottom: 2px;
+}
+
+.stat-card.sleep-stat {
+    background: linear-gradient(135deg, #F3E8FF, #EDE0FF);
+    border: 2px solid #C4B5E0;
+}
+
+.stat-card.sleep-stat .stat-value {
+    color: #8B7EC8;
+}
+
+.stat-card.sleep-stat .stat-label {
+    color: #A998D0;
+}
+
+.stat-card.add-card {
+    background: #FAFAFA;
+    border: 2px dashed #E8D5E0;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.stat-card.add-card:active {
+    background: #FFF0F5;
+    border-color: #FFB6C1;
+    transform: scale(0.96);
+}
+
+.stat-card.add-card .stat-icon {
+    font-size: 1.8rem;
+    color: #D0C0D0;
+}
+
+/* --- Records List --- */
+.records-list {
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 2px 10px rgba(255, 105, 180, 0.06);
+}
+
+.records-list h3 {
+    font-size: 0.95rem;
+    color: #FF69B4;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.record-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #FFF0F5;
+    font-size: 0.9rem;
+}
+
+.record-item:last-child {
+    border-bottom: none;
+}
+
+.record-icon {
+    font-size: 1.2rem;
+    width: 28px;
+    text-align: center;
+}
+
+.record-label {
+    flex: 1;
+    color: #555;
+}
+
+.record-detail {
+    font-weight: 600;
+    color: #FF69B4;
+}
+
+.record-time-btn {
+    background: none;
+    border: 1px solid #FDDDE6;
+    color: #FF69B4;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.record-time-btn:active {
+    background: #FFF0F5;
+    border-color: #FF69B4;
+}
+
+.record-del-btn {
+    background: none;
+    border: none;
+    color: #D0D0D0;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.15s;
+    flex-shrink: 0;
+}
+
+.record-del-btn:active {
+    background: #FFE4E4;
+    color: #E74C3C;
+}
+
+.empty-msg {
+    text-align: center;
+    color: #CCC;
+    padding: 20px 0;
+    font-size: 0.9rem;
+}
+
+/* --- User Card --- */
+.user-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px 24px;
+    text-align: center;
+    box-shadow: 0 2px 15px rgba(255, 105, 180, 0.08);
+}
+
+.user-avatar {
+    margin-bottom: 12px;
+}
+
+.user-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #FF69B4;
+    margin-bottom: 20px;
+}
+
+/* --- Export Card --- */
+.export-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px;
+    margin-top: 16px;
+    box-shadow: 0 2px 15px rgba(255, 105, 180, 0.08);
+}
+
+.export-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #FF69B4;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.export-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.export-field {
+    flex: 1;
+}
+
+.export-field .input-label {
+    font-size: 0.8rem;
+    color: #999;
+    margin-bottom: 4px;
+}
+
+.export-field .input-md {
+    width: 100%;
+}
+
+.export-mode {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.export-mode-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #FDDDE6;
+    border-radius: 10px;
+    background: #FFF5F7;
+    color: #C495A5;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.export-mode-btn.active {
+    background: #FF69B4;
+    color: #fff;
+    border-color: #FF69B4;
+}
+
+/* --- Modal (奶粉量输入) --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    padding: 24px;
+}
+
+.modal-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-box {
+    background: #fff;
+    border-radius: 22px;
+    width: 100%;
+    max-width: 340px;
+    overflow: hidden;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+    transform: translateY(20px);
+    transition: transform 0.2s;
+}
+
+.modal-overlay.show .modal-box {
+    transform: translateY(0);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px 10px;
+}
+
+.modal-header h3 {
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.modal-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: #F5F5F5;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+}
+
+.modal-body {
+    padding: 8px 20px 20px;
+}
+
+.input-label {
+    display: block;
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.input-lg {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+    border: 2px solid #FDDDE6;
+    border-radius: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    background: #FFFBFD;
+    color: #FF69B4;
+}
+
+.input-lg:focus {
+    border-color: #FF69B4;
+}
+
+.form-error {
+    color: #E74C3C;
+    font-size: 0.8rem;
+    margin-top: 6px;
+    text-align: center;
+}
+
+/* --- Type Picker (手动添加) --- */
+.type-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.type-option {
+    flex: 1 1 calc(50% - 4px);
+    padding: 10px 8px;
+    border: 2px solid #F0E0E8;
+    border-radius: 12px;
+    background: #FFFBFD;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+    min-width: calc(50% - 4px);
+}
+
+.type-option:active {
+    transform: scale(0.96);
+}
+
+.type-option.selected {
+    border-color: #FF69B4;
+    background: #FFF0F5;
+    color: #FF69B4;
+    font-weight: 600;
+}
+
+/* --- Date/Time Fields --- */
+.add-datetime {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.datetime-field {
+    flex: 1;
+}
+
+.add-formula-group {
+    margin-bottom: 10px;
+}
+
+.input-md {
+    width: 100%;
+    padding: 12px;
+    font-size: 0.95rem;
+    border: 2px solid #FDDDE6;
+    border-radius: 12px;
+    outline: none;
+    background: #FFFBFD;
+    color: #333;
+}
+
+.input-md:focus {
+    border-color: #FF69B4;
+}
+
+.input-sm {
+    padding: 12px;
+    font-size: 1.2rem;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 10px;
+    padding: 0 20px 20px;
+}
+
+.modal-footer .btn {
+    flex: 1;
+}
+
+/* --- Global Toast --- */
+.toast-global {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: #333;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    z-index: 9999;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    white-space: nowrap;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.toast-global.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+}
+
+.toast-global.error {
+    background: #E74C3C;
+}
+
+.toast-global .toast-undo {
+    text-decoration: underline;
+    cursor: pointer;
+    margin-left: 6px;
+    opacity: 0.85;
+    transition: opacity 0.2s;
+}
+
+.toast-global .toast-undo:hover {
+    opacity: 1;
+}
+
+/* --- Login Switch (登录/注册切换) --- */
+.login-switch {
+    margin-top: 16px;
+    font-size: 0.85rem;
+    color: #999;
+}
+
+.link-btn {
+    background: none;
+    border: none;
+    color: #FF69B4;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0 2px;
+}
+
+/* --- 用户角色徽章 --- */
+.user-role {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.role-admin {
+    background: #FFF0F5;
+    color: #E34E8C;
+    border: 1px solid #FFB6C1;
+}
+
+.role-user {
+    background: #F0F0F5;
+    color: #7B7B9B;
+    border: 1px solid #D8D8E8;
+}
+
+/* --- 管理员：用户管理 --- */
+.admin-panel {
+    margin-top: 16px;
+}
+
+.admin-user-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 4px;
+    border-bottom: 1px solid #FFF0F5;
+}
+
+.admin-user-row:last-child {
+    border-bottom: none;
+}
+
+.admin-user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+}
+
+.admin-user-name {
+    font-weight: 600;
+    color: #444;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-user-role {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.admin-user-role.role-admin {
+    background: #FFF0F5;
+    color: #E34E8C;
+}
+
+.admin-user-role.role-user {
+    background: #F0F0F5;
+    color: #7B7B9B;
+}
+
+.admin-user-del {
+    background: none;
+    border: 1px solid #FDDDE6;
+    color: #E74C3C;
+    font-size: 0.78rem;
+    padding: 5px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s;
+}
+
+.admin-user-del:active {
+    background: #FFE4E4;
+    border-color: #E74C3C;
+}
+
+/* --- Utility --- */
+.hidden {
+    display: none !important;
+}

@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+venv/
+
+# 运行时数据库（多实例独立数据库文件）
+instance/
+*.db
+
+# 备份 / 临时
+*.orig
+*.bak
+*.tmp
