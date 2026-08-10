@@ -2,14 +2,13 @@
 # BabyLog - 应用工厂
 # ============================================================
 import os
-import secrets
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from apscheduler.schedulers.background import BackgroundScheduler
 from sqlalchemy import inspect, text
 
-from config import DATABASE_URL, EMAIL_CONFIG
+from config import DATABASE_URL, EMAIL_CONFIG, SECRET_KEY
 
 # 项目根目录（app 包的上一级，即 babylog/）
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -82,7 +81,7 @@ def create_app():
         # 保持数据库文件位于 babylog/instance/（与拆分前一致）
         instance_path=os.path.join(BASE_DIR, 'instance'),
     )
-    app.config['SECRET_KEY'] = secrets.token_hex(32)
+    app.config['SECRET_KEY'] = SECRET_KEY
     app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

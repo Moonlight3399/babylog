@@ -14,6 +14,19 @@ BABYLOG_DB = os.environ.get('BABYLOG_DB', 'babylog_new.db')
 DATABASE_URL = f'sqlite:///{BABYLOG_DB}'
 
 # ============================================================
+# BabyLog - 会话安全配置
+# ============================================================
+
+# 会话签名密钥：用于给登录 session cookie 签名
+# - 环境变量 SECRET_KEY 优先（部署时务必设置，见《部署公网加固清单》第 2 步）
+# - 下方默认值为“开发默认”，仅供本地使用；部署到服务器前请重新生成并覆盖，切勿提交真实密钥到公开仓库
+# - 生成新密钥: python3 -c "import secrets; print(secrets.token_hex(32))"
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'babylog-dev-default-secret-key-please-replace-in-production-00000000',
+)
+
+# ============================================================
 # BabyLog - 每日邮件提醒配置
 # ============================================================
 
