@@ -95,12 +95,34 @@ def create_app():
     app.register_blueprint(main_bp)
     app.register_blueprint(api_bp)
 
-    # 启动每日邮件调度器
+    # 启动后台调度器（自动备份默认开启；每日邮件可选）
+    from datetime import datetime, timedelta
+    from config import BACKUP_ENABLED, BACKUP_TIME
+
+    scheduler = BackgroundScheduler()
+
+    # 数据库自动备份：启动后立即备份一次 + 每天定时备份
+    if BACKUP_ENABLED:
+        from .backup import backup_database
+        backup_hour, backup_minute = BACKUP_TIME.split(':')
+        scheduler.add_job(
+            lambda: backup_database(app),
+            'cron',
+            hour=int(backup_hour),
+            minute=int(backup_minute),
+        )
+        # 服务启动后立即备份一次（覆盖服务重启前的数据变化）
+        scheduler.add_job(
+            lambda: backup_database(app),
+            'date',
+            run_date=datetime.now() + timedelta(seconds=5),
+        )
+        print(f'[备份] 数据库自动备份已启用 → 每天 {BACKUP_TIME}（启动时也会备份一次）')
+
+    # 每日邮件（可选）
     if EMAIL_CONFIG.get('active'):
         from .models import User, Record
         from mailer import send_daily_email
-
-        scheduler = BackgroundScheduler()
         hour, minute = EMAIL_CONFIG['time'].split(':')
         scheduler.add_job(
             lambda: send_daily_email(app, db, User, Record),
@@ -108,7 +130,9 @@ def create_app():
             hour=int(hour),
             minute=int(minute),
         )
-        scheduler.start()
         print(f'[调度器] 每日邮件已启用 → 每天 {EMAIL_CONFIG["time"]}')
+
+    if scheduler.get_jobs():
+        scheduler.start()
 
     return app

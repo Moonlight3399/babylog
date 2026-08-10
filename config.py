@@ -27,6 +27,23 @@ SECRET_KEY = os.environ.get(
 )
 
 # ============================================================
+# BabyLog - 数据库自动备份配置
+# ============================================================
+
+# 是否启用数据库自动备份（默认开启）
+BACKUP_ENABLED = os.environ.get('BABYLOG_BACKUP_ENABLED', 'true').lower() in ('1', 'true', 'yes')
+
+# 备份目录：默认 instance/backups（相对项目根目录）；可用 BABYLOG_BACKUP_DIR 覆盖为绝对路径
+BACKUP_DIR = os.environ.get('BABYLOG_BACKUP_DIR', os.path.join('instance', 'backups'))
+
+# 每天备份时间 (格式 HH:MM，建议选在家人不使用的时间段)
+BACKUP_TIME = '03:30'
+
+# 备份保留天数（超过自动清理）
+BACKUP_RETENTION_DAYS = 30
+
+
+# ============================================================
 # BabyLog - 每日邮件提醒配置
 # ============================================================
 

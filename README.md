@@ -441,9 +441,13 @@ WantedBy=multi-user.target
 - Session 基于自研签名 Cookie 认证（格式 `user_id:过期时间戳:签名`），默认 30 天有效，`HttpOnly` + `SameSite=Lax`
 - `SECRET_KEY` 固定（`config.py` 默认值 + 环境变量 `SECRET_KEY` 覆盖），重启服务**不会**导致用户掉线；公网部署请重新生成并设置环境变量
 
----
+**自动备份：**
+- 默认每天 `03:30` 自动备份数据库到 `instance/backups/`（`babylog_时间戳.db`），保留最近 30 天，超出自动清理
+- 服务启动后也会立即备份一次（保证覆盖重启前的数据变化）
+- 配置项见 `config.py`：`BACKUP_ENABLED` / `BACKUP_DIR` / `BACKUP_TIME` / `BACKUP_RETENTION_DAYS`，均可用环境变量覆盖（如 `BABYLOG_BACKUP_DIR`）
+- 使用 SQLite 在线备份 API，备份文件保证一致性
 
-## 七、技术架构
+---
 
 | 层级 | 技术 |
 |------|------|
@@ -501,7 +505,8 @@ babylog/
 │   ├── models.py         # 数据模型（User/Baby/Record/Food/GrowthRecord/LoginAttempt）
 │   ├── auth.py           # 认证辅助函数 + 登录相关路由（auth 蓝图）
 │   ├── views.py          # 页面路由（main 蓝图：首页）
-│   └── api.py            # API 路由（api 蓝图：记录、统计、导出、sw.js）
+│   ├── api.py            # API 路由（api 蓝图：记录、统计、导出、sw.js）
+│   └── backup.py         # 数据库自动备份模块
 ├── static/               # 前端静态资源
 │   ├── style.css         # 全局样式
 │   ├── manifest.json     # PWA 清单
@@ -511,6 +516,7 @@ babylog/
 │   ├── index.html        # 主页面（快捷记录/统计/历史/用户 四个标签页）
 │   └── login.html        # 登录页
 └── instance/             # SQLite 数据库目录（运行时生成）
+    └── backups/          # 自动备份目录（每天生成 babylog_时间戳.db）
 ```
 
 ---
@@ -568,7 +574,7 @@ A：通过环境变量 `PORT` 覆盖（如 `PORT=5002 python run.py`），或修
 
 ### Q：数据如何备份？
 
-A：备份 `instance/babylog_new.db` 文件即可。或使用 CSV 导出功能导出全部数据。
+A：系统已内置**自动备份**：默认每天 `03:30` 自动备份数据库到 `instance/backups/`（保留最近 30 天，服务启动时也会立即备份一次）。也可用"用户 → 导出 CSV"导出数据；手动备份直接复制 `instance/babylog_new.db` 即可。
 
 ### Q：如何重置密码？
 
