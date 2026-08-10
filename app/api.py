@@ -81,16 +81,16 @@ def api_create_record(user):
                     cleaned.append(f)
             record.foods = ','.join(cleaned)
 
-    # 睡眠约束：检查是否存在未配对的睡眠记录（跨所有日期）
+    # 睡眠约束：检查是否存在未配对的睡眠记录（跨所有日期，按宝宝共享）
     if event_type == 'sleep_start':
-        sleep_start_count = Record.query.filter_by(user_id=user.id, event_type='sleep_start').count()
-        sleep_end_count = Record.query.filter_by(user_id=user.id, event_type='sleep_end').count()
+        sleep_start_count = Record.query.filter_by(baby_id=user.baby_id, event_type='sleep_start').count()
+        sleep_end_count = Record.query.filter_by(baby_id=user.baby_id, event_type='sleep_end').count()
         if sleep_start_count > sleep_end_count:
             return jsonify({'error': '当前有未结束的睡眠，请先"睡醒了"再开始新的睡眠'}), 400
 
     if event_type == 'sleep_end':
-        sleep_start_count = Record.query.filter_by(user_id=user.id, event_type='sleep_start').count()
-        sleep_end_count = Record.query.filter_by(user_id=user.id, event_type='sleep_end').count()
+        sleep_start_count = Record.query.filter_by(baby_id=user.baby_id, event_type='sleep_start').count()
+        sleep_end_count = Record.query.filter_by(baby_id=user.baby_id, event_type='sleep_end').count()
         if sleep_start_count <= sleep_end_count:
             return jsonify({'error': '还没有"开始睡"记录，无法"睡醒了"'}), 400
 
@@ -127,7 +127,7 @@ def api_create_record(user):
 @api_bp.route('/api/record/<int:record_id>', methods=['PUT'])
 @login_required
 def api_update_record(user, record_id):
-    record = Record.query.filter_by(id=record_id, user_id=user.id).first()
+    record = Record.query.filter_by(id=record_id, baby_id=user.baby_id).first()
     if not record:
         return jsonify({'error': '记录不存在'}), 404
 
@@ -162,7 +162,7 @@ def api_update_record(user, record_id):
 @api_bp.route('/api/record/<int:record_id>', methods=['DELETE'])
 @login_required
 def api_delete_record(user, record_id):
-    record = Record.query.filter_by(id=record_id, user_id=user.id).first()
+    record = Record.query.filter_by(id=record_id, baby_id=user.baby_id).first()
     if not record:
         return jsonify({'error': '记录不存在'}), 404
 
@@ -203,7 +203,7 @@ def api_records(user):
     except ValueError:
         return jsonify({'error': '日期格式错误'}), 400
 
-    records = Record.query.filter_by(user_id=user.id, baby_id=user.baby_id, event_date=date)\
+    records = Record.query.filter_by(baby_id=user.baby_id, event_date=date)\
                           .order_by(Record.event_time.asc()).all()
 
     return jsonify({
@@ -234,7 +234,7 @@ def api_stats(user):
     except ValueError:
         return jsonify({'error': '日期格式错误'}), 400
 
-    records = Record.query.filter_by(user_id=user.id, baby_id=user.baby_id, event_date=date)\
+    records = Record.query.filter_by(baby_id=user.baby_id, event_date=date)\
                           .order_by(Record.event_time.asc()).all()
 
     total_formula = sum(r.formula_amount for r in records if r.event_type == 'formula' and r.formula_amount)
@@ -248,9 +248,8 @@ def api_stats(user):
     sleep_count = 0
     pending_start = None  # 当前未配对的开始睡时间
 
-    # 从数据库中获取该用户跨所有日期的睡眠记录，以便正确配对（考虑跨天睡眠）
+    # 从数据库中获取该宝宝跨所有日期的睡眠记录，以便正确配对（考虑跨天睡眠）
     all_sleep = Record.query.filter(
-        Record.user_id == user.id,
         Record.baby_id == user.baby_id,
         Record.event_type.in_(['sleep_start', 'sleep_end']),
         Record.event_date <= date
@@ -307,7 +306,6 @@ def api_export_csv(user):
         return jsonify({'error': '开始日期不能晚于结束日期'}), 400
 
     records = Record.query.filter(
-        Record.user_id == user.id,
         Record.baby_id == user.baby_id,
         Record.event_date >= start_date,
         Record.event_date <= end_date
@@ -422,7 +420,7 @@ def api_get_growth(user):
     if not user.baby_id:
         return jsonify({'ok': True, 'growth': None})
     g = GrowthRecord.query.filter_by(
-        user_id=user.id, baby_id=user.baby_id, record_date=date
+        baby_id=user.baby_id, record_date=date
     ).first()
     if not g:
         return jsonify({'ok': True, 'growth': None})
@@ -466,7 +464,7 @@ def api_save_growth(user):
         return jsonify({'error': '请至少填写身高或体重'}), 400
 
     g = GrowthRecord.query.filter_by(
-        user_id=user.id, baby_id=user.baby_id, record_date=date
+        baby_id=user.baby_id, record_date=date
     ).first()
     if g:
         g.height = height
