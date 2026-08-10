@@ -22,7 +22,7 @@ cd babylog
 # 2. 安装依赖
 pip install -r requirements.txt
 
-# 3. 注册用户
+# 3. （可选）命令行添加用户（也可登录后由管理员在"用户管理"中手动添加）
 python register.py
 
 # 4. 启动服务
@@ -366,7 +366,7 @@ WantedBy=multi-user.target
 
 ## 六、数据库说明
 
-数据库文件：`instance/babylog_new.db`（SQLite），首次运行自动创建，包含两张表：
+数据库文件：`instance/babylog_new.db`（SQLite），首次运行自动创建，包含以下表：
 
 ### users（用户表）
 
@@ -424,6 +424,16 @@ WantedBy=multi-user.target
 | name | String(20) | 辅食名称 |
 | created_at | DateTime | 创建时间 |
 
+### login_attempts（登录失败记录表，防暴力破解）
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | Integer PK | 主键 |
+| key | String(120) UNIQUE | 限速维度：`用户名|IP` |
+| fail_count | Integer | 连续失败次数 |
+| last_fail | DateTime | 最近一次失败时间 |
+| locked_until | DateTime | 锁定截止时间（15 分钟后自动解除） |
+
 **安全机制：**
 - 用户密码使用 PBKDF2-SHA256（10 万次迭代）加盐哈希存储，不保存明文
 - **登录限速**：同一「用户名+IP」连续失败 5 次锁定 15 分钟（数据库持久化，跨进程/重启有效）
@@ -479,15 +489,15 @@ WantedBy=multi-user.target
 ```
 babylog/
 ├── run.py                # 应用入口（精简，仅启动服务）
-├── config.py             # 配置：邮件、SMTP、AI、宝宝出生日期
+├── config.py             # 配置：端口/数据库/SECRET_KEY、邮件、SMTP、AI
 ├── mailer.py             # 每日邮件发送模块
-├── register.py           # 用户注册脚本（交互式 / 命令行）
+├── register.py           # 用户注册脚本（交互式 / 命令行，管理员创建用户）
 ├── mail_template.html    # 每日邮件 HTML 模板
 ├── requirements.txt      # Python 依赖
 ├── README.md              # 项目说明文档
 ├── app/                  # 应用主包（工厂 + 蓝图结构）
 │   ├── __init__.py       # 应用工厂 create_app()：初始化 db、注册蓝图、启动调度器
-│   ├── models.py         # 数据模型 User / Record
+│   ├── models.py         # 数据模型（User/Baby/Record/Food/GrowthRecord/LoginAttempt）
 │   ├── auth.py           # 认证辅助函数 + 登录相关路由（auth 蓝图）
 │   ├── views.py          # 页面路由（main 蓝图：首页）
 │   └── api.py            # API 路由（api 蓝图：记录、统计、导出、sw.js）
@@ -549,7 +559,7 @@ babylog/
 
 ### Q：服务重启后需要重新登录？
 
-A：是的。每次重启服务会重新生成 SECRET_KEY，所有用户的 Session 都会失效，需要重新登录。
+A：不会。`SECRET_KEY` 已固定（`config.py` 默认值 + 环境变量 `SECRET_KEY` 覆盖），重启服务后已登录用户**保持登录**，不会掉线。
 
 ### Q：如何修改端口号？
 
