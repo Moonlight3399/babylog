@@ -83,6 +83,11 @@
                     <div class="stat-value" id="stat-poop">0</div>
                     <div class="stat-label">拉粑粑</div>
                 </div>
+                <div class="stat-card growth-card" id="growthCard">
+                    <div class="stat-icon">📐</div>
+                    <div class="stat-value growth-value" id="stat-growth">--</div>
+                    <div class="stat-label">身高体重</div>
+                </div>
                 <div class="stat-card add-card" id="addRecordCard">
                     <div class="stat-icon">＋</div>
                     <div class="stat-value" style="font-size:0.85rem;color:#CCC;">手动添加</div>
@@ -269,6 +274,37 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" id="editTimeCancel">取消</button>
                 <button class="btn btn-primary" id="editTimeConfirm">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 身高体重弹窗 -->
+    <div class="modal-overlay" id="growthModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>记录身高体重</h3>
+                <button class="modal-close" id="growthClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="input-label" for="growthDate">日期</label>
+                    <input type="date" id="growthDate" class="input-md" max="">
+                </div>
+                <div class="add-datetime">
+                    <div class="datetime-field">
+                        <label class="input-label" for="growthHeight">身高 (cm)</label>
+                        <input type="number" id="growthHeight" class="input-md" placeholder="如 68.5" min="0" step="0.1" inputmode="decimal" autocomplete="off">
+                    </div>
+                    <div class="datetime-field">
+                        <label class="input-label" for="growthWeight">体重 (kg)</label>
+                        <input type="number" id="growthWeight" class="input-md" placeholder="如 8.2" min="0" step="0.1" inputmode="decimal" autocomplete="off">
+                    </div>
+                </div>
+                <div id="growthError" class="form-error" style="display:none;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="growthCancel">取消</button>
+                <button class="btn btn-primary" id="growthSave">保存</button>
             </div>
         </div>
     </div>
@@ -926,6 +962,7 @@
     // ========== 每日统计 ==========
     function loadDailyStats() {
         loadStatsFor(getTodayStr(), 'stat-', 'recordsContainer');
+        loadGrowth(getTodayStr());
     }
 
     function loadStats() { loadDailyStats(); } // 兼容旧调用
@@ -1411,6 +1448,104 @@
                 refreshCurrentContext();
             } else {
                 errDiv.textContent = data.error || '添加失败';
+                errDiv.style.display = 'block';
+            }
+        })
+        .catch(() => {
+            errDiv.textContent = '网络错误';
+            errDiv.style.display = 'block';
+        });
+    });
+
+    // ========== 身高体重 ==========
+    function loadGrowth(date) {
+        fetch('/api/growth?date=' + date)
+            .then(r => r.json())
+            .then(data => {
+                const el = document.getElementById('stat-growth');
+                if (!el) return;
+                const g = data.growth;
+                if (g && (g.height !== null || g.weight !== null)) {
+                    const parts = [];
+                    if (g.height !== null) parts.push(+Number(g.height).toFixed(1) + 'cm');
+                    if (g.weight !== null) parts.push(+Number(g.weight).toFixed(1) + 'kg');
+                    el.innerHTML = parts.join('<br>');
+                    el.style.fontSize = '0.9rem';
+                    el.style.lineHeight = '1.35';
+                } else {
+                    el.textContent = '--';
+                    el.style.fontSize = '';
+                    el.style.lineHeight = '';
+                }
+            });
+    }
+
+    const growthModal = document.getElementById('growthModal');
+
+    document.getElementById('growthCard').addEventListener('click', () => {
+        openGrowthModal(getTodayStr());
+    });
+
+    function openGrowthModal(date) {
+        if (!window.currentBabyId) {
+            showToast('请先由管理员绑定宝宝，才能记录', true);
+            return;
+        }
+        const today = getTodayStr();
+        document.getElementById('growthError').style.display = 'none';
+        document.getElementById('growthDate').max = today;
+        document.getElementById('growthDate').value = date || today;
+        document.getElementById('growthHeight').value = '';
+        document.getElementById('growthWeight').value = '';
+        // 回填当天已有数据
+        fetch('/api/growth?date=' + (date || today))
+            .then(r => r.json())
+            .then(data => {
+                const g = data.growth;
+                if (g) {
+                    if (g.height !== null) document.getElementById('growthHeight').value = g.height;
+                    if (g.weight !== null) document.getElementById('growthWeight').value = g.weight;
+                }
+                growthModal.classList.add('show');
+            });
+    }
+
+    function closeGrowthModal() {
+        growthModal.classList.remove('show');
+    }
+
+    document.getElementById('growthClose').addEventListener('click', closeGrowthModal);
+    document.getElementById('growthCancel').addEventListener('click', closeGrowthModal);
+    growthModal.addEventListener('click', (e) => {
+        if (e.target === growthModal) closeGrowthModal();
+    });
+
+    document.getElementById('growthSave').addEventListener('click', () => {
+        const errDiv = document.getElementById('growthError');
+        errDiv.style.display = 'none';
+        const date = document.getElementById('growthDate').value;
+        const height = document.getElementById('growthHeight').value;
+        const weight = document.getElementById('growthWeight').value;
+        if (!height && !weight) {
+            errDiv.textContent = '请至少填写身高或体重';
+            errDiv.style.display = 'block';
+            return;
+        }
+        fetch('/api/growth', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ date: date, height: height || null, weight: weight || null }),
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.ok) {
+                closeGrowthModal();
+                showToast('身高体重已保存');
+                if (date === getTodayStr()) {
+                    loadGrowth(date);
+                }
+            } else {
+                errDiv.textContent = data.error || '保存失败';
                 errDiv.style.display = 'block';
             }
         })

@@ -371,6 +371,29 @@ input, button {
     color: #D0C0D0;
 }
 
+.stat-card.growth-card {
+    background: linear-gradient(135deg, #E8F7FF, #DDF2FF);
+    border: 2px solid #A8D8F0;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.stat-card.growth-card:active {
+    transform: scale(0.96);
+    background: #DDF2FF;
+}
+
+.stat-card.growth-card .stat-value {
+    color: #4A9ACB;
+    font-size: 1.05rem;
+    line-height: 1.35;
+    word-break: break-word;
+}
+
+.stat-card.growth-card .stat-label {
+    color: #7FB4D8;
+}
+
 /* --- Records List --- */
 .records-list {
     background: #fff;

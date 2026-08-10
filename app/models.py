@@ -46,3 +46,15 @@ class Food(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     name = db.Column(db.String(20), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class GrowthRecord(db.Model):
+    """身高体重成长记录（每宝宝每天一条，可覆盖更新）"""
+    __tablename__ = 'growth_records'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    baby_id = db.Column(db.Integer, db.ForeignKey('babies.id'), nullable=True)  # 所属宝宝
+    height = db.Column(db.Float, nullable=True)   # 身高 cm
+    weight = db.Column(db.Float, nullable=True)   # 体重 kg
+    record_date = db.Column(db.Date, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)

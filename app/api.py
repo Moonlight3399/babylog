@@ -11,7 +11,7 @@ from flask import (Blueprint, current_app, jsonify, make_response,
                    request, send_from_directory)
 
 from . import db
-from .models import Food, Record
+from .models import Food, GrowthRecord, Record
 from .auth import login_required
 
 api_bp = Blueprint('api', __name__)
@@ -404,3 +404,81 @@ def api_delete_food(user, food_id):
     db.session.delete(food)
     db.session.commit()
     return jsonify({'ok': True})
+
+
+# ------------------------------------------------------------
+# 身高体重（成长记录）
+# ------------------------------------------------------------
+@api_bp.route('/api/growth')
+@login_required
+def api_get_growth(user):
+    date_str = request.args.get('date', '').strip()
+    if not date_str:
+        date_str = datetime.now().strftime('%Y-%m-%d')
+    try:
+        date = datetime.strptime(date_str, '%Y-%m-%d').date()
+    except ValueError:
+        return jsonify({'error': '日期格式错误'}), 400
+    if not user.baby_id:
+        return jsonify({'ok': True, 'growth': None})
+    g = GrowthRecord.query.filter_by(
+        user_id=user.id, baby_id=user.baby_id, record_date=date
+    ).first()
+    if not g:
+        return jsonify({'ok': True, 'growth': None})
+    return jsonify({'ok': True, 'growth': {
+        'id': g.id,
+        'height': g.height,
+        'weight': g.weight,
+        'date': str(g.record_date),
+    }})
+
+
+@api_bp.route('/api/growth', methods=['POST'])
+@login_required
+def api_save_growth(user):
+    data = request.get_json() or {}
+    if not user.baby_id:
+        return jsonify({'error': '请先由管理员绑定宝宝，才能记录'}), 403
+
+    date_str = (data.get('date') or '').strip() or datetime.now().strftime('%Y-%m-%d')
+    try:
+        date = datetime.strptime(date_str, '%Y-%m-%d').date()
+    except ValueError:
+        return jsonify({'error': '日期格式错误'}), 400
+
+    def _parse_num(v):
+        if v is None:
+            return None
+        if isinstance(v, str) and not v.strip():
+            return None
+        try:
+            val = float(v)
+        except (ValueError, TypeError):
+            return None
+        if val <= 0 or val > 999:
+            return None
+        return val
+
+    height = _parse_num(data.get('height'))
+    weight = _parse_num(data.get('weight'))
+    if height is None and weight is None:
+        return jsonify({'error': '请至少填写身高或体重'}), 400
+
+    g = GrowthRecord.query.filter_by(
+        user_id=user.id, baby_id=user.baby_id, record_date=date
+    ).first()
+    if g:
+        g.height = height
+        g.weight = weight
+    else:
+        g = GrowthRecord(user_id=user.id, baby_id=user.baby_id,
+                         record_date=date, height=height, weight=weight)
+        db.session.add(g)
+    db.session.commit()
+    return jsonify({'ok': True, 'growth': {
+        'id': g.id,
+        'height': g.height,
+        'weight': g.weight,
+        'date': str(g.record_date),
+    }})

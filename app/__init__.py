@@ -55,6 +55,23 @@ def migrate_schema(app):
                 ))
                 db.session.commit()
                 print('[迁移] records 表已添加 baby_id 列')
+        # growth_records 表（身高体重）
+        if 'growth_records' not in insp.get_table_names():
+            db.session.execute(text(
+                """
+                CREATE TABLE growth_records (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    baby_id INTEGER,
+                    height REAL,
+                    weight REAL,
+                    record_date DATE NOT NULL,
+                    created_at DATETIME
+                )
+                """
+            ))
+            db.session.commit()
+            print('[迁移] 已创建 growth_records 身高体重表')
 
 
 def create_app():

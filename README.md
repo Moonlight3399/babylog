@@ -112,7 +112,21 @@ python register.py admin 123456 --admin    # 创建管理员 admin
 
 **注意：** 不能添加未来时间的记录。
 
-### 2.5 数据导出
+### 2.5 身高体重记录
+
+在"今日统计"页面中，点击 **📐 身高体重** 卡片：
+
+1. 选择日期（默认今天，不能选择未来日期）
+2. 填写身高（cm）和/或体重（kg），可只填一项
+3. 点击"保存"
+
+**说明：**
+
+- 同一宝宝同一天的身高体重会自动**覆盖更新**（再次保存即修改当天数值）
+- 卡片上会显示当天记录的身高与体重，未记录显示 `--`
+- 与其它记录一样，未绑定宝宝的用户无法记录（提示"请先由管理员绑定宝宝"）
+
+### 2.6 数据导出
 
 在"用户"页面中，可以导出 CSV 数据：
 
@@ -122,7 +136,7 @@ python register.py admin 123456 --admin    # 创建管理员 admin
    - **汇总信息：** 按日汇总的喝奶次数、总奶量、吃辅食次数、睡眠次数、拉粑粑次数
 3. 点击"导出 CSV"按钮下载文件
 
-### 2.6 多宝宝与用户身份
+### 2.7 多宝宝与用户身份
 
 BabyLog 支持**多宝宝数据隔离**：每个用户由管理员绑定到一个宝宝，未绑定前无法记录任何数据；绑定后，用户的所有操作（记录、查询、统计、导出）都只作用于该宝宝，且只能看到自己的宝宝。
 
@@ -383,6 +397,18 @@ WantedBy=multi-user.target
 | name | String(50) | 宝宝名字 |
 | created_at | DateTime | 创建时间 |
 
+### growth_records（身高体重记录表）
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | Integer PK | 主键 |
+| user_id | FK → users.id | 所属用户 |
+| baby_id | FK → babies.id | 所属宝宝（可为空） |
+| height | Float | 身高（cm，可空） |
+| weight | Float | 体重（kg，可空） |
+| record_date | Date | 记录日期（每宝宝每天一条） |
+| created_at | DateTime | 创建时间 |
+
 ### custom_foods（用户常用辅食表）
 
 | 字段 | 类型 | 说明 |
@@ -497,6 +523,8 @@ babylog/
 | GET | `/api/records?date=YYYY-MM-DD` | 查询某日记录列表（仅本人绑定宝宝） | 是 |
 | GET | `/api/stats?date=YYYY-MM-DD` | 查询某日统计汇总（仅本人绑定宝宝） | 是 |
 | GET | `/api/export/csv?start=&end=&mode=` | 导出 CSV（detail 详细 / summary 汇总，仅本人绑定宝宝） | 是 |
+| GET | `/api/growth?date=YYYY-MM-DD` | 查询某日身高体重（仅本人绑定宝宝，无记录返回 null） | 是 |
+| POST | `/api/growth` | 保存/覆盖身高体重（body: {date?, height?, weight?}；未绑定宝宝返回 403） | 是 |
 
 **事件类型：** `formula`（喝奶粉）/ `solid`（吃辅食）/ `sleep_start`（开始睡）/ `sleep_end`（睡醒了）/ `poop`（拉粑粑）/ `pee`（小便了，旧数据兼容）
 
