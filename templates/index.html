@@ -138,6 +138,7 @@
                     </select>
                 </div>
                 <button class="btn btn-primary btn-full" id="saveProfileBtn">保存身份</button>
+                <button class="btn btn-outline btn-full" id="changePwdBtn" style="margin-top:8px;">🔒 修改密码</button>
             </div>
 
             <!-- 管理员：宝宝与用户管理 -->
@@ -281,6 +282,35 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" id="editTimeCancel">取消</button>
                 <button class="btn btn-primary" id="editTimeConfirm">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 修改密码弹窗 -->
+    <div class="modal-overlay" id="changePwdModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>修改密码</h3>
+                <button class="modal-close" id="changePwdClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="input-label" for="oldPassword">当前密码</label>
+                    <input type="password" id="oldPassword" class="input-md" placeholder="输入当前密码" autocomplete="current-password">
+                </div>
+                <div class="form-group">
+                    <label class="input-label" for="newPassword">新密码（至少 6 位）</label>
+                    <input type="password" id="newPassword" class="input-md" placeholder="输入新密码" autocomplete="new-password">
+                </div>
+                <div class="form-group">
+                    <label class="input-label" for="confirmPassword">确认新密码</label>
+                    <input type="password" id="confirmPassword" class="input-md" placeholder="再次输入新密码" autocomplete="new-password">
+                </div>
+                <div id="changePwdError" class="form-error" style="display:none;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="changePwdCancel">取消</button>
+                <button class="btn btn-primary" id="changePwdSave">确认修改</button>
             </div>
         </div>
     </div>
@@ -1578,6 +1608,64 @@
                 }
             } else {
                 errDiv.textContent = data.error || '保存失败';
+                errDiv.style.display = 'block';
+            }
+        })
+        .catch(() => {
+            errDiv.textContent = '网络错误';
+            errDiv.style.display = 'block';
+        });
+    });
+
+    // ========== 修改密码 ==========
+    const changePwdModal = document.getElementById('changePwdModal');
+
+    document.getElementById('changePwdBtn').addEventListener('click', () => {
+        document.getElementById('changePwdError').style.display = 'none';
+        document.getElementById('oldPassword').value = '';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmPassword').value = '';
+        changePwdModal.classList.add('show');
+    });
+
+    function closeChangePwdModal() {
+        changePwdModal.classList.remove('show');
+    }
+
+    document.getElementById('changePwdClose').addEventListener('click', closeChangePwdModal);
+    document.getElementById('changePwdCancel').addEventListener('click', closeChangePwdModal);
+    changePwdModal.addEventListener('click', (e) => {
+        if (e.target === changePwdModal) closeChangePwdModal();
+    });
+
+    document.getElementById('changePwdSave').addEventListener('click', () => {
+        const errDiv = document.getElementById('changePwdError');
+        errDiv.style.display = 'none';
+        const oldPw = document.getElementById('oldPassword').value;
+        const newPw = document.getElementById('newPassword').value;
+        const confirmPw = document.getElementById('confirmPassword').value;
+        if (!oldPw || !newPw) {
+            errDiv.textContent = '请填写当前密码和新密码';
+            errDiv.style.display = 'block';
+            return;
+        }
+        if (newPw !== confirmPw) {
+            errDiv.textContent = '两次输入的新密码不一致';
+            errDiv.style.display = 'block';
+            return;
+        }
+        fetch('/api/user/password', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ old_password: oldPw, new_password: newPw }),
+        })
+        .then(r => r.json())
+        .then(d => {
+            if (d.ok) {
+                closeChangePwdModal();
+                showToast('密码已修改');
+            } else {
+                errDiv.textContent = d.error || '修改失败';
                 errDiv.style.display = 'block';
             }
         })

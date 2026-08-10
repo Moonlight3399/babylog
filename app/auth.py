@@ -269,6 +269,24 @@ def api_user_profile(user):
     })
 
 
+@auth_bp.route('/api/user/password', methods=['PUT'])
+@login_required
+def api_change_password(user):
+    """用户修改自己的密码（需验证旧密码）"""
+    data = request.get_json() or {}
+    old_pw = data.get('old_password', '')
+    new_pw = data.get('new_password', '')
+    if not old_pw or not new_pw:
+        return jsonify({'error': '请填写当前密码和新密码'}), 400
+    if len(new_pw) < 6:
+        return jsonify({'error': '新密码长度至少 6 位'}), 400
+    if not verify_password(user.password_hash, old_pw):
+        return jsonify({'error': '当前密码错误'}), 400
+    user.password_hash = hash_password(new_pw)
+    db.session.commit()
+    return jsonify({'ok': True})
+
+
 # ------------------------------------------------------------
 # 管理员：宝宝管理
 # ------------------------------------------------------------

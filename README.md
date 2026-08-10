@@ -157,6 +157,8 @@ BabyLog 支持**多宝宝数据隔离**：每个用户由管理员绑定到一�
 
 **用户管理（管理员）：** 查看所有用户、为用户绑定宝宝/设置身份、删除用户
 
+**修改密码：** 每个用户在"用户 → 我的身份 → 修改密码"中修改自己的密码（需验证当前密码，新密码至少 6 位）。
+
 ---
 
 ## 三、每日邮件功能（可选）
@@ -506,6 +508,7 @@ babylog/
 | POST | `/api/register` | 管理员手动添加用户（body: {username, password}；未登录 401、普通用户 403） | 管理员 |
 | GET | `/api/user` | 当前用户信息（含角色 role、身份 identity、绑定宝宝 baby） | 是 |
 | PUT | `/api/user/profile` | 用户设置自己的身份（宝宝由管理员绑定，用户不可更改） | 是 |
+| PUT | `/api/user/password` | 用户修改自己的密码（body: {old_password, new_password}，新密码≥6位） | 是 |
 | GET | `/api/babies` | 查看我绑定的宝宝（未绑定返回空） | 是 |
 | GET | `/api/foods` | 查看我的常用辅食 | 是 |
 | POST | `/api/foods` | 保存常用辅食（body: {name}） | 是 |
