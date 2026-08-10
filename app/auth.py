@@ -10,9 +10,12 @@ from flask import (Blueprint, current_app, jsonify, redirect,
                    render_template, request, url_for)
 
 from . import db
-from .models import Record, User
+from .models import Baby, Record, User
 
 auth_bp = Blueprint('auth', __name__)
+
+# 用户可设置的家庭身份
+IDENTITIES = ('爸爸', '妈妈', '爷爷', '奶奶', '外公', '外婆')
 
 
 # ------------------------------------------------------------
@@ -132,9 +135,12 @@ def api_logout():
 @auth_bp.route('/api/user')
 @login_required
 def api_user(user):
+    baby = Baby.query.get(user.baby_id) if user.baby_id else None
     return jsonify({
         'username': user.username,
         'role': user.role,
+        'identity': user.identity,
+        'baby': {'id': baby.id, 'name': baby.name} if baby else None,
         'created_at': user.created_at.isoformat(),
     })
 
@@ -184,6 +190,8 @@ def api_admin_users(admin):
                 'id': u.id,
                 'username': u.username,
                 'role': u.role,
+                'identity': u.identity,
+                'baby_id': u.baby_id,
                 'created_at': u.created_at.isoformat() if u.created_at else None,
             }
             for u in users
@@ -201,5 +209,112 @@ def api_admin_delete_user(admin, user_id):
         return jsonify({'error': '不能删除当前登录的管理员账号'}), 400
     Record.query.filter_by(user_id=target.id).delete()
     db.session.delete(target)
+    db.session.commit()
+    return jsonify({'ok': True})
+
+
+@auth_bp.route('/api/admin/users/<int:user_id>', methods=['PUT'])
+@admin_required
+def api_admin_update_user(admin, user_id):
+    """管理员为用户设置身份和关联宝宝"""
+    target = User.query.get(user_id)
+    if not target:
+        return jsonify({'error': '用户不存在'}), 404
+    data = request.get_json() or {}
+    identity = (data.get('identity') or '').strip()
+    baby_id = data.get('baby_id')
+    if identity and identity not in IDENTITIES:
+        return jsonify({'error': '无效的身份，可选：爸爸/妈妈/爷爷/奶奶/外公/外婆'}), 400
+    if baby_id:
+        baby = Baby.query.get(int(baby_id))
+        if not baby:
+            return jsonify({'error': '宝宝不存在'}), 404
+        target.baby_id = baby.id
+    else:
+        target.baby_id = None
+    target.identity = identity or None
+    db.session.commit()
+    baby = Baby.query.get(target.baby_id) if target.baby_id else None
+    return jsonify({
+        'ok': True,
+        'identity': target.identity,
+        'baby': {'id': baby.id, 'name': baby.name} if baby else None,
+    })
+
+
+# ------------------------------------------------------------
+# 用户：查看宝宝列表 / 设置自己的身份
+# ------------------------------------------------------------
+@auth_bp.route('/api/babies')
+@login_required
+def api_babies(user):
+    babies = Baby.query.order_by(Baby.id.asc()).all()
+    return jsonify({
+        'babies': [{'id': b.id, 'name': b.name} for b in babies]
+    })
+
+
+@auth_bp.route('/api/user/profile', methods=['PUT'])
+@login_required
+def api_user_profile(user):
+    """用户设置自己的身份和关联宝宝"""
+    data = request.get_json() or {}
+    identity = (data.get('identity') or '').strip()
+    baby_id = data.get('baby_id')
+    if identity and identity not in IDENTITIES:
+        return jsonify({'error': '无效的身份，可选：爸爸/妈妈/爷爷/奶奶/外公/外婆'}), 400
+    if baby_id:
+        baby = Baby.query.get(int(baby_id))
+        if not baby:
+            return jsonify({'error': '宝宝不存在'}), 404
+        user.baby_id = baby.id
+    else:
+        user.baby_id = None
+    user.identity = identity or None
+    db.session.commit()
+    baby = Baby.query.get(user.baby_id) if user.baby_id else None
+    return jsonify({
+        'ok': True,
+        'identity': user.identity,
+        'baby': {'id': baby.id, 'name': baby.name} if baby else None,
+    })
+
+
+# ------------------------------------------------------------
+# 管理员：宝宝管理
+# ------------------------------------------------------------
+@auth_bp.route('/api/admin/babies')
+@admin_required
+def api_admin_babies(admin):
+    babies = Baby.query.order_by(Baby.id.asc()).all()
+    return jsonify({
+        'babies': [{'id': b.id, 'name': b.name} for b in babies]
+    })
+
+
+@auth_bp.route('/api/admin/babies', methods=['POST'])
+@admin_required
+def api_admin_add_baby(admin):
+    data = request.get_json() or {}
+    name = (data.get('name') or '').strip()
+    if not name:
+        return jsonify({'error': '宝宝名字不能为空'}), 400
+    if len(name) > 20:
+        return jsonify({'error': '宝宝名字过长'}), 400
+    baby = Baby(name=name)
+    db.session.add(baby)
+    db.session.commit()
+    return jsonify({'ok': True, 'baby': {'id': baby.id, 'name': baby.name}}), 201
+
+
+@auth_bp.route('/api/admin/babies/<int:baby_id>', methods=['DELETE'])
+@admin_required
+def api_admin_delete_baby(admin, baby_id):
+    baby = Baby.query.get(baby_id)
+    if not baby:
+        return jsonify({'error': '宝宝不存在'}), 404
+    # 解除与该宝宝关联的用户
+    User.query.filter_by(baby_id=baby_id).update({'baby_id': None})
+    db.session.delete(baby)
     db.session.commit()
     return jsonify({'ok': True})

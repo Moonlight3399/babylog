@@ -3,14 +3,14 @@
 # ============================================================
 import os
 
-# 服务监听端口：默认 5000，可用环境变量 PORT 覆盖（如 PORT=5001）
-PORT = int(os.environ.get('PORT', '5000'))
+# 服务监听端口：默认 5001（避开旧版本默认 5000），可用环境变量 PORT 覆盖
+PORT = int(os.environ.get('PORT', '5001'))
 
-# SQLite 数据库文件名或路径：默认 babylog.db（位于 instance/ 目录）
-# 可通过环境变量 BABYLOG_DB 覆盖，实现新旧版本数据隔离
-#   相对路径: BABYLOG_DB=babylog_v2.db   -> instance/babylog_v2.db
+# SQLite 数据库文件名或路径：默认 babylog_new.db（位于 instance/ 目录，避开旧版本 babylog.db）
+# 可通过环境变量 BABYLOG_DB 覆盖，实现多实例数据隔离
+#   相对路径: BABYLOG_DB=babylog_v3.db   -> instance/babylog_v3.db
 #   绝对路径: BABYLOG_DB=/data/babylog.db
-BABYLOG_DB = os.environ.get('BABYLOG_DB', 'babylog.db')
+BABYLOG_DB = os.environ.get('BABYLOG_DB', 'babylog_new.db')
 DATABASE_URL = f'sqlite:///{BABYLOG_DB}'
 
 # ============================================================

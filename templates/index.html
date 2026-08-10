@@ -14,7 +14,7 @@
     <link rel="apple-touch-icon" href="/static/icons/192x192.png">
     <link rel="icon" type="image/png" href="/static/icons/192x192.png">
 
-    <link rel="stylesheet" href="/static/style.css?v=3">
+    <link rel="stylesheet" href="/static/style.css?v=4">
 </head>
 <body class="app-body">
     <!-- 内容区 -->
@@ -31,6 +31,10 @@
                     <span class="action-icon">🍼</span>
                     <span class="action-label">喝奶粉</span>
                 </button>
+                <button class="action-btn solid-btn" data-event="solid">
+                    <span class="action-icon">🥣</span>
+                    <span class="action-label">吃辅食</span>
+                </button>
                 <button class="action-btn sleep-btn" data-event="sleep_start">
                     <span class="action-icon">😴</span>
                     <span class="action-label">开始睡</span>
@@ -41,11 +45,7 @@
                 </button>
                 <button class="action-btn poop-btn" data-event="poop">
                     <span class="action-icon">💩</span>
-                    <span class="action-label">大便了</span>
-                </button>
-                <button class="action-btn pee-btn" data-event="pee">
-                    <span class="action-icon">💧</span>
-                    <span class="action-label">小便了</span>
+                    <span class="action-label">拉粑粑</span>
                 </button>
             </div>
             <div id="actionToast" class="toast"></div>
@@ -74,14 +74,14 @@
                     <div class="stat-label">睡眠时长</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">💩</div>
-                    <div class="stat-value" id="stat-poop">0</div>
-                    <div class="stat-label">大便</div>
+                    <div class="stat-icon">🥣</div>
+                    <div class="stat-value" id="stat-solid">0</div>
+                    <div class="stat-label">吃辅食</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">💧</div>
-                    <div class="stat-value" id="stat-pee">0</div>
-                    <div class="stat-label">小便</div>
+                    <div class="stat-icon">💩</div>
+                    <div class="stat-value" id="stat-poop">0</div>
+                    <div class="stat-label">拉粑粑</div>
                 </div>
                 <div class="stat-card add-card" id="addRecordCard">
                     <div class="stat-icon">＋</div>
@@ -109,12 +109,43 @@
                 </div>
                 <div class="user-name" id="userName">---</div>
                 <div class="user-role" id="userRole">普通用户</div>
+                <div class="user-identity" id="userIdentity"></div>
                 <button class="btn btn-outline btn-full" id="logoutBtn">退出登录</button>
             </div>
 
-            <!-- 管理员：用户管理 -->
+            <!-- 我的身份 -->
+            <div class="export-card profile-card">
+                <h3 class="export-title">👤 我的身份</h3>
+                <div class="form-group">
+                    <label class="input-label" for="profileBaby">关联宝宝</label>
+                    <select id="profileBaby" class="input-md">
+                        <option value="">（暂无宝宝，请联系管理员添加）</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="input-label" for="profileIdentity">我的身份</label>
+                    <select id="profileIdentity" class="input-md">
+                        <option value="">（未设置）</option>
+                        <option value="爸爸">爸爸</option>
+                        <option value="妈妈">妈妈</option>
+                        <option value="爷爷">爷爷</option>
+                        <option value="奶奶">奶奶</option>
+                        <option value="外公">外公</option>
+                        <option value="外婆">外婆</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary btn-full" id="saveProfileBtn">保存身份</button>
+            </div>
+
+            <!-- 管理员：宝宝与用户管理 -->
             <div class="export-card admin-panel" id="adminPanel" style="display:none;">
-                <h3 class="export-title">👥 用户管理</h3>
+                <h3 class="export-title">👶 宝宝管理</h3>
+                <div class="admin-baby-add">
+                    <input type="text" id="adminBabyName" class="input-md" placeholder="输入宝宝名字">
+                    <button class="btn btn-primary admin-baby-add-btn" id="adminAddBabyBtn">添加</button>
+                </div>
+                <div id="adminBabyList"></div>
+                <h3 class="export-title admin-user-title">👥 用户管理</h3>
                 <div id="adminUserList"></div>
             </div>
 
@@ -165,14 +196,14 @@
                     <div class="stat-label">睡眠时长</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">💩</div>
-                    <div class="stat-value" id="hist-poop">0</div>
-                    <div class="stat-label">大便</div>
+                    <div class="stat-icon">🥣</div>
+                    <div class="stat-value" id="hist-solid">0</div>
+                    <div class="stat-label">吃辅食</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">💧</div>
-                    <div class="stat-value" id="hist-pee">0</div>
-                    <div class="stat-label">小便</div>
+                    <div class="stat-icon">💩</div>
+                    <div class="stat-value" id="hist-poop">0</div>
+                    <div class="stat-label">拉粑粑</div>
                 </div>
                 <div class="stat-card add-card" id="histAddCard">
                     <div class="stat-icon">＋</div>
@@ -255,14 +286,18 @@
                 <label class="input-label">事件类型</label>
                 <div class="type-picker" id="typePicker">
                     <button class="type-option" data-type="formula">🍼 喝奶粉</button>
+                    <button class="type-option" data-type="solid">🥣 吃辅食</button>
                     <button class="type-option" data-type="sleep_start">😴 开始睡</button>
                     <button class="type-option" data-type="sleep_end">🌞 睡醒了</button>
-                    <button class="type-option" data-type="poop">💩 大便了</button>
-                    <button class="type-option" data-type="pee">💧 小便了</button>
+                    <button class="type-option" data-type="poop">💩 拉粑粑</button>
                 </div>
                 <div id="addRecordFormula" class="add-formula-group hidden">
                     <label class="input-label" for="addFormulaAmount">奶粉量 (ml)</label>
                     <input type="number" id="addFormulaAmount" class="input-lg input-sm" placeholder="输入毫升数" inputmode="numeric" min="1" autocomplete="off">
+                </div>
+                <div id="addRecordSolid" class="confirm-solid hidden">
+                    <label class="input-label" for="addSolidInput">辅食名称（多个用逗号分隔）</label>
+                    <input type="text" id="addSolidInput" class="input-md" placeholder="如：大米、南瓜、鸡肉" maxlength="50">
                 </div>
                 <div class="add-datetime">
                     <div class="datetime-field">
@@ -279,6 +314,140 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" id="addRecordCancel">取消</button>
                 <button class="btn btn-primary" id="addRecordConfirm">确认添加</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 事件确认弹窗（左侧行为 / 右侧时间 / 确认取消） -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="confirmTitle">确认记录</h3>
+                <button class="modal-close" id="confirmClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="confirm-row">
+                    <div class="confirm-action">
+                        <span class="confirm-icon" id="confirmIcon">🍼</span>
+                        <span class="confirm-label" id="confirmLabel">喝奶粉</span>
+                    </div>
+                    <div class="confirm-time">
+                        <label class="input-label" for="confirmTime">时间</label>
+                        <input type="time" id="confirmTime" class="input-md">
+                    </div>
+                </div>
+                <div id="confirmFormula" class="confirm-formula hidden">
+                    <label class="input-label" for="confirmFormulaAmount">奶粉量 (ml)</label>
+                    <input type="number" id="confirmFormulaAmount" class="input-lg input-sm" placeholder="输入毫升数" inputmode="numeric" min="1" autocomplete="off">
+                    <label class="input-label" style="margin-top:14px;">快捷选择</label>
+                    <div class="amount-quick" id="amountQuick">
+                        <button type="button" class="amount-option" data-amount="30">30</button>
+                        <button type="button" class="amount-option" data-amount="60">60</button>
+                        <button type="button" class="amount-option" data-amount="90">90</button>
+                        <button type="button" class="amount-option" data-amount="120">120</button>
+                        <button type="button" class="amount-option" data-amount="150">150</button>
+                        <button type="button" class="amount-option" data-amount="180">180</button>
+                        <button type="button" class="amount-option" data-amount="210">210</button>
+                    </div>
+                </div>
+                <div id="confirmSolid" class="confirm-solid hidden">
+                    <label class="input-label">辅食（可多选）</label>
+                    <div class="solid-selected" id="solidSelected"></div>
+                    <div class="solid-categories">
+                        <div class="solid-cat">
+                            <div class="solid-cat-title">主食</div>
+                            <div class="solid-cat-options">
+                                <button type="button" class="solid-opt" data-food="大米">大米</button>
+                                <button type="button" class="solid-opt" data-food="小米">小米</button>
+                            </div>
+                        </div>
+                        <div class="solid-cat">
+                            <div class="solid-cat-title">蛋白质</div>
+                            <div class="solid-cat-options">
+                                <button type="button" class="solid-opt" data-food="猪肉">猪肉</button>
+                                <button type="button" class="solid-opt" data-food="牛肉">牛肉</button>
+                                <button type="button" class="solid-opt" data-food="鸡肉">鸡肉</button>
+                                <button type="button" class="solid-opt" data-food="鱼">鱼</button>
+                                <button type="button" class="solid-opt" data-food="虾">虾</button>
+                            </div>
+                        </div>
+                        <div class="solid-cat">
+                            <div class="solid-cat-title">蔬菜</div>
+                            <div class="solid-cat-options">
+                                <button type="button" class="solid-opt" data-food="南瓜">南瓜</button>
+                                <button type="button" class="solid-opt" data-food="山药">山药</button>
+                                <button type="button" class="solid-opt" data-food="土豆">土豆</button>
+                                <button type="button" class="solid-opt" data-food="绿叶菜">绿叶菜</button>
+                            </div>
+                        </div>
+                        <div class="solid-cat">
+                            <div class="solid-cat-title">其他</div>
+                            <div class="solid-cat-options">
+                                <button type="button" class="solid-opt" data-food="酸奶">酸奶</button>
+                                <button type="button" class="solid-opt" data-food="苹果">苹果</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="solid-common">
+                        <div class="solid-cat-title">常用选项</div>
+                        <div class="solid-common-list" id="solidCommonList"></div>
+                    </div>
+                    <div class="solid-input-row">
+                        <input type="text" id="solidInput" class="input-md" placeholder="输入辅食名称" maxlength="20">
+                        <button type="button" class="btn btn-secondary solid-save-btn" id="solidSaveBtn">保存为常用</button>
+                    </div>
+                </div>
+                <div id="confirmError" class="form-error" style="display:none;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="confirmCancel">取消</button>
+                <button class="btn btn-primary" id="confirmSubmit">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通用确认弹窗（美化，替代原生 confirm） -->
+    <div class="modal-overlay" id="globalConfirmModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="globalConfirmTitle">确认</h3>
+                <button class="modal-close" id="globalConfirmClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="globalConfirmText" class="confirm-text"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="globalConfirmCancel">取消</button>
+                <button class="btn btn-primary" id="globalConfirmOk">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 管理员设置用户身份弹窗 -->
+    <div class="modal-overlay" id="adminSetProfileModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="adminSetProfileTitle">设置用户身份</h3>
+                <button class="modal-close" id="adminSetProfileClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <label class="input-label" for="adminSetBaby">关联宝宝</label>
+                <select id="adminSetBaby" class="input-md"></select>
+                <label class="input-label" for="adminSetIdentity" style="margin-top:12px;">身份</label>
+                <select id="adminSetIdentity" class="input-md">
+                    <option value="">（未设置）</option>
+                    <option value="爸爸">爸爸</option>
+                    <option value="妈妈">妈妈</option>
+                    <option value="爷爷">爷爷</option>
+                    <option value="奶奶">奶奶</option>
+                    <option value="外公">外公</option>
+                    <option value="外婆">外婆</option>
+                </select>
+                <div id="adminSetProfileError" class="form-error" style="display:none;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="adminSetProfileCancel">取消</button>
+                <button class="btn btn-primary" id="adminSetProfileConfirm">保存</button>
             </div>
         </div>
     </div>
@@ -358,16 +527,256 @@
         }, 8000);
     }
 
-    // ========== 快捷记录按钮 ==========
+    // ========== 通用确认弹窗（美化，替代原生 confirm） ==========
+    const globalConfirmModal = document.getElementById('globalConfirmModal');
+    let globalConfirmCallback = null;
+
+    function showConfirm(message, okCallback, title) {
+        document.getElementById('globalConfirmText').textContent = message;
+        document.getElementById('globalConfirmTitle').textContent = title || '确认';
+        globalConfirmCallback = okCallback;
+        globalConfirmModal.classList.add('show');
+    }
+
+    function hideGlobalConfirm() {
+        globalConfirmModal.classList.remove('show');
+        globalConfirmCallback = null;
+    }
+
+    document.getElementById('globalConfirmClose').addEventListener('click', hideGlobalConfirm);
+    document.getElementById('globalConfirmCancel').addEventListener('click', hideGlobalConfirm);
+    globalConfirmModal.addEventListener('click', (e) => {
+        if (e.target === globalConfirmModal) hideGlobalConfirm();
+    });
+    document.getElementById('globalConfirmOk').addEventListener('click', () => {
+        const cb = globalConfirmCallback;
+        hideGlobalConfirm();
+        if (cb) cb();
+    });
+
+    // ========== 快捷记录按钮（弹出确认弹窗） ==========
+    const EVENT_INFO = {
+        formula: { label: '喝奶粉', icon: '🍼', needAmount: true },
+        solid: { label: '吃辅食', icon: '🥣', needAmount: false, needFood: true },
+        sleep_start: { label: '开始睡', icon: '😴', needAmount: false },
+        sleep_end: { label: '睡醒了', icon: '🌞', needAmount: false },
+        poop: { label: '拉粑粑', icon: '💩', needAmount: false },
+    };
+
     document.querySelectorAll('.action-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            const event = btn.dataset.event;
-            if (event === 'formula') {
-                openFormulaModal();
-            } else {
-                submitRecord(event, null);
-            }
+            openConfirmModal(btn.dataset.event);
         });
+    });
+
+    // ========== 事件确认弹窗 ==========
+    const confirmModal = document.getElementById('confirmModal');
+    let confirmEventType = null;
+
+    function openConfirmModal(eventType) {
+        const info = EVENT_INFO[eventType];
+        if (!info) return;
+        confirmEventType = eventType;
+        document.getElementById('confirmIcon').textContent = info.icon;
+        document.getElementById('confirmLabel').textContent = info.label;
+        document.getElementById('confirmTitle').textContent = '记录：' + info.label;
+        // 默认当前时间
+        const now = new Date();
+        document.getElementById('confirmTime').value =
+            String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+        // 是否需要输入奶粉量
+        const fg = document.getElementById('confirmFormula');
+        if (info.needAmount) {
+            fg.classList.remove('hidden');
+            document.getElementById('confirmFormulaAmount').value = '';
+            document.querySelectorAll('.amount-option').forEach(b => b.classList.remove('active'));
+        } else {
+            fg.classList.add('hidden');
+        }
+        // 是否需要选择辅食
+        const fs = document.getElementById('confirmSolid');
+        if (info.needFood) {
+            fs.classList.remove('hidden');
+            selectedFoods = [];
+            renderSolidSelected();
+            renderSolidCommon();
+            document.getElementById('solidInput').value = '';
+            document.querySelectorAll('.solid-opt').forEach(b => b.classList.remove('active'));
+        } else {
+            fs.classList.add('hidden');
+        }
+        document.getElementById('confirmError').style.display = 'none';
+        confirmModal.classList.add('show');
+        setTimeout(() => {
+            let el;
+            if (info.needFood) el = document.getElementById('solidInput');
+            else if (info.needAmount) el = document.getElementById('confirmFormulaAmount');
+            else el = document.getElementById('confirmTime');
+            el.focus();
+        }, 100);
+    }
+
+    function closeConfirmModal() {
+        confirmModal.classList.remove('show');
+        confirmEventType = null;
+    }
+
+    document.getElementById('confirmClose').addEventListener('click', closeConfirmModal);
+    document.getElementById('confirmCancel').addEventListener('click', closeConfirmModal);
+    confirmModal.addEventListener('click', (e) => {
+        if (e.target === confirmModal) closeConfirmModal();
+    });
+
+    // 奶粉量快捷选项：点击即填入输入框并高亮
+    document.querySelectorAll('.amount-option').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.getElementById('confirmFormulaAmount').value = btn.dataset.amount;
+            document.querySelectorAll('.amount-option').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+
+    // ========== 辅食选择（分类多选 + 常用 + 手动保存） ==========
+    let selectedFoods = [];
+
+    function toggleFood(name) {
+        const idx = selectedFoods.indexOf(name);
+        if (idx >= 0) {
+            selectedFoods.splice(idx, 1);
+        } else {
+            if (selectedFoods.length >= 10) { showToast('最多选择 10 种辅食', true); return; }
+            selectedFoods.push(name);
+        }
+        document.querySelectorAll('.solid-opt').forEach(b => {
+            b.classList.toggle('active', selectedFoods.includes(b.dataset.food));
+        });
+        renderSolidSelected();
+    }
+
+    function renderSolidSelected() {
+        const el = document.getElementById('solidSelected');
+        if (selectedFoods.length === 0) {
+            el.innerHTML = '<div class="empty-msg">未选择辅食</div>';
+            return;
+        }
+        el.innerHTML = selectedFoods.map(f =>
+            '<span class="solid-tag">' + f + '<button type="button" class="solid-tag-x" data-food="' + f + '">&times;</button></span>'
+        ).join('');
+        el.querySelectorAll('.solid-tag-x').forEach(btn => {
+            btn.addEventListener('click', () => toggleFood(btn.dataset.food));
+        });
+    }
+
+    // 分类快捷选项（多选）
+    document.querySelectorAll('.solid-opt').forEach(btn => {
+        btn.addEventListener('click', () => toggleFood(btn.dataset.food));
+    });
+
+    // 加载/渲染常用选项
+    function renderSolidCommon() {
+        fetch('/api/foods')
+            .then(r => r.json())
+            .then(data => {
+                const el = document.getElementById('solidCommonList');
+                if (data.foods.length === 0) {
+                    el.innerHTML = '<div class="empty-msg">暂无常用，可手动输入保存</div>';
+                    return;
+                }
+                el.innerHTML = data.foods.map(f =>
+                    '<span class="solid-tag solid-common-tag" data-food="' + f.name + '">' + f.name +
+                    '<button type="button" class="solid-tag-x" data-id="' + f.id + '" data-name="' + f.name + '">&times;</button></span>'
+                ).join('');
+                el.querySelectorAll('.solid-common-tag').forEach(tag => {
+                    tag.addEventListener('click', (e) => {
+                        if (e.target.classList.contains('solid-tag-x')) return;
+                        toggleFood(tag.dataset.food);
+                    });
+                });
+                el.querySelectorAll('.solid-tag-x').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        showConfirm('删除常用选项「' + btn.dataset.name + '」？', () => {
+                            fetch('/api/foods/' + btn.dataset.id, { method: 'DELETE' })
+                                .then(r => r.json())
+                                .then(d => {
+                                    if (d.ok) { showToast('已删除'); renderSolidCommon(); }
+                                    else { showToast(d.error || '删除失败', true); }
+                                });
+                        });
+                    });
+                });
+            });
+    }
+
+    // 手动输入保存为常用
+    document.getElementById('solidSaveBtn').addEventListener('click', () => {
+        const name = document.getElementById('solidInput').value.trim();
+        if (!name) { showToast('请输入辅食名称', true); return; }
+        fetch('/api/foods', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name })
+        })
+        .then(r => r.json())
+        .then(d => {
+            if (d.ok) {
+                showToast('已保存为常用');
+                document.getElementById('solidInput').value = '';
+                renderSolidCommon();
+            } else { showToast(d.error || '保存失败', true); }
+        });
+    });
+
+    document.getElementById('confirmSubmit').addEventListener('click', () => {
+        const info = EVENT_INFO[confirmEventType];
+        if (!info) return;
+        const errEl = document.getElementById('confirmError');
+        errEl.style.display = 'none';
+        const time = document.getElementById('confirmTime').value;
+        if (!time) { errEl.textContent = '请选择时间'; errEl.style.display = 'block'; return; }
+        let amount = null;
+        if (info.needAmount) {
+            amount = document.getElementById('confirmFormulaAmount').value;
+            if (!amount) { errEl.textContent = '请填写奶粉量'; errEl.style.display = 'block'; return; }
+            amount = parseInt(amount, 10);
+            if (!(amount > 0)) { errEl.textContent = '奶粉量必须大于0'; errEl.style.display = 'block'; return; }
+        }
+        let foods = null;
+        if (info.needFood) {
+            foods = selectedFoods.slice();
+        }
+        const body = {
+            event_type: confirmEventType,
+            event_date: getTodayStr(),
+            event_time: time,
+        };
+        if (amount !== null) body.formula_amount = amount;
+        if (foods !== null) body.foods = foods;
+        fetch('/api/record', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.ok) {
+                closeConfirmModal();
+                showToast(info.icon + ' ' + info.label + ' 已记录', false, () => {
+                    fetch('/api/record/undo', { method: 'POST' })
+                        .then(r => r.json())
+                        .then(d => {
+                            if (d.ok) { showToast('已撤回'); refreshCurrentContext(); }
+                            else { showToast(d.error || '撤回失败', true); }
+                        })
+                        .catch(() => showToast('网络错误', true));
+                });
+                refreshCurrentContext();
+            } else {
+                errEl.textContent = data.error || '记录失败';
+                errEl.style.display = 'block';
+            }
+        })
+        .catch(() => { errEl.textContent = '网络错误'; errEl.style.display = 'block'; });
     });
 
     function submitRecord(eventType, formulaAmount) {
@@ -541,8 +950,8 @@
                 const m = mins % 60;
                 document.getElementById(prefix + 'sleep-duration').textContent =
                     h > 0 ? h + 'h ' + m + 'm' : m + 'm';
+                document.getElementById(prefix + 'solid').textContent = data.count_solid;
                 document.getElementById(prefix + 'poop').textContent = data.count_poop;
-                document.getElementById(prefix + 'pee').textContent = data.count_pee;
             });
 
         loadRecordsFor(date, recordsContainerId);
@@ -561,6 +970,9 @@
                         let detail = '';
                         if (r.event_type === 'formula' && r.formula_amount) {
                             detail = ' <span class="record-detail">' + r.formula_amount + 'ml</span>';
+                        }
+                        if (r.event_type === 'solid' && r.foods && r.foods.length) {
+                            detail = ' <span class="record-detail">' + r.foods.join('、') + '</span>';
                         }
                         return '<div class="record-item">' +
                             '<span class="record-icon">' + getEventIcon(r.event_type) + '</span>' +
@@ -586,18 +998,19 @@
     }
 
     function deleteRecord(id) {
-        if (!confirm('确定删除这条记录？')) return;
-        fetch('/api/record/' + id, { method: 'DELETE' })
-            .then(r => r.json())
-            .then(data => {
-                if (data.ok) {
-                    showToast('记录已删除');
-                    refreshCurrentContext();
-                } else {
-                    showToast(data.error || '删除失败', true);
-                }
-            })
-            .catch(() => showToast('网络错误', true));
+        showConfirm('确定删除这条记录？', () => {
+            fetch('/api/record/' + id, { method: 'DELETE' })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.ok) {
+                        showToast('记录已删除');
+                        refreshCurrentContext();
+                    } else {
+                        showToast(data.error || '删除失败', true);
+                    }
+                })
+                .catch(() => showToast('网络错误', true));
+        });
     }
 
     function refreshCurrentContext() {
@@ -606,7 +1019,7 @@
     }
 
     function getEventIcon(type) {
-        const m = { formula: '🍼', sleep_start: '😴', sleep_end: '🌞', poop: '💩', pee: '💧' };
+        const m = { formula: '🍼', solid: '🥣', sleep_start: '😴', sleep_end: '🌞', poop: '💩', pee: '💧' };
         return m[type] || '📌';
     }
 
@@ -619,14 +1032,110 @@
                 const roleEl = document.getElementById('userRole');
                 roleEl.textContent = data.role === 'admin' ? '管理员' : '普通用户';
                 roleEl.className = 'user-role ' + (data.role === 'admin' ? 'role-admin' : 'role-user');
+                // 身份显示：xx的爸爸
+                const identityEl = document.getElementById('userIdentity');
+                if (data.baby && data.identity) {
+                    identityEl.textContent = data.baby.name + '的' + data.identity;
+                    identityEl.className = 'user-identity';
+                } else if (data.baby) {
+                    identityEl.textContent = data.baby.name + '的家人';
+                    identityEl.className = 'user-identity';
+                } else {
+                    identityEl.textContent = '';
+                }
+                // 身份设置回填
+                document.getElementById('profileBaby').value = data.baby ? String(data.baby.id) : '';
+                document.getElementById('profileIdentity').value = data.identity || '';
+                loadProfileBabies();
                 if (data.role === 'admin') {
                     document.getElementById('adminPanel').style.display = 'block';
+                    loadAdminBabies();
                     loadAdminUsers();
                 } else {
                     document.getElementById('adminPanel').style.display = 'none';
                 }
             });
     }
+
+    // 加载宝宝列表到身份选择
+    function loadProfileBabies() {
+        fetch('/api/babies')
+            .then(r => r.json())
+            .then(data => {
+                const sel = document.getElementById('profileBaby');
+                const current = sel.value;
+                sel.innerHTML = data.babies.length
+                    ? '<option value="">（请选择宝宝）</option>' + data.babies.map(b => `<option value="${b.id}">${b.name}</option>`).join('')
+                    : '<option value="">（暂无宝宝，请联系管理员添加）</option>';
+                if (current) sel.value = current;
+            });
+    }
+
+    // 保存我的身份
+    document.getElementById('saveProfileBtn').addEventListener('click', () => {
+        const identity = document.getElementById('profileIdentity').value;
+        const babyId = document.getElementById('profileBaby').value;
+        fetch('/api/user/profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ identity: identity, baby_id: babyId ? Number(babyId) : null })
+        })
+        .then(r => r.json())
+        .then(d => {
+            if (d.ok) { showToast('身份已保存'); loadUser(); }
+            else { showToast(d.error || '保存失败', true); }
+        });
+    });
+
+    // ========== 管理员：宝宝管理 ==========
+    function loadAdminBabies() {
+        fetch('/api/admin/babies')
+            .then(r => r.json())
+            .then(data => {
+                const list = document.getElementById('adminBabyList');
+                list.innerHTML = data.babies.length ? '' : '<div class="empty-msg">暂无宝宝，请先添加</div>';
+                data.babies.forEach(b => {
+                    const row = document.createElement('div');
+                    row.className = 'admin-baby-row';
+                    row.innerHTML = `
+                        <span class="admin-baby-name">👶 ${b.name}</span>
+                        <button class="admin-baby-del" data-id="${b.id}" data-name="${b.name}">删除</button>
+                    `;
+                    list.appendChild(row);
+                });
+                list.querySelectorAll('.admin-baby-del').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        showConfirm(`确定删除宝宝「${btn.dataset.name}」？`, () => {
+                            fetch('/api/admin/babies/' + btn.dataset.id, { method: 'DELETE' })
+                                .then(r => r.json())
+                                .then(d => {
+                                    if (d.ok) { showToast('已删除宝宝'); loadAdminBabies(); loadAdminUsers(); loadProfileBabies(); }
+                                    else { showToast(d.error || '删除失败', true); }
+                                });
+                        });
+                    });
+                });
+            });
+    }
+
+    document.getElementById('adminAddBabyBtn').addEventListener('click', () => {
+        const name = document.getElementById('adminBabyName').value.trim();
+        if (!name) { showToast('请输入宝宝名字', true); return; }
+        fetch('/api/admin/babies', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name })
+        })
+        .then(r => r.json())
+        .then(d => {
+            if (d.ok) {
+                showToast('宝宝已添加');
+                document.getElementById('adminBabyName').value = '';
+                loadAdminBabies();
+                loadProfileBabies();
+            } else { showToast(d.error || '添加失败', true); }
+        });
+    });
 
     // ========== 管理员：用户管理 ==========
     function loadAdminUsers() {
@@ -644,27 +1153,82 @@
                         <div class="admin-user-info">
                             <span class="admin-user-name">${u.username}</span>
                             <span class="admin-user-role ${u.role === 'admin' ? 'role-admin' : 'role-user'}">${u.role === 'admin' ? '管理员' : '普通用户'}</span>
+                            <span class="admin-user-identity">${u.identity || '未设置身份'}</span>
                         </div>
-                        ${isSelf ? '' : `<button class="admin-user-del" data-id="${u.id}" data-name="${u.username}">删除</button>`}
+                        <div class="admin-user-actions">
+                            <button class="admin-user-set" data-id="${u.id}" data-name="${u.username}">身份</button>
+                            ${isSelf ? '' : `<button class="admin-user-del" data-id="${u.id}" data-name="${u.username}">删除</button>`}
+                        </div>
                     `;
                     list.appendChild(row);
+                });
+                list.querySelectorAll('.admin-user-set').forEach(btn => {
+                    btn.addEventListener('click', () => openAdminSetProfile(btn.dataset.id, btn.dataset.name));
                 });
                 list.querySelectorAll('.admin-user-del').forEach(btn => {
                     btn.addEventListener('click', () => {
                         const id = btn.dataset.id;
                         const name = btn.dataset.name;
-                        if (confirm(`确定删除用户「${name}」及其所有记录？`)) {
+                        showConfirm(`确定删除用户「${name}」及其所有记录？`, () => {
                             fetch('/api/admin/users/' + id, { method: 'DELETE' })
                                 .then(r => r.json())
                                 .then(d => {
                                     if (d.ok) { showToast('已删除用户'); loadAdminUsers(); }
                                     else { showToast(d.error || '删除失败', true); }
                                 });
-                        }
+                        });
                     });
                 });
             });
     }
+
+    // ========== 管理员：设置用户身份弹窗 ==========
+    let adminSetUserId = null;
+    const adminSetProfileModal = document.getElementById('adminSetProfileModal');
+    function openAdminSetProfile(userId, username) {
+        adminSetUserId = userId;
+        document.getElementById('adminSetProfileTitle').textContent = '设置身份 - ' + username;
+        document.getElementById('adminSetProfileError').style.display = 'none';
+        fetch('/api/admin/babies')
+            .then(r => r.json())
+            .then(data => {
+                const sel = document.getElementById('adminSetBaby');
+                sel.innerHTML = '<option value="">（不关联宝宝）</option>' +
+                    data.babies.map(b => `<option value="${b.id}">${b.name}</option>`).join('');
+                fetch('/api/admin/users')
+                    .then(r => r.json())
+                    .then(d2 => {
+                        const u = d2.users.find(x => x.id === userId);
+                        if (u) {
+                            sel.value = u.baby_id ? String(u.baby_id) : '';
+                            document.getElementById('adminSetIdentity').value = u.identity || '';
+                        }
+                    });
+            });
+        adminSetProfileModal.classList.add('show');
+    }
+    function closeAdminSetProfile() {
+        adminSetProfileModal.classList.remove('show');
+    }
+    document.getElementById('adminSetProfileClose').addEventListener('click', closeAdminSetProfile);
+    document.getElementById('adminSetProfileCancel').addEventListener('click', closeAdminSetProfile);
+    document.getElementById('adminSetProfileConfirm').addEventListener('click', () => {
+        const babyId = document.getElementById('adminSetBaby').value;
+        const identity = document.getElementById('adminSetIdentity').value;
+        fetch('/api/admin/users/' + adminSetUserId, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ identity: identity, baby_id: babyId ? Number(babyId) : null })
+        })
+        .then(r => r.json())
+        .then(d => {
+            if (d.ok) { closeAdminSetProfile(); showToast('身份已保存'); loadAdminUsers(); }
+            else {
+                document.getElementById('adminSetProfileError').textContent = d.error || '保存失败';
+                document.getElementById('adminSetProfileError').style.display = 'block';
+            }
+        });
+    });
 
     // ========== CSV 导出 ==========
     (function() {
@@ -736,6 +1300,7 @@
         document.getElementById('addRecordError').style.display = 'none';
         document.getElementById('addRecordFormula').classList.add('hidden');
         document.getElementById('addFormulaAmount').value = '';
+        document.getElementById('addRecordSolid').classList.add('hidden');
 
         const now = new Date();
         const today = getTodayStr();
@@ -767,10 +1332,17 @@
             document.getElementById('addRecordError').style.display = 'none';
 
             const formulaGroup = document.getElementById('addRecordFormula');
+            const solidGroup = document.getElementById('addRecordSolid');
             if (selectedAddType === 'formula') {
                 formulaGroup.classList.remove('hidden');
+                solidGroup.classList.add('hidden');
+            } else if (selectedAddType === 'solid') {
+                formulaGroup.classList.add('hidden');
+                solidGroup.classList.remove('hidden');
+                document.getElementById('addSolidInput').value = '';
             } else {
                 formulaGroup.classList.add('hidden');
+                solidGroup.classList.add('hidden');
             }
         });
     });
@@ -800,6 +1372,16 @@
                 return;
             }
             body.formula_amount = val;
+        }
+        if (selectedAddType === 'solid') {
+            const raw = document.getElementById('addSolidInput').value;
+            const foods = raw.split(/[,，、]/).map(s => s.trim()).filter(Boolean);
+            if (foods.length > 10) {
+                errDiv.textContent = '辅食最多 10 种';
+                errDiv.style.display = 'block';
+                return;
+            }
+            body.foods = foods;
         }
 
         // 不能添加未来时间
@@ -890,10 +1472,11 @@
     });
 
     // ========== 退出 ==========
-    document.getElementById('logoutBtn').addEventListener('click', async () => {
-        if (!confirm('确定退出登录？')) return;
-        await fetch('/api/logout', { method: 'POST' });
-        window.location.href = '/login';
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        showConfirm('确定退出登录？', async () => {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = '/login';
+        });
     });
 
     // ========== 初始加载 ==========

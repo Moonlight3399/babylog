@@ -36,6 +36,7 @@ def get_yesterday_stats(user, db, Record):
 
     total_formula = sum(r.formula_amount for r in records if r.event_type == 'formula' and r.formula_amount)
     count_formula = sum(1 for r in records if r.event_type == 'formula')
+    count_solid = sum(1 for r in records if r.event_type == 'solid')
     count_poop = sum(1 for r in records if r.event_type == 'poop')
     count_pee = sum(1 for r in records if r.event_type == 'pee')
 
@@ -66,6 +67,7 @@ def get_yesterday_stats(user, db, Record):
         'date': yesterday.strftime('%Y年%m月%d日'),
         'count_formula': count_formula,
         'total_formula': total_formula,
+        'count_solid': count_solid,
         'sleep_minutes': total_sleep_minutes,
         'count_poop': count_poop,
         'count_pee': count_pee,

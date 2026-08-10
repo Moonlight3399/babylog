@@ -258,10 +258,10 @@ input, button {
 }
 
 .formula-btn { background: linear-gradient(135deg, #FF9A9E, #FFB6C1); }
+.solid-btn   { background: linear-gradient(135deg, #FF8C42, #F05F0E); }
 .sleep-btn   { background: linear-gradient(135deg, #A18CD1, #C4B5E0); }
 .wake-btn    { background: linear-gradient(135deg, #FAD961, #F7B733); }
 .poop-btn    { background: linear-gradient(135deg, #A8D8B9, #7EC8A0); }
-.pee-btn     { background: linear-gradient(135deg, #89CFF0, #A8D8EA); }
 
 /* --- Bottom Nav --- */
 .bottom-nav {
@@ -552,6 +552,7 @@ input, button {
     pointer-events: none;
     transition: opacity 0.2s;
     padding: 24px;
+    overflow-y: auto;
 }
 
 .modal-overlay.show {
@@ -564,6 +565,9 @@ input, button {
     border-radius: 22px;
     width: 100%;
     max-width: 340px;
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
     transform: translateY(20px);
@@ -602,6 +606,10 @@ input, button {
 
 .modal-body {
     padding: 8px 20px 20px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .input-label {
@@ -859,6 +867,321 @@ input, button {
 .admin-user-del:active {
     background: #FFE4E4;
     border-color: #E74C3C;
+}
+
+/* --- 用户身份显示（xx的爸爸） --- */
+.user-identity {
+    font-size: 0.95rem;
+    color: #C495A5;
+    margin-bottom: 14px;
+    font-weight: 600;
+}
+
+/* --- 我的身份设置卡片 --- */
+.profile-card .form-group {
+    text-align: left;
+}
+
+.profile-card select.input-md {
+    appearance: none;
+    -webkit-appearance: none;
+    background: #FFFBFD;
+}
+
+/* --- 管理员：宝宝管理 --- */
+.admin-baby-add {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.admin-baby-add .input-md {
+    flex: 1;
+}
+
+.admin-baby-add-btn {
+    padding: 12px 18px;
+    flex-shrink: 0;
+}
+
+.admin-baby-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 4px;
+    border-bottom: 1px solid #FFF0F5;
+}
+
+.admin-baby-row:last-child {
+    border-bottom: none;
+}
+
+.admin-baby-name {
+    font-weight: 600;
+    color: #444;
+}
+
+.admin-baby-del {
+    background: none;
+    border: 1px solid #FDDDE6;
+    color: #E74C3C;
+    font-size: 0.78rem;
+    padding: 4px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.admin-user-title {
+    margin-top: 16px;
+}
+
+/* --- 管理员：用户管理（身份标签 + 操作按钮） --- */
+.admin-user-identity {
+    font-size: 0.7rem;
+    color: #C495A5;
+    background: #FFF5F7;
+    border: 1px solid #FDE4EC;
+    padding: 2px 8px;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.admin-user-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.admin-user-set {
+    background: none;
+    border: 1px solid #FDDDE6;
+    color: #FF69B4;
+    font-size: 0.78rem;
+    padding: 5px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s;
+}
+
+.admin-user-set:active {
+    background: #FFF0F5;
+    border-color: #FF69B4;
+}
+
+/* --- 事件确认弹窗（左侧行为 / 右侧时间） --- */
+.confirm-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.confirm-action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.confirm-icon {
+    font-size: 1.7rem;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFF0F5;
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+.confirm-label {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #FF69B4;
+}
+
+.confirm-time {
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.confirm-time .input-label {
+    font-size: 0.8rem;
+    color: #999;
+    margin-bottom: 4px;
+}
+
+.confirm-time input {
+    width: 120px;
+    text-align: center;
+    padding: 10px;
+    font-size: 1.1rem;
+}
+
+.confirm-formula {
+    margin-top: 8px;
+}
+
+/* --- 通用确认弹窗文字 --- */
+.confirm-text {
+    font-size: 0.95rem;
+    color: #555;
+    text-align: center;
+    line-height: 1.6;
+    padding: 8px 0;
+}
+
+.amount-quick {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.amount-option {
+    flex: 1 1 calc(25% - 8px);
+    min-width: calc(25% - 8px);
+    padding: 11px 8px;
+    border: 2px solid #F0E0E8;
+    border-radius: 13px;
+    background: #FFFBFD;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #FF69B4;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(255, 105, 180, 0.08);
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.amount-option.active {
+    border-color: #FF69B4;
+    background: linear-gradient(135deg, #FF69B4, #FF85C2);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(255, 105, 180, 0.35);
+    font-weight: 800;
+}
+
+.amount-option:active {
+    transform: scale(0.96);
+}
+
+/* --- 辅食选择（分类多选 + 常用） --- */
+.confirm-solid {
+    margin-top: 4px;
+}
+
+.solid-selected {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 34px;
+    margin-bottom: 12px;
+}
+
+.solid-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    background: #FFF0F5;
+    border: 1px solid #FFB6C1;
+    border-radius: 16px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #FF69B4;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.solid-tag-x {
+    background: none;
+    border: none;
+    color: #E74C3C;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0 2px;
+    line-height: 1;
+}
+
+.solid-cat {
+    margin-bottom: 8px;
+}
+
+.solid-cat-title {
+    font-size: 0.8rem;
+    color: #999;
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+
+.solid-cat-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.solid-opt {
+    flex: 0 0 auto;
+    min-width: 52px;
+    padding: 7px 10px;
+    border: 2px solid #F0E0E8;
+    border-radius: 10px;
+    background: #FFFBFD;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.solid-opt.active {
+    border-color: #FF69B4;
+    background: linear-gradient(135deg, #FF69B4, #FF85C2);
+    color: #fff;
+    font-weight: 700;
+}
+
+.solid-opt:active {
+    transform: scale(0.96);
+}
+
+.solid-common {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #FFF0F5;
+}
+
+.solid-common-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.solid-input-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.solid-input-row .input-md {
+    flex: 1;
+}
+
+.solid-save-btn {
+    padding: 12px 14px;
+    font-size: 0.85rem;
+    flex-shrink: 0;
 }
 
 /* --- Utility --- */

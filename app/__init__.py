@@ -18,7 +18,7 @@ db = SQLAlchemy()
 
 
 def migrate_schema(app):
-    """轻量数据库迁移：建表，并为旧版本 users 表补充 role 列（区分管理员/普通用户）"""
+    """轻量数据库迁移：建表，并为旧版本 users 表补充 role / baby_id / identity 列"""
     with app.app_context():
         db.create_all()
         insp = inspect(db.engine)
@@ -28,8 +28,27 @@ def migrate_schema(app):
                 db.session.execute(text(
                     "ALTER TABLE users ADD COLUMN role VARCHAR(20) NOT NULL DEFAULT 'user'"
                 ))
-                db.session.commit()
                 print('[迁移] users 表已添加 role 列')
+            if 'baby_id' not in cols:
+                db.session.execute(text(
+                    "ALTER TABLE users ADD COLUMN baby_id INTEGER"
+                ))
+                print('[迁移] users 表已添加 baby_id 列')
+            if 'identity' not in cols:
+                db.session.execute(text(
+                    "ALTER TABLE users ADD COLUMN identity VARCHAR(20)"
+                ))
+                print('[迁移] users 表已添加 identity 列')
+            db.session.commit()
+        # records 表补充 foods 列（辅食）
+        if 'records' in insp.get_table_names():
+            rcols = [c['name'] for c in insp.get_columns('records')]
+            if 'foods' not in rcols:
+                db.session.execute(text(
+                    "ALTER TABLE records ADD COLUMN foods VARCHAR(200)"
+                ))
+                db.session.commit()
+                print('[迁移] records 表已添加 foods 列')
 
 
 def create_app():

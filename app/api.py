@@ -11,17 +11,18 @@ from flask import (Blueprint, current_app, jsonify, make_response,
                    request, send_from_directory)
 
 from . import db
-from .models import Record
+from .models import Food, Record
 from .auth import login_required
 
 api_bp = Blueprint('api', __name__)
 
 LABEL_MAP = {
     'formula': '喝奶粉',
+    'solid': '吃辅食',
     'sleep_start': '开始睡',
     'sleep_end': '睡醒了',
-    'poop': '大便了',
-    'pee': '小便了',
+    'poop': '拉粑粑',
+    'pee': '小便了',  # 兼容历史数据展示
 }
 
 
@@ -36,7 +37,7 @@ def api_create_record(user):
         return jsonify({'error': '无效请求'}), 400
 
     event_type = data.get('event_type', '').strip()
-    valid_types = {'formula', 'sleep_start', 'sleep_end', 'poop', 'pee'}
+    valid_types = {'formula', 'solid', 'sleep_start', 'sleep_end', 'poop'}
     if event_type not in valid_types:
         return jsonify({'error': '无效的事件类型'}), 400
 
@@ -61,6 +62,19 @@ def api_create_record(user):
         event_time=event_time,
         formula_amount=None,
     )
+
+    # 辅食：食物列表（逗号分隔存储）
+    if event_type == 'solid':
+        foods = data.get('foods')
+        if foods is not None:
+            if not isinstance(foods, list):
+                return jsonify({'error': '辅食参数格式错误'}), 400
+            cleaned = []
+            for f in foods[:10]:
+                f = str(f).strip()
+                if f and f not in cleaned and len(f) <= 20:
+                    cleaned.append(f)
+            record.foods = ','.join(cleaned)
 
     # 睡眠约束：检查是否存在未配对的睡眠记录（跨所有日期）
     if event_type == 'sleep_start':
@@ -98,6 +112,7 @@ def api_create_record(user):
             'event_date': str(record.event_date),
             'event_time': str(record.event_time),
             'formula_amount': record.formula_amount,
+            'foods': record.foods.split(',') if record.foods else [],
         }
     })
 
@@ -131,6 +146,7 @@ def api_update_record(user, record_id):
             'event_date': str(record.event_date),
             'event_time': str(record.event_time),
             'formula_amount': record.formula_amount,
+            'foods': record.foods.split(',') if record.foods else [],
         }
     })
 
@@ -191,6 +207,7 @@ def api_records(user):
                 'event_label': LABEL_MAP.get(r.event_type, r.event_type),
                 'event_time': str(r.event_time),
                 'formula_amount': r.formula_amount,
+                'foods': r.foods.split(',') if r.foods else [],
             }
             for r in records
         ]
@@ -213,6 +230,7 @@ def api_stats(user):
 
     total_formula = sum(r.formula_amount for r in records if r.event_type == 'formula' and r.formula_amount)
     count_formula = sum(1 for r in records if r.event_type == 'formula')
+    count_solid = sum(1 for r in records if r.event_type == 'solid')
     count_poop = sum(1 for r in records if r.event_type == 'poop')
     count_pee = sum(1 for r in records if r.event_type == 'pee')
 
@@ -247,6 +265,7 @@ def api_stats(user):
         'date': str(date),
         'total_formula': total_formula,
         'count_formula': count_formula,
+        'count_solid': count_solid,
         'sleep_count': sleep_count,
         'total_sleep_minutes': total_sleep_minutes,
         'count_poop': count_poop,
@@ -287,15 +306,17 @@ def api_export_csv(user):
     writer = csv.writer(output)
 
     if mode == 'summary':
-        writer.writerow(['日期', '喝奶粉次数', '总奶量(ml)', '开始睡次数', '睡醒次数', '大便次数', '小便次数'])
+        writer.writerow(['日期', '喝奶粉次数', '总奶量(ml)', '吃辅食次数', '开始睡次数', '睡醒次数', '拉粑粑次数', '小便次数'])
         # 按日期分组
-        groups = defaultdict(lambda: {'formula_count': 0, 'formula_total': 0, 'sleep_start': 0, 'sleep_end': 0, 'poop': 0, 'pee': 0})
+        groups = defaultdict(lambda: {'formula_count': 0, 'formula_total': 0, 'solid': 0, 'sleep_start': 0, 'sleep_end': 0, 'poop': 0, 'pee': 0})
         for r in records:
             d = str(r.event_date)
             g = groups[d]
             if r.event_type == 'formula':
                 g['formula_count'] += 1
                 g['formula_total'] += (r.formula_amount or 0)
+            elif r.event_type == 'solid':
+                g['solid'] += 1
             elif r.event_type == 'sleep_start':
                 g['sleep_start'] += 1
             elif r.event_type == 'sleep_end':
@@ -307,11 +328,12 @@ def api_export_csv(user):
 
         for d in sorted(groups.keys()):
             g = groups[d]
-            writer.writerow([d, g['formula_count'], g['formula_total'], g['sleep_start'], g['sleep_end'], g['poop'], g['pee']])
+            writer.writerow([d, g['formula_count'], g['formula_total'], g['solid'], g['sleep_start'], g['sleep_end'], g['poop'], g['pee']])
     else:
-        writer.writerow(['日期', '时间', '事件类型', '奶粉量(ml)'])
+        writer.writerow(['日期', '时间', '事件类型', '奶粉量(ml)', '辅食'])
         for r in records:
-            writer.writerow([str(r.event_date), str(r.event_time), LABEL_MAP.get(r.event_type, r.event_type), r.formula_amount or ''])
+            foods = r.foods if r.foods else ''
+            writer.writerow([str(r.event_date), str(r.event_time), LABEL_MAP.get(r.event_type, r.event_type), r.formula_amount or '', foods])
 
     csv_content = output.getvalue()
     output.close()
@@ -330,3 +352,44 @@ def api_export_csv(user):
 @api_bp.route('/sw.js')
 def service_worker():
     return send_from_directory(current_app.static_folder, 'sw.js', mimetype='application/javascript')
+
+
+# ------------------------------------------------------------
+# 用户常用辅食选项
+# ------------------------------------------------------------
+@api_bp.route('/api/foods')
+@login_required
+def api_foods(user):
+    foods = Food.query.filter_by(user_id=user.id).order_by(Food.id.asc()).all()
+    return jsonify({
+        'foods': [{'id': f.id, 'name': f.name} for f in foods]
+    })
+
+
+@api_bp.route('/api/foods', methods=['POST'])
+@login_required
+def api_add_food(user):
+    data = request.get_json() or {}
+    name = (data.get('name') or '').strip()
+    if not name:
+        return jsonify({'error': '食物名称不能为空'}), 400
+    if len(name) > 20:
+        return jsonify({'error': '食物名称过长'}), 400
+    existing = Food.query.filter_by(user_id=user.id, name=name).first()
+    if existing:
+        return jsonify({'error': '该食物已在常用中'}), 400
+    food = Food(user_id=user.id, name=name)
+    db.session.add(food)
+    db.session.commit()
+    return jsonify({'ok': True, 'food': {'id': food.id, 'name': food.name}}), 201
+
+
+@api_bp.route('/api/foods/<int:food_id>', methods=['DELETE'])
+@login_required
+def api_delete_food(user, food_id):
+    food = Food.query.filter_by(id=food_id, user_id=user.id).first()
+    if not food:
+        return jsonify({'error': '食物不存在'}), 404
+    db.session.delete(food)
+    db.session.commit()
+    return jsonify({'ok': True})
