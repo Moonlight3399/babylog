@@ -515,6 +515,11 @@
                     <option value="外公">外公</option>
                     <option value="外婆">外婆</option>
                 </select>
+                <label class="input-label" for="adminSetRole" style="margin-top:12px;">角色</label>
+                <select id="adminSetRole" class="input-md">
+                    <option value="user">普通用户</option>
+                    <option value="admin">管理员</option>
+                </select>
                 <div id="adminSetProfileError" class="form-error" style="display:none;"></div>
             </div>
             <div class="modal-footer">
@@ -1257,7 +1262,7 @@
                             ${babyHtml}
                         </div>
                         <div class="admin-user-actions">
-                            <button class="admin-user-set" data-id="${u.id}" data-name="${u.username}">身份</button>
+                            <button class="admin-user-set" data-id="${u.id}" data-name="${u.username}">设置</button>
                             ${isSelf ? '' : `<button class="admin-user-del" data-id="${u.id}" data-name="${u.username}">删除</button>`}
                         </div>
                     `;
@@ -1288,7 +1293,7 @@
     const adminSetProfileModal = document.getElementById('adminSetProfileModal');
     function openAdminSetProfile(userId, username) {
         adminSetUserId = userId;
-        document.getElementById('adminSetProfileTitle').textContent = '设置身份 - ' + username;
+        document.getElementById('adminSetProfileTitle').textContent = '用户设置 - ' + username;
         document.getElementById('adminSetProfileError').style.display = 'none';
         document.getElementById('adminSetCurrent').textContent = '加载中...';
         document.getElementById('adminSetCurrent').className = 'admin-set-current';
@@ -1305,6 +1310,10 @@
                         if (u) {
                             sel.value = u.baby_id ? String(u.baby_id) : '';
                             document.getElementById('adminSetIdentity').value = u.identity || '';
+                            const roleSel = document.getElementById('adminSetRole');
+                            roleSel.value = u.role || 'user';
+                            // 不能修改自己的角色（防止把唯一管理员降级锁死）
+                            roleSel.disabled = document.getElementById('userName').textContent === u.username;
                             const cur = document.getElementById('adminSetCurrent');
                             cur.textContent = u.baby_name ? '当前绑定：👶 ' + u.baby_name : '当前未绑定宝宝';
                             cur.className = 'admin-set-current' + (u.baby_name ? '' : ' admin-set-current-none');
@@ -1321,14 +1330,15 @@
     document.getElementById('adminSetProfileConfirm').addEventListener('click', () => {
         const babyId = document.getElementById('adminSetBaby').value;
         const identity = document.getElementById('adminSetIdentity').value;
+        const role = document.getElementById('adminSetRole').value;
         fetch('/api/admin/users/' + adminSetUserId, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ identity: identity, baby_id: babyId ? Number(babyId) : null })
+            body: JSON.stringify({ identity: identity, baby_id: babyId ? Number(babyId) : null, role: role })
         })
         .then(r => r.json())
         .then(d => {
-            if (d.ok) { closeAdminSetProfile(); showToast('身份已保存'); loadAdminUsers(); }
+            if (d.ok) { closeAdminSetProfile(); showToast('设置已保存'); loadAdminUsers(); }
             else {
                 document.getElementById('adminSetProfileError').textContent = d.error || '保存失败';
                 document.getElementById('adminSetProfileError').style.display = 'block';

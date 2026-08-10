@@ -261,13 +261,27 @@ def api_admin_delete_user(admin, user_id):
 @auth_bp.route('/api/admin/users/<int:user_id>', methods=['PUT'])
 @admin_required
 def api_admin_update_user(admin, user_id):
-    """管理员为用户设置身份和关联宝宝"""
+    """管理员为用户设置身份/关联宝宝/角色（可设另一用户为管理员）"""
     target = User.query.get(user_id)
     if not target:
         return jsonify({'error': '用户不存在'}), 404
     data = request.get_json() or {}
+    role = data.get('role')
     identity = (data.get('identity') or '').strip()
     baby_id = data.get('baby_id')
+
+    # 角色变更：管理员可设置其他用户为管理员/普通用户
+    if role is not None:
+        if role not in ('admin', 'user'):
+            return jsonify({'error': '无效的角色'}), 400
+        if target.id == admin.id:
+            return jsonify({'error': '不能修改自己的角色'}), 400
+        if target.role == 'admin' and role == 'user':
+            admin_count = User.query.filter_by(role='admin').count()
+            if admin_count <= 1:
+                return jsonify({'error': '至少保留一名管理员'}), 400
+        target.role = role
+
     if identity and identity not in IDENTITIES:
         return jsonify({'error': '无效的身份，可选：爸爸/妈妈/爷爷/奶奶/外公/外婆'}), 400
     if baby_id:
@@ -282,6 +296,7 @@ def api_admin_update_user(admin, user_id):
     baby = Baby.query.get(target.baby_id) if target.baby_id else None
     return jsonify({
         'ok': True,
+        'role': target.role,
         'identity': target.identity,
         'baby': {'id': baby.id, 'name': baby.name} if baby else None,
     })
