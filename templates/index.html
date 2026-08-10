@@ -1330,11 +1330,14 @@
     document.getElementById('adminSetProfileConfirm').addEventListener('click', () => {
         const babyId = document.getElementById('adminSetBaby').value;
         const identity = document.getElementById('adminSetIdentity').value;
-        const role = document.getElementById('adminSetRole').value;
+        const roleSel = document.getElementById('adminSetRole');
+        const body = { identity: identity, baby_id: babyId ? Number(babyId) : null };
+        // 自己的角色下拉已禁用：不提交 role 字段，避免被误判为"修改自己的角色"
+        if (!roleSel.disabled) body.role = roleSel.value;
         fetch('/api/admin/users/' + adminSetUserId, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ identity: identity, baby_id: babyId ? Number(babyId) : null, role: role })
+            body: JSON.stringify(body)
         })
         .then(r => r.json())
         .then(d => {

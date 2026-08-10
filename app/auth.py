@@ -270,8 +270,8 @@ def api_admin_update_user(admin, user_id):
     identity = (data.get('identity') or '').strip()
     baby_id = data.get('baby_id')
 
-    # 角色变更：管理员可设置其他用户为管理员/普通用户
-    if role is not None:
+    # 角色变更：仅当角色值实际变化时才处理（管理员可设置其他用户为管理员）
+    if role is not None and role != target.role:
         if role not in ('admin', 'user'):
             return jsonify({'error': '无效的角色'}), 400
         if target.id == admin.id:
