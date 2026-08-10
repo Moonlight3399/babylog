@@ -146,10 +146,11 @@ def api_user(user):
 
 
 # ------------------------------------------------------------
-# 注册
+# 注册（仅管理员可用：在管理界面手动添加用户）
 # ------------------------------------------------------------
 @auth_bp.route('/api/register', methods=['POST'])
-def api_register():
+@admin_required
+def api_register(admin):
     data = request.get_json()
     if not data:
         return jsonify({'error': '请提供用户名和密码'}), 400
@@ -169,12 +170,7 @@ def api_register():
     user = User(username=username, password_hash=hash_password(password), salt='', role='user')
     db.session.add(user)
     db.session.commit()
-
-    # 注册成功后自动登录
-    token, expires = make_session_cookie(user.id)
-    resp = jsonify({'ok': True, 'username': user.username, 'role': user.role})
-    resp.set_cookie('session', token, expires=expires, httponly=True, samesite='Lax', secure=False)
-    return resp, 201
+    return jsonify({'ok': True, 'username': user.username}), 201
 
 
 # ------------------------------------------------------------

@@ -39,28 +39,6 @@
             </div>
             <div id="loginError" class="login-error" style="display:none;"></div>
             <button type="submit" class="btn btn-primary btn-full" id="loginBtn">登 录</button>
-            <div class="login-switch">
-                <span>没有账号？</span>
-                <button type="button" class="link-btn" id="toRegisterBtn">立即注册</button>
-            </div>
-        </form>
-
-        <form id="registerForm" class="login-form" style="display:none;">
-            <div class="form-group">
-                <input type="text" id="regUsername" placeholder="用户名（2-20 个字符）" autocomplete="username" required>
-            </div>
-            <div class="form-group">
-                <input type="password" id="regPassword" placeholder="密码（至少 6 位）" autocomplete="new-password" required>
-            </div>
-            <div class="form-group">
-                <input type="password" id="regPassword2" placeholder="确认密码" autocomplete="new-password" required>
-            </div>
-            <div id="regError" class="login-error" style="display:none;"></div>
-            <button type="submit" class="btn btn-primary btn-full" id="registerBtn">注 册</button>
-            <div class="login-switch">
-                <span>已有账号？</span>
-                <button type="button" class="link-btn" id="toLoginBtn">去登录</button>
-            </div>
         </form>
     </div>
 
@@ -98,59 +76,6 @@
         }
     });
 
-    // ========== 登录 / 注册 切换 ==========
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-    document.getElementById('toRegisterBtn').addEventListener('click', () => {
-        loginForm.style.display = 'none';
-        registerForm.style.display = 'block';
-    });
-    document.getElementById('toLoginBtn').addEventListener('click', () => {
-        registerForm.style.display = 'none';
-        loginForm.style.display = 'block';
-    });
-
-    // ========== 注册 ==========
-    registerForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const btn = document.getElementById('registerBtn');
-        const errDiv = document.getElementById('regError');
-        const username = document.getElementById('regUsername').value.trim();
-        const password = document.getElementById('regPassword').value;
-        const password2 = document.getElementById('regPassword2').value;
-        btn.disabled = true;
-        btn.textContent = '注册中...';
-        errDiv.style.display = 'none';
-
-        if (password !== password2) {
-            errDiv.textContent = '两次输入的密码不一致';
-            errDiv.style.display = 'block';
-            btn.disabled = false;
-            btn.textContent = '注 册';
-            return;
-        }
-
-        try {
-            const resp = await fetch('/api/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-            });
-            const data = await resp.json();
-            if (data.ok) {
-                window.location.href = '/';
-            } else {
-                errDiv.textContent = data.error || '注册失败';
-                errDiv.style.display = 'block';
-            }
-        } catch (err) {
-            errDiv.textContent = '网络错误，请重试';
-            errDiv.style.display = 'block';
-        } finally {
-            btn.disabled = false;
-            btn.textContent = '注 册';
-        }
-    });
     </script>
 
     <!-- Service Worker -->

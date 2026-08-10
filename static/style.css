@@ -927,6 +927,25 @@ input, button {
     flex-shrink: 0;
 }
 
+.admin-user-add {
+    margin-bottom: 12px;
+}
+
+.admin-user-add-inputs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.admin-user-add-inputs .input-md {
+    flex: 1;
+}
+
+.admin-user-add-btn {
+    width: 100%;
+    padding: 12px;
+}
+
 .admin-baby-row {
     display: flex;
     align-items: center;

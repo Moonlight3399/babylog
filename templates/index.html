@@ -149,6 +149,13 @@
                 </div>
                 <div id="adminBabyList"></div>
                 <h3 class="export-title admin-user-title">👥 用户管理</h3>
+                <div class="admin-user-add">
+                    <div class="admin-user-add-inputs">
+                        <input type="text" id="adminUserName" class="input-md" placeholder="新用户名" autocomplete="off">
+                        <input type="password" id="adminUserPassword" class="input-md" placeholder="初始密码（≥6位）" autocomplete="new-password">
+                    </div>
+                    <button class="btn btn-primary admin-user-add-btn" id="adminAddUserBtn">＋ 添加用户</button>
+                </div>
                 <div id="adminUserList"></div>
             </div>
 
@@ -1166,6 +1173,31 @@
                 loadAdminBabies();
             } else { showToast(d.error || '添加失败', true); }
         });
+    });
+
+    // ========== 管理员：手动添加用户 ==========
+    document.getElementById('adminAddUserBtn').addEventListener('click', () => {
+        const username = document.getElementById('adminUserName').value.trim();
+        const password = document.getElementById('adminUserPassword').value;
+        if (!username) { showToast('请输入用户名', true); return; }
+        if (!password || password.length < 6) { showToast('初始密码至少 6 位', true); return; }
+        fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: username, password: password }),
+        })
+        .then(r => r.json())
+        .then(d => {
+            if (d.ok) {
+                showToast('用户「' + d.username + '」已创建');
+                document.getElementById('adminUserName').value = '';
+                document.getElementById('adminUserPassword').value = '';
+                loadAdminUsers();
+            } else {
+                showToast(d.error || '添加失败', true);
+            }
+        })
+        .catch(() => showToast('网络错误', true));
     });
 
     // ========== 管理员：用户管理 ==========
