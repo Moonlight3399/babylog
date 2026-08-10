@@ -58,3 +58,13 @@ class GrowthRecord(db.Model):
     weight = db.Column(db.Float, nullable=True)   # 体重 kg
     record_date = db.Column(db.Date, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class LoginAttempt(db.Model):
+    """登录失败记录（防暴力破解，按 用户名|IP 维度计数，持久化跨进程/重启有效）"""
+    __tablename__ = 'login_attempts'
+    id = db.Column(db.Integer, primary_key=True)
+    key = db.Column(db.String(120), unique=True, nullable=False)  # 用户名|IP
+    fail_count = db.Column(db.Integer, nullable=False, default=0)
+    last_fail = db.Column(db.DateTime, nullable=True)
+    locked_until = db.Column(db.DateTime, nullable=True)

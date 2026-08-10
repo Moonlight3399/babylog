@@ -426,8 +426,9 @@ WantedBy=multi-user.target
 
 **安全机制：**
 - 用户密码使用 PBKDF2-SHA256（10 万次迭代）加盐哈希存储，不保存明文
+- **登录限速**：同一「用户名+IP」连续失败 5 次锁定 15 分钟（数据库持久化，跨进程/重启有效）
 - Session 基于自研签名 Cookie 认证（格式 `user_id:过期时间戳:签名`），默认 30 天有效，`HttpOnly` + `SameSite=Lax`
-- 注意：`SECRET_KEY` 每次启动随机生成，**重启服务后所有用户需重新登录**
+- `SECRET_KEY` 固定（`config.py` 默认值 + 环境变量 `SECRET_KEY` 覆盖），重启服务**不会**导致用户掉线；公网部署请重新生成并设置环境变量
 
 ---
 
@@ -507,7 +508,7 @@ babylog/
 
 | 方法 | 路径 | 说明 | 鉴权 |
 |------|------|------|------|
-| POST | `/api/login` | 登录，设置 Session Cookie | 否 |
+| POST | `/api/login` | 登录，设置 Session Cookie（连续失败 5 次锁定 15 分钟，返回 429） | 否 |
 | POST | `/api/logout` | 退出登录 | 否 |
 | POST | `/api/register` | 管理员手动添加用户（body: {username, password}；未登录 401、普通用户 403） | 管理员 |
 | GET | `/api/user` | 当前用户信息（含角色 role、身份 identity、绑定宝宝 baby） | 是 |

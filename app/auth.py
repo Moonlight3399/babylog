@@ -10,7 +10,7 @@ from flask import (Blueprint, current_app, jsonify, redirect,
                    render_template, request, url_for)
 
 from . import db
-from .models import Baby, Record, User
+from .models import Baby, LoginAttempt, Record, User
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -105,6 +105,45 @@ def login_page():
 # ------------------------------------------------------------
 # 认证 API
 # ------------------------------------------------------------
+# 登录限速（防暴力破解）：同一 用户名|IP 失败 5 次锁定 15 分钟
+# 使用数据库持久化（login_attempts 表），跨进程/重启依然有效
+_MAX_FAIL = 5
+_LOCK_SEC = 15 * 60
+
+
+def _login_key(username):
+    return f"{username}|{request.remote_addr or ''}"
+
+
+def _is_locked(key):
+    a = LoginAttempt.query.filter_by(key=key).first()
+    if a and a.locked_until and a.locked_until > datetime.utcnow():
+        return True
+    return False
+
+
+def _record_fail(key):
+    now = datetime.utcnow()
+    a = LoginAttempt.query.filter_by(key=key).first()
+    if not a:
+        a = LoginAttempt(key=key, fail_count=0, last_fail=None, locked_until=None)
+        db.session.add(a)
+    # 滑动窗口：距上次失败超过锁定周期则重新计数
+    if a.last_fail and (now - a.last_fail).total_seconds() > _LOCK_SEC:
+        a.fail_count = 0
+    a.fail_count += 1
+    a.last_fail = now
+    if a.fail_count >= _MAX_FAIL:
+        a.locked_until = now + timedelta(seconds=_LOCK_SEC)
+        a.fail_count = 0
+    db.session.commit()
+
+
+def _clear_fails(key):
+    LoginAttempt.query.filter_by(key=key).delete()
+    db.session.commit()
+
+
 @auth_bp.route('/api/login', methods=['POST'])
 def api_login():
     data = request.get_json()
@@ -115,10 +154,18 @@ def api_login():
     if not username or not password:
         return jsonify({'error': '用户名和密码不能为空'}), 400
 
+    # 限速：锁定期间直接拒绝
+    key = _login_key(username)
+    if _is_locked(key):
+        return jsonify({'error': f'尝试次数过多，请 {_LOCK_SEC // 60} 分钟后再试'}), 429
+
     user = User.query.filter_by(username=username).first()
     if not user or not verify_password(user.password_hash, password):
+        _record_fail(key)
         return jsonify({'error': '用户名或密码错误'}), 401
 
+    # 登录成功，清除失败记录
+    _clear_fails(key)
     token, expires = make_session_cookie(user.id)
     resp = jsonify({'ok': True, 'username': user.username})
     resp.set_cookie('session', token, expires=expires, httponly=True, samesite='Lax', secure=False)
