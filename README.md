@@ -583,10 +583,13 @@ A：支持。项目全部为纯 Python + 官方跨平台 wheel 依赖，**x86_64
 
 BabyLog 基于 **MIT License** 开源发布，允许任何人自由**使用、修改、复制、分发（含商业用途）**，只需保留原始版权声明与许可声明。
 
+本项目基于原项目作者 **https://yuubari.cn/** 的作品开发，保留原作者的版权归属。
+
 ```
 MIT License
 
 Copyright (c) 2026 zhongyutian
+Original project author: https://yuubari.cn/
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
