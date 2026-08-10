@@ -1177,7 +1177,7 @@
                             <span class="admin-baby-name">👶 ${b.name}</span>
                             <span class="admin-baby-users">${b.user_count > 0 ? b.user_count + ' 位家人' : '暂无家人'}</span>
                         </div>
-                        <button class="admin-baby-del" data-id="${b.id}" data-name="${b.name}">删除</button>
+                        ${b.can_delete ? `<button class="admin-baby-del" data-id="${b.id}" data-name="${b.name}">删除</button>` : ''}
                     `;
                     list.appendChild(row);
                 });
@@ -1239,53 +1239,96 @@
         .catch(() => showToast('网络错误', true));
     });
 
-    // ========== 管理员：用户管理 ==========
-    function loadAdminUsers() {
-        fetch('/api/admin/users')
-            .then(r => r.json())
-            .then(data => {
-                const list = document.getElementById('adminUserList');
-                list.innerHTML = '';
-                const currentName = document.getElementById('userName').textContent;
-                data.users.forEach(u => {
-                    const isSelf = u.username === currentName;
-                    const row = document.createElement('div');
-                    row.className = 'admin-user-row';
-                    const babyHtml = u.baby_name
-                        ? `<span class="admin-user-baby">👶 ${u.baby_name}</span>`
-                        : `<span class="admin-user-baby admin-user-baby-none">未绑定宝宝</span>`;
-                    row.innerHTML = `
-                        <div class="admin-user-info">
-                            <span class="admin-user-name">${u.username}</span>
-                            <span class="admin-user-role ${u.role === 'admin' ? 'role-admin' : 'role-user'}">${u.role === 'admin' ? '管理员' : '普通用户'}</span>
-                            <span class="admin-user-identity">${u.identity || '未设置身份'}</span>
-                            ${babyHtml}
-                        </div>
-                        <div class="admin-user-actions">
-                            <button class="admin-user-set" data-id="${u.id}" data-name="${u.username}">设置</button>
-                            ${isSelf ? '' : `<button class="admin-user-del" data-id="${u.id}" data-name="${u.username}">删除</button>`}
-                        </div>
-                    `;
-                    list.appendChild(row);
-                });
-                list.querySelectorAll('.admin-user-set').forEach(btn => {
-                    btn.addEventListener('click', () => openAdminSetProfile(btn.dataset.id, btn.dataset.name));
-                });
-                list.querySelectorAll('.admin-user-del').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const id = btn.dataset.id;
-                        const name = btn.dataset.name;
-                        showConfirm(`确定删除用户「${name}」及其所有记录？`, () => {
-                            fetch('/api/admin/users/' + id, { method: 'DELETE' })
-                                .then(r => r.json())
-                                .then(d => {
-                                    if (d.ok) { showToast('已删除用户'); loadAdminUsers(); }
-                                    else { showToast(d.error || '删除失败', true); }
-                                });
+    // ========== 管理员：用户管理（按宝宝分组） ==========
+    function buildUserRow(u, currentName) {
+        const isSelf = u.username === currentName;
+        const row = document.createElement('div');
+        row.className = 'admin-user-row';
+        const babyHtml = u.baby_name
+            ? `<span class="admin-user-baby">👶 ${u.baby_name}</span>`
+            : `<span class="admin-user-baby admin-user-baby-none">未绑定宝宝</span>`;
+        row.innerHTML = `
+            <div class="admin-user-info">
+                <span class="admin-user-name">${u.username}</span>
+                <span class="admin-user-role ${u.role === 'admin' ? 'role-admin' : 'role-user'}">${u.role === 'admin' ? '管理员' : '普通用户'}</span>
+                <span class="admin-user-identity">${u.identity || '未设置身份'}</span>
+                ${babyHtml}
+            </div>
+            <div class="admin-user-actions">
+                <button class="admin-user-set" data-id="${u.id}" data-name="${u.username}">设置</button>
+                ${(!isSelf && u.can_delete) ? `<button class="admin-user-del" data-id="${u.id}" data-name="${u.username}">删除</button>` : ''}
+            </div>
+        `;
+        return row;
+    }
+
+    function bindUserRowEvents(list) {
+        list.querySelectorAll('.admin-user-set').forEach(btn => {
+            btn.addEventListener('click', () => openAdminSetProfile(btn.dataset.id, btn.dataset.name));
+        });
+        list.querySelectorAll('.admin-user-del').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const name = btn.dataset.name;
+                showConfirm(`确定删除用户「${name}」及其所有记录？`, () => {
+                    fetch('/api/admin/users/' + id, { method: 'DELETE' })
+                        .then(r => r.json())
+                        .then(d => {
+                            if (d.ok) { showToast('已删除用户'); loadAdminUsers(); }
+                            else { showToast(d.error || '删除失败', true); }
                         });
-                    });
                 });
             });
+        });
+    }
+
+    function addGroupHeader(text, none) {
+        const h = document.createElement('div');
+        h.className = 'admin-group-header' + (none ? ' admin-group-header-none' : '');
+        h.textContent = text;
+        return h;
+    }
+
+    function loadAdminUsers() {
+        Promise.all([
+            fetch('/api/admin/users').then(r => r.json()),
+            fetch('/api/admin/babies').then(r => r.json()),
+        ])
+        .then(([uData, bData]) => {
+            const list = document.getElementById('adminUserList');
+            list.innerHTML = '';
+            const currentName = document.getElementById('userName').textContent;
+            const groups = bData.babies.map(b => ({ baby: b, users: [] }));
+            const unbound = { baby: null, users: [] };
+            uData.users.forEach(u => {
+                const g = groups.find(g => g.baby.id === u.baby_id);
+                if (g) g.users.push(u);
+                else unbound.users.push(u);
+            });
+            // 宝宝分组
+            groups.forEach(g => {
+                list.appendChild(addGroupHeader(`👶 ${g.baby.name}（${g.users.length} 人）`));
+                if (g.users.length === 0) {
+                    const e = document.createElement('div');
+                    e.className = 'empty-msg';
+                    e.textContent = '暂无成员';
+                    list.appendChild(e);
+                } else {
+                    g.users.forEach(u => list.appendChild(buildUserRow(u, currentName)));
+                }
+            });
+            // 未绑定宝宝分组
+            list.appendChild(addGroupHeader(`🚫 未绑定宝宝（${unbound.users.length} 人）`, true));
+            if (unbound.users.length === 0) {
+                const e = document.createElement('div');
+                e.className = 'empty-msg';
+                e.textContent = '暂无';
+                list.appendChild(e);
+            } else {
+                unbound.users.forEach(u => list.appendChild(buildUserRow(u, currentName)));
+            }
+            bindUserRowEvents(list);
+        });
     }
 
     // ========== 管理员：设置用户身份弹窗 ==========

@@ -214,7 +214,7 @@ def api_register(admin):
     if existing:
         return jsonify({'error': '用户名已存在'}), 400
 
-    user = User(username=username, password_hash=hash_password(password), salt='', role='user')
+    user = User(username=username, password_hash=hash_password(password), salt='', role='user', created_by=admin.id)
     db.session.add(user)
     db.session.commit()
     return jsonify({'ok': True, 'username': user.username}), 201
@@ -237,6 +237,7 @@ def api_admin_users(admin):
                 'identity': u.identity,
                 'baby_id': u.baby_id,
                 'baby_name': baby_map.get(u.baby_id),
+                'can_delete': (u.id != admin.id) and (u.created_by is None or u.created_by == admin.id),
                 'created_at': u.created_at.isoformat() if u.created_at else None,
             }
             for u in users
@@ -252,6 +253,8 @@ def api_admin_delete_user(admin, user_id):
         return jsonify({'error': '用户不存在'}), 404
     if target.id == admin.id:
         return jsonify({'error': '不能删除当前登录的管理员账号'}), 400
+    if target.created_by is not None and target.created_by != admin.id:
+        return jsonify({'error': '不能删除其他管理员添加的用户'}), 403
     Record.query.filter_by(user_id=target.id).delete()
     db.session.delete(target)
     db.session.commit()
@@ -363,6 +366,7 @@ def api_admin_babies(admin):
             'id': b.id,
             'name': b.name,
             'user_count': User.query.filter_by(baby_id=b.id).count(),
+            'can_delete': (b.created_by is None or b.created_by == admin.id),
         } for b in babies]
     })
 
@@ -376,7 +380,7 @@ def api_admin_add_baby(admin):
         return jsonify({'error': '宝宝名字不能为空'}), 400
     if len(name) > 20:
         return jsonify({'error': '宝宝名字过长'}), 400
-    baby = Baby(name=name)
+    baby = Baby(name=name, created_by=admin.id)
     db.session.add(baby)
     db.session.commit()
     return jsonify({'ok': True, 'baby': {'id': baby.id, 'name': baby.name}}), 201
@@ -388,6 +392,8 @@ def api_admin_delete_baby(admin, baby_id):
     baby = Baby.query.get(baby_id)
     if not baby:
         return jsonify({'error': '宝宝不存在'}), 404
+    if baby.created_by is not None and baby.created_by != admin.id:
+        return jsonify({'error': '不能删除其他管理员添加的宝宝'}), 403
     # 解除与该宝宝关联的用户
     User.query.filter_by(baby_id=baby_id).update({'baby_id': None})
     db.session.delete(baby)

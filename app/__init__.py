@@ -38,6 +38,11 @@ def migrate_schema(app):
                     "ALTER TABLE users ADD COLUMN identity VARCHAR(20)"
                 ))
                 print('[迁移] users 表已添加 identity 列')
+            if 'created_by' not in cols:
+                db.session.execute(text(
+                    "ALTER TABLE users ADD COLUMN created_by INTEGER"
+                ))
+                print('[迁移] users 表已添加 created_by 列')
             db.session.commit()
         # records 表补充 foods 列（辅食）
         if 'records' in insp.get_table_names():
@@ -54,6 +59,15 @@ def migrate_schema(app):
                 ))
                 db.session.commit()
                 print('[迁移] records 表已添加 baby_id 列')
+        # babies 表补充 created_by 列（创建者，仅创建者可删除）
+        if 'babies' in insp.get_table_names():
+            bcols = [c['name'] for c in insp.get_columns('babies')]
+            if 'created_by' not in bcols:
+                db.session.execute(text(
+                    "ALTER TABLE babies ADD COLUMN created_by INTEGER"
+                ))
+                db.session.commit()
+                print('[迁移] babies 表已添加 created_by 列')
         # growth_records 表（身高体重）
         if 'growth_records' not in insp.get_table_names():
             db.session.execute(text(

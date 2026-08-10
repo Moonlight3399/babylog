@@ -15,6 +15,7 @@ class User(db.Model):
     role = db.Column(db.String(20), nullable=False, default='user')  # 'admin' | 'user'
     baby_id = db.Column(db.Integer, db.ForeignKey('babies.id'), nullable=True)  # 关联宝宝
     identity = db.Column(db.String(20), nullable=True)  # 爸爸/妈妈/爷爷/奶奶/外公/外婆
+    created_by = db.Column(db.Integer, nullable=True)  # 创建者用户ID（仅创建者可删除）
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
@@ -22,6 +23,7 @@ class Baby(db.Model):
     __tablename__ = 'babies'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
+    created_by = db.Column(db.Integer, nullable=True)  # 创建者用户ID（仅创建者可删除）
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 

@@ -978,6 +978,21 @@ input, button {
     color: #999;
 }
 
+/* 用户管理分组标题 */
+.admin-group-header {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #FF69B4;
+    padding: 10px 4px 6px;
+    margin-top: 6px;
+    border-bottom: 2px solid #FFE4EC;
+}
+
+.admin-group-header-none {
+    color: #AAA;
+    border-bottom-color: #F0F0F0;
+}
+
 /* 设置身份弹窗：当前绑定提示 */
 .admin-set-current {
     padding: 10px;
