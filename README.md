@@ -1,6 +1,6 @@
-# BabyLog 使用说明
+# BabyLog
 
-## 简介
+> 宝宝日常成长记录工具（PWA 应用）· 支持 x86 / ARM64 双平台 · 开源免费
 
 BabyLog 是一款面向宝爸宝妈的宝宝日常成长记录工具，支持快速记录喂养、睡眠、排便等活动。采用 PWA 技术，可安装到手机主屏幕，像原生 App 一样使用，并支持离线模式。
 
@@ -65,15 +65,15 @@ python register.py admin 123456 --admin    # 创建管理员 admin
 
 ### 2.1 快捷记录（首页）
 
-首页提供 5 个快捷按钮，点击即可记录：
+首页提供 5 个快捷按钮。点击任一按钮会弹出**确认弹窗**：左侧显示行为、右侧显示**当前时间（可修改）**，下方"确认/取消"按钮；点确认后记录该行为。
 
-| 按钮 | 操作 | 说明 |
-|------|------|------|
-| 喝奶粉 | 点击后弹出输入框 | 输入奶粉量（ml），确认后记录 |
-| 吃辅食 | 弹出选择面板 | 分类多选辅食（主食/蛋白质/蔬菜/其他），可保存/使用常用选项 |
-| 开始睡 | 直接记录 | 记录睡眠开始时间 |
-| 睡醒了 | 直接记录 | 记录睡眠结束时间，**需先有"开始睡"记录** |
-| 拉粑粑 | 直接记录 | 记录一次排便 |
+| 按钮 | 说明 |
+|------|------|
+| 喝奶粉 | 弹窗内含奶粉量输入框，并有**快捷量选项**（30/60/90/120/150/180/210 ml），点击快捷选项即自动填入 |
+| 吃辅食 | 弹窗内含辅食选择：**分类快捷多选**（主食/蛋白质/蔬菜/其他）+ **常用选项**（可保存/删除）+ 手动输入 |
+| 开始睡 | 弹窗确认后记录睡眠开始时间 |
+| 睡醒了 | 弹窗确认后记录睡眠结束时间，**需先有"开始睡"记录** |
+| 拉粑粑 | 弹窗确认后记录一次排便 |
 
 **撤回功能：** 记录添加后，页面底部会显示 Toast 提示，15 秒内可点击"撤回"撤销操作。
 
@@ -106,8 +106,9 @@ python register.py admin 123456 --admin    # 创建管理员 admin
 
 1. 选择事件类型（喝奶粉 / 吃辅食 / 开始睡 / 睡醒了 / 拉粑粑）
 2. 如果选择"喝奶粉"，需填写奶粉量（ml）
-3. 选择日期和时间
-4. 点击"确认添加"
+3. 如果选择"吃辅食"，需输入辅食名称（多个用逗号/顿号分隔，如"大米、南瓜"）
+4. 选择日期和时间
+5. 点击"确认添加"
 
 **注意：** 不能添加未来时间的记录。
 
@@ -117,7 +118,7 @@ python register.py admin 123456 --admin    # 创建管理员 admin
 
 1. 选择开始日期和结束日期
 2. 选择导出模式：
-   - **详细信息：** 每条记录的日期、时间、事件类型、奶粉量
+   - **详细信息：** 每条记录的日期、时间、事件类型、奶粉量、辅食
    - **汇总信息：** 按日汇总的喝奶次数、总奶量、吃辅食次数、睡眠次数、拉粑粑次数
 3. 点击"导出 CSV"按钮下载文件
 
@@ -442,7 +443,7 @@ babylog/
 ├── register.py           # 用户注册脚本（交互式 / 命令行）
 ├── mail_template.html    # 每日邮件 HTML 模板
 ├── requirements.txt      # Python 依赖
-├── 使用说明.md            # 本说明文档
+├── README.md              # 项目说明文档
 ├── app/                  # 应用主包（工厂 + 蓝图结构）
 │   ├── __init__.py       # 应用工厂 create_app()：初始化 db、注册蓝图、启动调度器
 │   ├── models.py         # 数据模型 User / Record
@@ -520,3 +521,35 @@ A：使用 `register.py` 重新注册同名用户即可覆盖（会被提示"用
 ### Q：支持哪些平台？x86 和 ARM 都能跑吗？
 
 A：支持。项目全部为纯 Python + 官方跨平台 wheel 依赖，**x86_64 与 arm64 (aarch64) 均可直接运行**，无需任何修改。若在 ARM 上遇到某依赖安装失败，请先确认 PyPI 是否有对应 aarch64 wheel（验证方法见"八、平台兼容性要求"）。
+
+---
+
+## 开源许可（MIT License）
+
+BabyLog 基于 **MIT License** 开源发布，允许任何人自由**使用、修改、复制、分发（含商业用途）**，只需保留原始版权声明与许可声明。
+
+```
+MIT License
+
+Copyright (c) 2026 zhongyutian
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+完整许可文本见项目根目录 `LICENSE` 文件。
