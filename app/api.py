@@ -55,8 +55,13 @@ def api_create_record(user):
         event_date = now.date()
         event_time = now.time().replace(microsecond=0)
 
+    # 必须绑定宝宝后才能记录（宝宝由管理员绑定）
+    if not user.baby_id:
+        return jsonify({'error': '请先由管理员绑定宝宝，才能记录'}), 403
+
     record = Record(
         user_id=user.id,
+        baby_id=user.baby_id,
         event_type=event_type,
         event_date=event_date,
         event_time=event_time,
@@ -108,7 +113,9 @@ def api_create_record(user):
         'ok': True,
         'record': {
             'id': record.id,
+            'baby_id': record.baby_id,
             'event_type': record.event_type,
+            'event_label': LABEL_MAP.get(record.event_type, record.event_type),
             'event_date': str(record.event_date),
             'event_time': str(record.event_time),
             'formula_amount': record.formula_amount,
@@ -141,6 +148,7 @@ def api_update_record(user, record_id):
         'ok': True,
         'record': {
             'id': record.id,
+            'baby_id': record.baby_id,
             'event_type': record.event_type,
             'event_label': LABEL_MAP.get(record.event_type, record.event_type),
             'event_date': str(record.event_date),
@@ -166,7 +174,7 @@ def api_delete_record(user, record_id):
 @api_bp.route('/api/record/undo', methods=['POST'])
 @login_required
 def api_undo_record(user):
-    last_record = Record.query.filter_by(user_id=user.id)\
+    last_record = Record.query.filter_by(user_id=user.id, baby_id=user.baby_id)\
         .order_by(Record.id.desc()).first()
 
     if not last_record:
@@ -195,7 +203,7 @@ def api_records(user):
     except ValueError:
         return jsonify({'error': '日期格式错误'}), 400
 
-    records = Record.query.filter_by(user_id=user.id, event_date=date)\
+    records = Record.query.filter_by(user_id=user.id, baby_id=user.baby_id, event_date=date)\
                           .order_by(Record.event_time.asc()).all()
 
     return jsonify({
@@ -203,6 +211,7 @@ def api_records(user):
         'records': [
             {
                 'id': r.id,
+                'baby_id': r.baby_id,
                 'event_type': r.event_type,
                 'event_label': LABEL_MAP.get(r.event_type, r.event_type),
                 'event_time': str(r.event_time),
@@ -225,7 +234,7 @@ def api_stats(user):
     except ValueError:
         return jsonify({'error': '日期格式错误'}), 400
 
-    records = Record.query.filter_by(user_id=user.id, event_date=date)\
+    records = Record.query.filter_by(user_id=user.id, baby_id=user.baby_id, event_date=date)\
                           .order_by(Record.event_time.asc()).all()
 
     total_formula = sum(r.formula_amount for r in records if r.event_type == 'formula' and r.formula_amount)
@@ -242,6 +251,7 @@ def api_stats(user):
     # 从数据库中获取该用户跨所有日期的睡眠记录，以便正确配对（考虑跨天睡眠）
     all_sleep = Record.query.filter(
         Record.user_id == user.id,
+        Record.baby_id == user.baby_id,
         Record.event_type.in_(['sleep_start', 'sleep_end']),
         Record.event_date <= date
     ).order_by(Record.event_date.asc(), Record.event_time.asc()).all()
@@ -298,6 +308,7 @@ def api_export_csv(user):
 
     records = Record.query.filter(
         Record.user_id == user.id,
+        Record.baby_id == user.baby_id,
         Record.event_date >= start_date,
         Record.event_date <= end_date
     ).order_by(Record.event_date.asc(), Record.event_time.asc()).all()

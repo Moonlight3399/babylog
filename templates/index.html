@@ -117,10 +117,8 @@
             <div class="export-card profile-card">
                 <h3 class="export-title">👤 我的身份</h3>
                 <div class="form-group">
-                    <label class="input-label" for="profileBaby">关联宝宝</label>
-                    <select id="profileBaby" class="input-md">
-                        <option value="">（暂无宝宝，请联系管理员添加）</option>
-                    </select>
+                    <label class="input-label">我的宝宝</label>
+                    <div class="profile-baby" id="profileBabyText">未绑定宝宝</div>
                 </div>
                 <div class="form-group">
                     <label class="input-label" for="profileIdentity">我的身份</label>
@@ -576,6 +574,11 @@
     function openConfirmModal(eventType) {
         const info = EVENT_INFO[eventType];
         if (!info) return;
+        // 未绑定宝宝前禁止记录
+        if (!window.currentBabyId) {
+            showToast('请先由管理员绑定宝宝，才能记录', true);
+            return;
+        }
         confirmEventType = eventType;
         document.getElementById('confirmIcon').textContent = info.icon;
         document.getElementById('confirmLabel').textContent = info.label;
@@ -1029,6 +1032,7 @@
             .then(r => r.json())
             .then(data => {
                 document.getElementById('userName').textContent = data.username;
+                window.currentBabyId = data.baby ? data.baby.id : null;
                 const roleEl = document.getElementById('userRole');
                 roleEl.textContent = data.role === 'admin' ? '管理员' : '普通用户';
                 roleEl.className = 'user-role ' + (data.role === 'admin' ? 'role-admin' : 'role-user');
@@ -1043,10 +1047,16 @@
                 } else {
                     identityEl.textContent = '';
                 }
-                // 身份设置回填
-                document.getElementById('profileBaby').value = data.baby ? String(data.baby.id) : '';
+                // 我的宝宝（只读，由管理员绑定）
+                const babyText = document.getElementById('profileBabyText');
+                if (data.baby) {
+                    babyText.textContent = '👶 ' + data.baby.name;
+                    babyText.className = 'profile-baby';
+                } else {
+                    babyText.textContent = '未绑定宝宝，请联系管理员';
+                    babyText.className = 'profile-baby profile-baby-empty';
+                }
                 document.getElementById('profileIdentity').value = data.identity || '';
-                loadProfileBabies();
                 if (data.role === 'admin') {
                     document.getElementById('adminPanel').style.display = 'block';
                     loadAdminBabies();
@@ -1057,28 +1067,13 @@
             });
     }
 
-    // 加载宝宝列表到身份选择
-    function loadProfileBabies() {
-        fetch('/api/babies')
-            .then(r => r.json())
-            .then(data => {
-                const sel = document.getElementById('profileBaby');
-                const current = sel.value;
-                sel.innerHTML = data.babies.length
-                    ? '<option value="">（请选择宝宝）</option>' + data.babies.map(b => `<option value="${b.id}">${b.name}</option>`).join('')
-                    : '<option value="">（暂无宝宝，请联系管理员添加）</option>';
-                if (current) sel.value = current;
-            });
-    }
-
-    // 保存我的身份
+    // 保存我的身份（宝宝由管理员绑定）
     document.getElementById('saveProfileBtn').addEventListener('click', () => {
         const identity = document.getElementById('profileIdentity').value;
-        const babyId = document.getElementById('profileBaby').value;
         fetch('/api/user/profile', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ identity: identity, baby_id: babyId ? Number(babyId) : null })
+            body: JSON.stringify({ identity: identity })
         })
         .then(r => r.json())
         .then(d => {
@@ -1109,7 +1104,7 @@
                             fetch('/api/admin/babies/' + btn.dataset.id, { method: 'DELETE' })
                                 .then(r => r.json())
                                 .then(d => {
-                                    if (d.ok) { showToast('已删除宝宝'); loadAdminBabies(); loadAdminUsers(); loadProfileBabies(); }
+                                    if (d.ok) { showToast('已删除宝宝'); loadAdminBabies(); loadAdminUsers(); }
                                     else { showToast(d.error || '删除失败', true); }
                                 });
                         });
@@ -1132,7 +1127,6 @@
                 showToast('宝宝已添加');
                 document.getElementById('adminBabyName').value = '';
                 loadAdminBabies();
-                loadProfileBabies();
             } else { showToast(d.error || '添加失败', true); }
         });
     });

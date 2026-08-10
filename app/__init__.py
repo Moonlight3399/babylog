@@ -49,6 +49,12 @@ def migrate_schema(app):
                 ))
                 db.session.commit()
                 print('[迁移] records 表已添加 foods 列')
+            if 'baby_id' not in rcols:
+                db.session.execute(text(
+                    "ALTER TABLE records ADD COLUMN baby_id INTEGER"
+                ))
+                db.session.commit()
+                print('[迁移] records 表已添加 baby_id 列')
 
 
 def create_app():

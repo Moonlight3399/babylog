@@ -248,28 +248,21 @@ def api_admin_update_user(admin, user_id):
 @auth_bp.route('/api/babies')
 @login_required
 def api_babies(user):
-    babies = Baby.query.order_by(Baby.id.asc()).all()
+    """用户只能看到自己绑定的宝宝"""
+    babies = [Baby.query.get(user.baby_id)] if user.baby_id else []
     return jsonify({
-        'babies': [{'id': b.id, 'name': b.name} for b in babies]
+        'babies': [{'id': b.id, 'name': b.name} for b in babies if b]
     })
 
 
 @auth_bp.route('/api/user/profile', methods=['PUT'])
 @login_required
 def api_user_profile(user):
-    """用户设置自己的身份和关联宝宝"""
+    """用户设置自己的身份（宝宝由管理员绑定，用户不可自行更改）"""
     data = request.get_json() or {}
     identity = (data.get('identity') or '').strip()
-    baby_id = data.get('baby_id')
     if identity and identity not in IDENTITIES:
         return jsonify({'error': '无效的身份，可选：爸爸/妈妈/爷爷/奶奶/外公/外婆'}), 400
-    if baby_id:
-        baby = Baby.query.get(int(baby_id))
-        if not baby:
-            return jsonify({'error': '宝宝不存在'}), 404
-        user.baby_id = baby.id
-    else:
-        user.baby_id = None
     user.identity = identity or None
     db.session.commit()
     baby = Baby.query.get(user.baby_id) if user.baby_id else None

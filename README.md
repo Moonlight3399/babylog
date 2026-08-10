@@ -122,19 +122,26 @@ python register.py admin 123456 --admin    # 创建管理员 admin
    - **汇总信息：** 按日汇总的喝奶次数、总奶量、吃辅食次数、睡眠次数、拉粑粑次数
 3. 点击"导出 CSV"按钮下载文件
 
-### 2.6 用户身份与宝宝
+### 2.6 多宝宝与用户身份
 
-**用户身份：** 每个用户可设置自己的家庭身份（爸爸 / 妈妈 / 爷爷 / 奶奶 / 外公 / 外婆），并关联一个宝宝。设置后，用户页面会显示为 **"宝宝名字 的 身份"**（如"小宝的爸爸"）。
+BabyLog 支持**多宝宝数据隔离**：每个用户由管理员绑定到一个宝宝，未绑定前无法记录任何数据；绑定后，用户的所有操作（记录、查询、统计、导出）都只作用于该宝宝，且只能看到自己的宝宝。
 
-- 普通用户可在"用户 → 我的身份"中自行设置身份和关联宝宝
-- 管理员可在后台为用户设置身份（"用户管理"中点击"身份"按钮）
+**绑定规则：**
+- **宝宝由管理员绑定**：普通用户不能自行选择/更改宝宝，宝宝在"用户 → 宝宝管理"中由管理员添加，并在"用户管理 → 身份"弹窗中为用户绑定
+- **未绑定不能记录**：用户点击快捷键或手动添加时，会提示"请先由管理员绑定宝宝，才能记录"
+- **数据按宝宝隔离**：绑定后，用户的所有记录自动归属该宝宝（记录带 `baby_id`），查询/统计/导出均按宝宝过滤
+
+**用户身份：** 每个用户可设置自己的家庭身份（爸爸 / 妈妈 / 爷爷 / 奶奶 / 外公 / 外婆）。设置后，用户页面会显示为 **"宝宝名字 的 身份"**（如"小宝的爸爸"）。
+
+- 普通用户在"用户 → 我的身份"中可设置身份（宝宝为只读显示，由管理员绑定）
+- 管理员可在"用户管理"中点击"身份"按钮，为用户设置身份并绑定/更换宝宝
 - 身份可选：爸爸、妈妈、爷爷、奶奶、外公、外婆
 
 **宝宝管理（管理员）：**
 - 管理员可在"用户 → 宝宝管理"中添加宝宝（输入名字）、查看宝宝列表、删除宝宝
-- 添加宝宝后，所有用户的身份设置中即可选择该宝宝
+- 删除宝宝时自动解除用户对该宝宝的关联
 
-**用户管理（管理员）：** 查看所有用户、为用户设置身份/关联宝宝、删除用户
+**用户管理（管理员）：** 查看所有用户、为用户绑定宝宝/设置身份、删除用户
 
 ---
 
@@ -350,7 +357,7 @@ WantedBy=multi-user.target
 | password_hash | String(128) | PBKDF2-SHA256 加盐哈希 |
 | salt | String(64) | 盐值 |
 | role | String(20) | 角色：`admin` 管理员 / `user` 普通用户（默认 user） |
-| baby_id | Integer FK → babies.id | 关联宝宝（可为空） |
+| baby_id | Integer FK → babies.id | 绑定的宝宝（由管理员设置，可为空） |
 | identity | String(20) | 家庭身份：爸爸/妈妈/爷爷/奶奶/外公/外婆（可为空） |
 | created_at | DateTime | 创建时间 |
 
@@ -360,6 +367,7 @@ WantedBy=multi-user.target
 |------|------|------|
 | id | Integer PK | 主键 |
 | user_id | FK → users.id | 所属用户 |
+| baby_id | FK → babies.id | 所属宝宝（多宝宝数据隔离，可为空） |
 | event_type | String(20) | 事件类型（formula / solid / sleep_start / sleep_end / poop / pee 旧数据兼容） |
 | event_date | Date | 记录日期 |
 | event_time | Time | 记录时间 |
@@ -470,29 +478,30 @@ babylog/
 | POST | `/api/login` | 登录，设置 Session Cookie | 否 |
 | POST | `/api/logout` | 退出登录 | 否 |
 | POST | `/api/register` | 注册普通用户（成功后自动登录） | 否 |
-| GET | `/api/user` | 当前用户信息（含角色 role、身份 identity、宝宝 baby） | 是 |
-| PUT | `/api/user/profile` | 用户设置自己的身份与关联宝宝 | 是 |
-| GET | `/api/babies` | 查看宝宝列表 | 是 |
+| GET | `/api/user` | 当前用户信息（含角色 role、身份 identity、绑定宝宝 baby） | 是 |
+| PUT | `/api/user/profile` | 用户设置自己的身份（宝宝由管理员绑定，用户不可更改） | 是 |
+| GET | `/api/babies` | 查看我绑定的宝宝（未绑定返回空） | 是 |
 | GET | `/api/foods` | 查看我的常用辅食 | 是 |
 | POST | `/api/foods` | 保存常用辅食（body: {name}） | 是 |
 | DELETE | `/api/foods/<id>` | 删除常用辅食 | 是 |
 | GET | `/api/admin/users` | 查看所有用户（含身份/宝宝） | 管理员 |
-| PUT | `/api/admin/users/<id>` | 管理员为用户设置身份/关联宝宝 | 管理员 |
+| PUT | `/api/admin/users/<id>` | 管理员为用户设置身份/绑定宝宝（body: {identity?, baby_id?}） | 管理员 |
 | DELETE | `/api/admin/users/<id>` | 删除用户及其全部记录 | 管理员 |
 | GET | `/api/admin/babies` | 查看所有宝宝 | 管理员 |
 | POST | `/api/admin/babies` | 添加宝宝（body: {name}） | 管理员 |
 | DELETE | `/api/admin/babies/<id>` | 删除宝宝（自动解除用户关联） | 管理员 |
-| POST | `/api/record` | 新增记录（可手动指定日期时间） | 是 |
+| POST | `/api/record` | 新增记录（可手动指定日期时间；未绑定宝宝返回 403） | 是 |
 | PUT | `/api/record/<id>` | 修改记录时间（HH:MM） | 是 |
 | DELETE | `/api/record/<id>` | 删除记录 | 是 |
 | POST | `/api/record/undo` | 撤回最近一条记录（15 秒内） | 是 |
-| GET | `/api/records?date=YYYY-MM-DD` | 查询某日记录列表 | 是 |
-| GET | `/api/stats?date=YYYY-MM-DD` | 查询某日统计汇总 | 是 |
-| GET | `/api/export/csv?start=&end=&mode=` | 导出 CSV（detail 详细 / summary 汇总） | 是 |
+| GET | `/api/records?date=YYYY-MM-DD` | 查询某日记录列表（仅本人绑定宝宝） | 是 |
+| GET | `/api/stats?date=YYYY-MM-DD` | 查询某日统计汇总（仅本人绑定宝宝） | 是 |
+| GET | `/api/export/csv?start=&end=&mode=` | 导出 CSV（detail 详细 / summary 汇总，仅本人绑定宝宝） | 是 |
 
 **事件类型：** `formula`（喝奶粉）/ `solid`（吃辅食）/ `sleep_start`（开始睡）/ `sleep_end`（睡醒了）/ `poop`（拉粑粑）/ `pee`（小便了，旧数据兼容）
 
 **业务规则：**
+- 未绑定宝宝的用户无法记录（返回 403："请先由管理员绑定宝宝，才能记录"）
 - 存在未结束的睡眠时，禁止再次"开始睡"；没有"开始睡"记录时，禁止"睡醒了"
 - 睡眠时长统计支持**跨天配对**（按所有日期顺序配对）
 - 撤回仅限最近一条、创建 15 秒内

@@ -35,6 +35,7 @@ class Record(db.Model):
     event_time = db.Column(db.Time, nullable=False)
     formula_amount = db.Column(db.Integer, nullable=True)
     foods = db.Column(db.String(200), nullable=True)  # 辅食食物列表（逗号分隔）
+    baby_id = db.Column(db.Integer, db.ForeignKey('babies.id'), nullable=True)  # 所属宝宝
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 

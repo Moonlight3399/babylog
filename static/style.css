@@ -1035,6 +1035,24 @@ input, button {
     padding: 8px 0;
 }
 
+/* --- 我的宝宝（只读显示） --- */
+.profile-baby {
+    padding: 12px;
+    background: #FFFBFD;
+    border: 2px solid #FDDDE6;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #FF69B4;
+    text-align: center;
+}
+
+.profile-baby-empty {
+    color: #E74C3C;
+    border-color: #F8C9C9;
+    background: #FFF5F5;
+}
+
 .amount-quick {
     display: flex;
     flex-wrap: wrap;
