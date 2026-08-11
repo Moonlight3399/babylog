@@ -797,12 +797,15 @@
         }
         document.getElementById('confirmError').style.display = 'none';
         confirmModal.classList.add('show');
+        // 默认显示弹窗顶部（餐次标签可见），避免被下方输入框的 focus 带到最底部
+        const confirmBody = confirmModal.querySelector('.modal-body');
+        if (confirmBody) confirmBody.scrollTop = 0;
         setTimeout(() => {
             let el;
             if (info.needFood) el = document.getElementById('solidInput');
             else if (info.needAmount) el = document.getElementById('confirmFormulaAmount');
             else el = document.getElementById('confirmTime');
-            el.focus();
+            if (el) el.focus({ preventScroll: true });
         }, 100);
     }
 
