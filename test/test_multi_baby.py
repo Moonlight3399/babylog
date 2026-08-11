@@ -108,7 +108,9 @@ check('清理测试用户成功', r.json().get('ok') is True)
 
 # 清理测试记录（按 user_id 删除）——直接通过 sqlite
 import sqlite3, os
-db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instance', 'babylog_new.db')
+# 脚本位于 test/ 下，数据库在项目根 instance/ 下
+_BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+db_path = os.path.join(_BASE, 'instance', 'babylog_new.db')
 conn = sqlite3.connect(db_path)
 # 找出测试用户记录并删除（用户已删除，遗留孤儿记录也清理）
 cur = conn.execute("DELETE FROM records WHERE user_id NOT IN (SELECT id FROM users)")
