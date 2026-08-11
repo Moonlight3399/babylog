@@ -881,7 +881,7 @@ select.input-md {
 /* --- Global Toast --- */
 .toast-global {
     position: fixed;
-    top: 35%;
+    top: 120px;
     left: 50%;
     transform: translateX(-50%) translateY(-100px);
     background: #333;
