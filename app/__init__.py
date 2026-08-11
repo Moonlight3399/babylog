@@ -7,6 +7,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from apscheduler.schedulers.background import BackgroundScheduler
 from sqlalchemy import inspect, text
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from config import DATABASE_URL, EMAIL_CONFIG, SECRET_KEY
 
@@ -106,6 +107,9 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     db.init_app(app)
+
+    # 反向代理（Nginx）后正确识别客户端真实 IP，用于登录限速等
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
     # 注册蓝图
     from .auth import auth_bp
