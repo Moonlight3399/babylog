@@ -80,6 +80,10 @@ def api_create_record(user):
                 if f and f not in cleaned and len(f) <= 20:
                     cleaned.append(f)
             record.foods = ','.join(cleaned)
+            # 餐次（早餐/午餐/晚餐/加餐）
+            meal = str(data.get('meal', '') or '').strip()
+            if meal in ('早餐', '午餐', '晚餐', '加餐'):
+                record.meal = meal
 
     # 睡眠约束：检查是否存在未配对的睡眠记录（跨所有日期，按宝宝共享）
     if event_type == 'sleep_start':
@@ -120,6 +124,7 @@ def api_create_record(user):
             'event_time': str(record.event_time),
             'formula_amount': record.formula_amount,
             'foods': record.foods.split(',') if record.foods else [],
+            'meal': record.meal,
         }
     })
 
@@ -155,6 +160,7 @@ def api_update_record(user, record_id):
             'event_time': str(record.event_time),
             'formula_amount': record.formula_amount,
             'foods': record.foods.split(',') if record.foods else [],
+            'meal': record.meal,
         }
     })
 
@@ -217,6 +223,7 @@ def api_records(user):
                 'event_time': str(r.event_time),
                 'formula_amount': r.formula_amount,
                 'foods': r.foods.split(',') if r.foods else [],
+                'meal': r.meal,
             }
             for r in records
         ]

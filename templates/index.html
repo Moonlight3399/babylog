@@ -445,6 +445,13 @@
                 </div>
                 <div id="confirmSolid" class="confirm-solid hidden">
                     <label class="input-label">辅食（可多选）</label>
+                    <div class="solid-meal-picker" id="solidMealPicker">
+                        <span class="solid-meal-label">餐次</span>
+                        <button type="button" class="meal-opt" data-meal="早餐">早餐</button>
+                        <button type="button" class="meal-opt" data-meal="午餐">午餐</button>
+                        <button type="button" class="meal-opt" data-meal="晚餐">晚餐</button>
+                        <button type="button" class="meal-opt" data-meal="加餐">加餐</button>
+                    </div>
                     <div class="solid-selected" id="solidSelected"></div>
                     <div class="solid-categories">
                         <div class="solid-cat">
@@ -744,6 +751,7 @@
         if (info.needFood) {
             fs.classList.remove('hidden');
             selectedFoods = [];
+            initMealPicker();
             renderSolidSelected();
             renderSolidCommon();
             document.getElementById('solidInput').value = '';
@@ -784,6 +792,28 @@
 
     // ========== 辅食选择（分类多选 + 常用 + 手动保存） ==========
     let selectedFoods = [];
+
+    // 餐次：按当前时间自动判断，可手动改
+    let selectedMeal = '早餐';
+    function autoMeal(hour) {
+        if (hour >= 5 && hour < 10) return '早餐';
+        if (hour >= 10 && hour < 14) return '午餐';
+        if (hour >= 17 && hour < 21) return '晚餐';
+        return '加餐';
+    }
+    function initMealPicker() {
+        selectedMeal = autoMeal(new Date().getHours());
+        document.querySelectorAll('.meal-opt').forEach(b => {
+            b.classList.toggle('active', b.dataset.meal === selectedMeal);
+        });
+    }
+    document.querySelectorAll('.meal-opt').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.meal-opt').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedMeal = btn.dataset.meal;
+        });
+    });
 
     function toggleFood(name) {
         const idx = selectedFoods.indexOf(name);
@@ -897,7 +927,7 @@
             event_time: time,
         };
         if (amount !== null) body.formula_amount = amount;
-        if (foods !== null) body.foods = foods;
+        if (foods !== null) { body.foods = foods; body.meal = selectedMeal; }
         fetch('/api/record', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -1146,8 +1176,11 @@
                         if (r.event_type === 'formula' && r.formula_amount) {
                             detail = ' <span class="record-detail">' + r.formula_amount + 'ml</span>';
                         }
-                        if (r.event_type === 'solid' && r.foods && r.foods.length) {
-                            detail = ' <span class="record-detail">' + r.foods.join('、') + '</span>';
+                        if (r.event_type === 'solid') {
+                            const mealParts = [];
+                            if (r.meal) mealParts.push('[' + r.meal + ']');
+                            if (r.foods && r.foods.length) mealParts.push(r.foods.join('、'));
+                            detail = ' <span class="record-detail">' + mealParts.join(' ') + '</span>';
                         }
                         return '<div class="record-item">' +
                             '<span class="record-icon">' + getEventIcon(r.event_type) + '</span>' +

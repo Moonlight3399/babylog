@@ -60,6 +60,12 @@ def migrate_schema(app):
                 ))
                 db.session.commit()
                 print('[迁移] records 表已添加 baby_id 列')
+            if 'meal' not in rcols:
+                db.session.execute(text(
+                    "ALTER TABLE records ADD COLUMN meal VARCHAR(10)"
+                ))
+                db.session.commit()
+                print('[迁移] records 表已添加 meal 列')
         # babies 表补充 created_by 列（创建者，仅创建者可删除）
         if 'babies' in insp.get_table_names():
             bcols = [c['name'] for c in insp.get_columns('babies')]

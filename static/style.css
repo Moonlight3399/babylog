@@ -445,6 +445,46 @@ input, button {
     text-align: center;
 }
 
+/* --- 辅食餐次选择 --- */
+.solid-meal-picker {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0;
+    flex-wrap: wrap;
+}
+
+.solid-meal-label {
+    font-size: 0.8rem;
+    color: #B8860B;
+    font-weight: 600;
+    margin-right: 2px;
+}
+
+.meal-opt {
+    padding: 6px 14px;
+    border: 2px solid #FDDDE6;
+    border-radius: 20px;
+    background: #FFFBFD;
+    color: #D4869C;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.meal-opt.active {
+    background: #FF69B4;
+    border-color: #FF69B4;
+    color: #fff;
+}
+
+.meal-opt:active {
+    transform: scale(0.95);
+}
+
 /* --- Records List --- */
 .records-list {
     background: #fff;
