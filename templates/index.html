@@ -15,7 +15,7 @@
     <link rel="apple-touch-icon" href="/static/icons/192x192.png">
     <link rel="icon" type="image/png" href="/static/icons/192x192.png">
 
-    <link rel="stylesheet" href="/static/style.css?v=10">
+    <link rel="stylesheet" href="/static/style.css?v=11">
 </head>
 <body class="app-body">
     <!-- 内容区 -->
@@ -193,6 +193,13 @@
                     <button class="export-mode-btn" data-mode="summary">汇总信息</button>
                 </div>
                 <button class="btn btn-primary btn-full" id="exportBtn">导出 CSV</button>
+            </div>
+
+            <div class="export-card">
+                <h3 class="export-title">导入数据</h3>
+                <div class="export-tip">选择用「详细信息」导出的 CSV，将记录恢复到当前宝宝</div>
+                <input type="file" id="importFile" accept=".csv" class="import-file" hidden>
+                <button class="btn btn-outline btn-full" id="importBtn">导入 CSV</button>
             </div>
         </div>
 
@@ -1645,6 +1652,39 @@
                 .catch(err => showToast(err.message || '导出失败', true));
         });
     })();
+
+    // ========== 导入数据（与「详细信息」导出格式对应） ==========
+    const importFile = document.getElementById('importFile');
+    const importBtn = document.getElementById('importBtn');
+    importBtn.addEventListener('click', () => importFile.click());
+    importFile.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (!/\.csv$/i.test(file.name)) {
+            showToast('请选择 CSV 文件', true);
+            e.target.value = '';
+            return;
+        }
+        const fd = new FormData();
+        fd.append('file', file);
+        const orig = importBtn.textContent;
+        importBtn.disabled = true;
+        importBtn.textContent = '导入中...';
+        fetch('/api/import/csv', { method: 'POST', body: fd })
+            .then(r => r.json())
+            .then(d => {
+                if (d.ok) {
+                    let msg = '导入成功 ' + d.imported + ' 条';
+                    if (d.failed) msg += '，失败 ' + d.failed + ' 条';
+                    showToast(msg);
+                    refreshCurrentContext();
+                } else {
+                    showToast(d.error || '导入失败', true);
+                }
+            })
+            .catch(() => showToast('网络错误', true))
+            .finally(() => { importBtn.disabled = false; importBtn.textContent = orig; e.target.value = ''; });
+    });
 
     // ========== 手动添加记录弹窗 ==========
     const addRecordModal = document.getElementById('addRecordModal');

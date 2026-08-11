@@ -144,7 +144,7 @@ python register.py admin 123456 --admin    # 创建管理员 admin
   - 从未记录 → 显示 `点击记录`
 - 方便一眼看出该多久测量一次、有没有长高长胖
 
-### 2.6 数据导出
+### 2.6 数据导出 / 导入
 
 在"用户"页面中，可以导出 CSV 数据：
 
@@ -153,6 +153,13 @@ python register.py admin 123456 --admin    # 创建管理员 admin
    - **详细信息：** 每条记录的日期、时间、事件类型、奶粉量、辅食
    - **汇总信息：** 按日汇总的喝奶次数、总奶量、吃辅食次数、睡眠次数、拉粑粑次数
 3. 点击"导出 CSV"按钮下载文件
+
+**数据导入：** 用户页的"导入数据"可把导出的**详细信息 CSV** 恢复到当前宝宝：
+
+- 选择 CSV 文件后自动导入，支持喝奶粉/吃辅食/开始睡/睡醒了/拉粑粑/小便了
+- 校验每行（日期/时间/事件类型/奶粉量），返回"成功 N 条 / 失败 N 条"，失败行会提示原因（前 20 条）
+- 导入的记录归属当前宝宝；未绑定宝宝无法导入；未来日期、非法格式会跳过
+- 用途：换手机、迁移数据、批量补录历史记录
 
 ### 2.7 多宝宝与用户身份
 
@@ -599,6 +606,7 @@ babylog/
 | GET | `/api/records?date=YYYY-MM-DD` | 查询某日记录列表（仅本人绑定宝宝） | 是 |
 | GET | `/api/stats?date=YYYY-MM-DD` | 查询某日统计汇总（仅本人绑定宝宝） | 是 |
 | GET | `/api/export/csv?start=&end=&mode=` | 导出 CSV（detail 详细 / summary 汇总，仅本人绑定宝宝） | 是 |
+| POST | `/api/import/csv` | 导入 CSV（multipart 上传 file，与详细信息导出格式对应，返回 imported/failed） | 是 |
 | GET | `/api/growth?date=YYYY-MM-DD` | 查询某日身高体重（仅本人绑定宝宝，无记录返回 null） | 是 |
 | POST | `/api/growth` | 保存/覆盖身高体重（body: {date?, height?, weight?}；未绑定宝宝返回 403） | 是 |
 | GET | `/api/growth/latest` | 最近一次身高体重（返回 height/weight/record_date/days_ago 距上次天数） | 是 |

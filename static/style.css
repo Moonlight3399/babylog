@@ -516,6 +516,13 @@ input, button {
     box-shadow: 0 4px 16px rgba(255, 105, 180, 0.18);
 }
 
+.export-tip {
+    font-size: 0.82rem;
+    color: #AAA;
+    margin-bottom: 12px;
+    text-align: left;
+}
+
 /* --- Records List --- */
 .records-list {
     background: #fff;

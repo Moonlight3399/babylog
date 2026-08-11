@@ -363,6 +363,91 @@ def api_export_csv(user):
 
 
 # ------------------------------------------------------------
+# 数据导入：CSV（与「详细信息」导出格式对应）
+# ------------------------------------------------------------
+@api_bp.route('/api/import/csv', methods=['POST'])
+@login_required
+def api_import_csv(user):
+    if not user.baby_id:
+        return jsonify({'error': '请先由管理员绑定宝宝，才能导入'}), 403
+
+    f = request.files.get('file')
+    if not f or not f.filename:
+        return jsonify({'error': '请选择 CSV 文件'}), 400
+    f.seek(0, 2)
+    size = f.tell()
+    f.seek(0)
+    if size > 5 * 1024 * 1024:
+        return jsonify({'error': '文件过大（超过 5MB）'}), 400
+
+    try:
+        raw = f.read().decode('utf-8-sig')
+    except UnicodeDecodeError:
+        return jsonify({'error': '文件编码错误，请使用 UTF-8'}), 400
+
+    reader = csv.reader(io.StringIO(raw))
+    rows = list(reader)
+    if not rows:
+        return jsonify({'error': '文件为空'}), 400
+
+    header = [h.strip() for h in rows[0]]
+    if len(header) < 3 or header[0] != '日期' or header[1] != '时间' or header[2] != '事件类型':
+        return jsonify({'error': 'CSV 格式不符，请使用「详细信息」导出的文件'}), 400
+
+    # 事件类型中文 → code（复用 LABEL_MAP 反向映射）
+    type_map = {v: k for k, v in LABEL_MAP.items()}
+
+    today = datetime.now().date()
+    imported = 0
+    failed = 0
+    errors = []
+
+    for i, row in enumerate(rows[1:], start=2):
+        if not row or not (row[0] or '').strip():
+            continue
+        try:
+            date_str = (row[0] or '').strip()
+            time_str = (row[1] or '').strip()
+            type_cn = (row[2] or '').strip()
+            amount_str = (row[3] if len(row) > 3 else '').strip()
+            foods = (row[4] if len(row) > 4 else '').strip()
+
+            if not date_str or not time_str or not type_cn:
+                raise ValueError('日期/时间/事件类型不能为空')
+            d = datetime.strptime(date_str, '%Y-%m-%d').date()
+            if d > today:
+                raise ValueError('不能导入未来日期的记录')
+            try:
+                t = datetime.strptime(time_str, '%H:%M').time()
+            except ValueError:
+                t = datetime.strptime(time_str, '%H:%M:%S').time()
+            if type_cn not in type_map:
+                raise ValueError(f'未知事件类型「{type_cn}」')
+
+            rec = Record(user_id=user.id, baby_id=user.baby_id, event_type=type_map[type_cn],
+                         event_date=d, event_time=t, formula_amount=None)
+            if rec.event_type == 'formula':
+                try:
+                    amt = int(float(amount_str))
+                except (ValueError, TypeError):
+                    raise ValueError('奶粉量格式错误')
+                if amt <= 0:
+                    raise ValueError('奶粉量必须大于0')
+                rec.formula_amount = amt
+            if rec.event_type == 'solid' and foods:
+                rec.foods = foods
+            db.session.add(rec)
+            imported += 1
+        except Exception as e:
+            failed += 1
+            if len(errors) < 20:
+                errors.append(f'第 {i} 行：{e}')
+
+    db.session.commit()
+    return jsonify({'ok': True, 'imported': imported, 'failed': failed, 'errors': errors})
+
+
+# ------------------------------------------------------------
 # Service Worker（必须位于根路径以保证正确作用域）
 # ------------------------------------------------------------
 @api_bp.route('/sw.js')
