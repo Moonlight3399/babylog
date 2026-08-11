@@ -409,6 +409,7 @@ input, button {
     border-radius: 14px;
     padding: 9px 14px;
     margin-top: 12px;
+    margin-bottom: 12px;
 }
 
 .tip-card-header {
