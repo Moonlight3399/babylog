@@ -406,29 +406,29 @@ input, button {
 .tip-card {
     background: linear-gradient(135deg, #FFF8E1, #FFECB3);
     border: 2px solid #FFD54F;
-    border-radius: 16px;
-    padding: 14px 16px;
-    margin-top: 16px;
+    border-radius: 14px;
+    padding: 9px 14px;
+    margin-top: 12px;
 }
 
 .tip-card-header {
-    font-size: 0.95rem;
+    font-size: 0.88rem;
     font-weight: 700;
     color: #E6A700;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 .tip-stage {
-    font-size: 0.8rem;
+    font-size: 0.74rem;
     color: #B8860B;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
     font-weight: 600;
 }
 
 .tip-text {
-    font-size: 0.9rem;
+    font-size: 0.84rem;
     color: #6D5B2F;
-    line-height: 1.6;
+    line-height: 1.5;
 }
 
 .tip-text.tip-empty {
@@ -436,8 +436,8 @@ input, button {
 }
 
 .tip-special {
-    margin-top: 8px;
-    font-size: 0.95rem;
+    margin-top: 6px;
+    font-size: 0.88rem;
     font-weight: 700;
     color: #E91E63;
     text-align: center;
