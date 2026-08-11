@@ -264,6 +264,7 @@ input, button {
 .sleep-btn   { background: linear-gradient(135deg, #A18CD1, #C4B5E0); }
 .wake-btn    { background: linear-gradient(135deg, #FAD961, #F7B733); }
 .poop-btn    { background: linear-gradient(135deg, #A8D8B9, #7EC8A0); }
+.pee-btn     { background: linear-gradient(135deg, #7EC8E3, #4FB3D9); }
 
 /* --- Bottom Nav --- */
 .bottom-nav {

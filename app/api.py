@@ -37,7 +37,7 @@ def api_create_record(user):
         return jsonify({'error': '无效请求'}), 400
 
     event_type = data.get('event_type', '').strip()
-    valid_types = {'formula', 'solid', 'sleep_start', 'sleep_end', 'poop'}
+    valid_types = {'formula', 'solid', 'sleep_start', 'sleep_end', 'poop', 'pee'}
     if event_type not in valid_types:
         return jsonify({'error': '无效的事件类型'}), 400
 

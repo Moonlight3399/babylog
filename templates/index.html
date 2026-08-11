@@ -41,6 +41,10 @@
                     <span class="action-icon">🥣</span>
                     <span class="action-label">吃辅食</span>
                 </button>
+                <button class="action-btn pee-btn" data-event="pee" style="display:none;">
+                    <span class="action-icon">💧</span>
+                    <span class="action-label">小便了</span>
+                </button>
                 <button class="action-btn sleep-btn" data-event="sleep_start">
                     <span class="action-icon">😴</span>
                     <span class="action-label">开始睡</span>
@@ -80,9 +84,9 @@
                     <div class="stat-label">睡眠时长</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">🥣</div>
+                    <div class="stat-icon" id="stat-solid-icon">🥣</div>
                     <div class="stat-value" id="stat-solid">0</div>
-                    <div class="stat-label">吃辅食</div>
+                    <div class="stat-label" id="stat-solid-label">吃辅食</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">💩</div>
@@ -218,9 +222,9 @@
                     <div class="stat-label">睡眠时长</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">🥣</div>
+                    <div class="stat-icon" id="hist-solid-icon">🥣</div>
                     <div class="stat-value" id="hist-solid">0</div>
-                    <div class="stat-label">吃辅食</div>
+                    <div class="stat-label" id="hist-solid-label">吃辅食</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">💩</div>
@@ -375,6 +379,7 @@
                 <div class="type-picker" id="typePicker">
                     <button class="type-option" data-type="formula">🍼 喝奶粉</button>
                     <button class="type-option" data-type="solid">🥣 吃辅食</button>
+                    <button class="type-option" data-type="pee" style="display:none;">💧 小便了</button>
                     <button class="type-option" data-type="sleep_start">😴 开始睡</button>
                     <button class="type-option" data-type="sleep_end">🌞 睡醒了</button>
                     <button class="type-option" data-type="poop">💩 拉粑粑</button>
@@ -696,6 +701,7 @@
         sleep_start: { label: '开始睡', icon: '😴', needAmount: false },
         sleep_end: { label: '睡醒了', icon: '🌞', needAmount: false },
         poop: { label: '拉粑粑', icon: '💩', needAmount: false },
+        pee: { label: '小便了', icon: '💧', needAmount: false },
     };
 
     document.querySelectorAll('.action-btn').forEach(btn => {
@@ -1118,7 +1124,8 @@
                 const m = mins % 60;
                 document.getElementById(prefix + 'sleep-duration').textContent =
                     h > 0 ? h + 'h ' + m + 'm' : m + 'm';
-                document.getElementById(prefix + 'solid').textContent = data.count_solid;
+                document.getElementById(prefix + 'solid').textContent =
+                    (window.under6Months) ? (data.count_pee || 0) : data.count_solid;
                 document.getElementById(prefix + 'poop').textContent = data.count_poop;
             });
 
@@ -1191,6 +1198,40 @@
         return m[type] || '📌';
     }
 
+    // ========== 年龄分级（6 个月前：吃辅食 → 小便了） ==========
+    function daysSinceBirth(birthDateStr) {
+        if (!birthDateStr) return null;
+        const b = new Date(birthDateStr + 'T00:00:00');
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        return Math.round((today - b) / 86400000);
+    }
+
+    function applyAgeGating() {
+        const under6 = window.babyAgeDays !== null && window.babyAgeDays < 180;
+        window.under6Months = under6;
+        // 快捷按钮：吃辅食 ↔ 小便了
+        const solidBtn = document.querySelector('.action-btn[data-event="solid"]');
+        const peeBtn = document.querySelector('.action-btn[data-event="pee"]');
+        if (solidBtn) solidBtn.style.display = under6 ? 'none' : '';
+        if (peeBtn) peeBtn.style.display = under6 ? '' : 'none';
+        // 手动添加弹窗：吃辅食 ↔ 小便了
+        const addSolid = document.querySelector('#typePicker .type-option[data-type="solid"]');
+        const addPee = document.querySelector('#typePicker .type-option[data-type="pee"]');
+        if (addSolid) addSolid.style.display = under6 ? 'none' : '';
+        if (addPee) addPee.style.display = under6 ? '' : 'none';
+        // 统计卡片：吃辅食 ↔ 小便了
+        [['stat-solid-icon', 'stat-solid-label'], ['hist-solid-icon', 'hist-solid-label']].forEach(([iconId, labelId]) => {
+            const ic = document.getElementById(iconId);
+            const lb = document.getElementById(labelId);
+            if (ic) ic.textContent = under6 ? '💧' : '🥣';
+            if (lb) lb.textContent = under6 ? '小便了' : '吃辅食';
+        });
+        // 刷新当前统计数字（solid ↔ pee）
+        if (currentContext === 'history') loadHistoryStats();
+        else loadDailyStats();
+    }
+
     // ========== 用户信息 ==========
     function loadUser() {
         fetch('/api/user')
@@ -1224,6 +1265,10 @@
                 document.getElementById('profileIdentity').value = data.identity || '';
                 document.getElementById('profileBirthDate').value =
                     (data.baby && data.baby.birth_date) ? data.baby.birth_date : '';
+                // 年龄分级：6 个月前不显示吃辅食，改为小便了
+                window.babyAgeDays = (data.baby && data.baby.birth_date)
+                    ? daysSinceBirth(data.baby.birth_date) : null;
+                applyAgeGating();
                 if (data.role === 'admin') {
                     document.getElementById('adminPanel').style.display = 'block';
                     loadAdminBabies();
