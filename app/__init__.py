@@ -114,6 +114,9 @@ def create_app():
 
     db.init_app(app)
 
+    # 建表 + 轻量迁移（所有入口统一执行，含 gunicorn run:app）
+    migrate_schema(app)
+
     # 反向代理（Nginx）后正确识别客户端真实 IP，用于登录限速等
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
