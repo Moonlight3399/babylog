@@ -11,7 +11,7 @@ from flask import (Blueprint, current_app, jsonify, make_response,
                    request, send_from_directory)
 
 from . import db
-from .models import Food, GrowthRecord, Record
+from .models import Baby, Food, GrowthRecord, Record
 from .auth import login_required
 
 api_bp = Blueprint('api', __name__)
@@ -480,3 +480,36 @@ def api_save_growth(user):
         'weight': g.weight,
         'date': str(g.record_date),
     }})
+
+
+@api_bp.route('/api/growth/latest')
+@login_required
+def api_growth_latest(user):
+    """获取该宝宝最近一次身高体重记录（用于今日统计卡片常驻显示）"""
+    if not user.baby_id:
+        return jsonify({'ok': True, 'growth': None})
+    g = GrowthRecord.query.filter_by(baby_id=user.baby_id)\
+        .order_by(GrowthRecord.record_date.desc(), GrowthRecord.id.desc()).first()
+    if not g:
+        return jsonify({'ok': True, 'growth': None})
+    days_ago = (datetime.now().date() - g.record_date).days
+    return jsonify({'ok': True, 'growth': {
+        'height': g.height,
+        'weight': g.weight,
+        'date': str(g.record_date),
+        'days_ago': days_ago,
+    }})
+
+
+@api_bp.route('/api/tips/daily')
+@login_required
+def api_tips_daily(user):
+    """今日育儿小知识：按宝宝生日计算年龄，返回对应阶段的知识与特殊日祝贺"""
+    if not user.baby_id:
+        return jsonify({'ok': True, 'tip': {'available': False, 'reason': '未绑定宝宝'}})
+    baby = Baby.query.get(user.baby_id)
+    if not baby:
+        return jsonify({'ok': True, 'tip': {'available': False, 'reason': '宝宝不存在'}})
+    from .tips import get_daily_tip
+    result = get_daily_tip(baby.birth_date)
+    return jsonify({'ok': True, 'tip': result})

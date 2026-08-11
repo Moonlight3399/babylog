@@ -187,7 +187,8 @@ def api_user(user):
         'username': user.username,
         'role': user.role,
         'identity': user.identity,
-        'baby': {'id': baby.id, 'name': baby.name} if baby else None,
+        'baby': {'id': baby.id, 'name': baby.name,
+                 'birth_date': str(baby.birth_date) if baby.birth_date else None} if baby else None,
         'created_at': user.created_at.isoformat(),
     })
 
@@ -321,18 +322,30 @@ def api_babies(user):
 @auth_bp.route('/api/user/profile', methods=['PUT'])
 @login_required
 def api_user_profile(user):
-    """用户设置自己的身份（宝宝由管理员绑定，用户不可自行更改）"""
+    """用户设置自己的身份/宝宝生日（宝宝由管理员绑定，用户不可自行更改宝宝）"""
     data = request.get_json() or {}
     identity = (data.get('identity') or '').strip()
+    birth = (data.get('baby_birth_date') or '').strip()
     if identity and identity not in IDENTITIES:
         return jsonify({'error': '无效的身份，可选：爸爸/妈妈/爷爷/奶奶/外公/外婆'}), 400
     user.identity = identity or None
+    # 设置宝宝生日（管理员和普通用户均可，后续按此计算月龄/年龄）
+    if birth:
+        try:
+            birth_date = datetime.strptime(birth, '%Y-%m-%d').date()
+        except ValueError:
+            return jsonify({'error': '生日格式错误，请使用 YYYY-MM-DD'}), 400
+        if user.baby_id:
+            baby = Baby.query.get(user.baby_id)
+            if baby:
+                baby.birth_date = birth_date
     db.session.commit()
     baby = Baby.query.get(user.baby_id) if user.baby_id else None
     return jsonify({
         'ok': True,
         'identity': user.identity,
-        'baby': {'id': baby.id, 'name': baby.name} if baby else None,
+        'baby': {'id': baby.id, 'name': baby.name,
+                 'birth_date': str(baby.birth_date) if baby.birth_date else None} if baby else None,
     })
 
 

@@ -23,6 +23,7 @@ class Baby(db.Model):
     __tablename__ = 'babies'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
+    birth_date = db.Column(db.Date, nullable=True)  # 宝宝生日（用于计算月龄/年龄）
     created_by = db.Column(db.Integer, nullable=True)  # 创建者用户ID（仅创建者可删除）
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 

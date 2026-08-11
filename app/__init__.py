@@ -68,6 +68,12 @@ def migrate_schema(app):
                 ))
                 db.session.commit()
                 print('[迁移] babies 表已添加 created_by 列')
+            if 'birth_date' not in bcols:
+                db.session.execute(text(
+                    "ALTER TABLE babies ADD COLUMN birth_date DATE"
+                ))
+                db.session.commit()
+                print('[迁移] babies 表已添加 birth_date 列')
         # growth_records 表（身高体重）
         if 'growth_records' not in insp.get_table_names():
             db.session.execute(text(

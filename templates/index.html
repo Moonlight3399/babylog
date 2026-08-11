@@ -48,6 +48,12 @@
                     <span class="action-label">拉粑粑</span>
                 </button>
             </div>
+            <div class="tip-card" id="tipCard">
+                <div class="tip-card-header">💡 今日育儿小知识</div>
+                <div class="tip-stage" id="tipStage"></div>
+                <div class="tip-text" id="tipText"></div>
+                <div class="tip-special" id="tipSpecial"></div>
+            </div>
             <div id="actionToast" class="toast"></div>
         </div>
 
@@ -87,6 +93,7 @@
                     <div class="stat-icon">📐</div>
                     <div class="stat-value growth-value" id="stat-growth">--</div>
                     <div class="stat-label">身高体重</div>
+                    <div class="growth-sub" id="stat-growth-sub"></div>
                 </div>
                 <div class="stat-card add-card" id="addRecordCard">
                     <div class="stat-icon">＋</div>
@@ -137,7 +144,11 @@
                         <option value="外婆">外婆</option>
                     </select>
                 </div>
-                <button class="btn btn-primary btn-full" id="saveProfileBtn">保存身份</button>
+                <div class="form-group">
+                    <label class="input-label" for="profileBirthDate">宝宝生日（用于计算年龄/月龄）</label>
+                    <input type="date" id="profileBirthDate" class="input-md" max="">
+                </div>
+                <button class="btn btn-primary btn-full" id="saveProfileBtn">保存</button>
                 <button class="btn btn-outline btn-full" id="changePwdBtn" style="margin-top:8px;">🔒 修改密码</button>
             </div>
 
@@ -1016,7 +1027,7 @@
     // ========== 每日统计 ==========
     function loadDailyStats() {
         loadStatsFor(getTodayStr(), 'stat-', 'recordsContainer');
-        loadGrowth(getTodayStr());
+        loadGrowth();
     }
 
     function loadStats() { loadDailyStats(); } // 兼容旧调用
@@ -1148,6 +1159,8 @@
                     babyText.className = 'profile-baby profile-baby-empty';
                 }
                 document.getElementById('profileIdentity').value = data.identity || '';
+                document.getElementById('profileBirthDate').value =
+                    (data.baby && data.baby.birth_date) ? data.baby.birth_date : '';
                 if (data.role === 'admin') {
                     document.getElementById('adminPanel').style.display = 'block';
                     loadAdminBabies();
@@ -1158,17 +1171,18 @@
             });
     }
 
-    // 保存我的身份（宝宝由管理员绑定）
+    // 保存我的身份/宝宝生日（宝宝由管理员绑定，不可改；生日人人可设）
     document.getElementById('saveProfileBtn').addEventListener('click', () => {
         const identity = document.getElementById('profileIdentity').value;
+        const birthDate = document.getElementById('profileBirthDate').value;
         fetch('/api/user/profile', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ identity: identity })
+            body: JSON.stringify({ identity: identity, baby_birth_date: birthDate || null })
         })
         .then(r => r.json())
         .then(d => {
-            if (d.ok) { showToast('身份已保存'); loadUser(); }
+            if (d.ok) { showToast('已保存'); loadUser(); loadDailyTip(); }
             else { showToast(d.error || '保存失败', true); }
         });
     });
@@ -1600,12 +1614,14 @@
     });
 
     // ========== 身高体重 ==========
-    function loadGrowth(date) {
-        fetch('/api/growth?date=' + date)
+    // 身高体重卡片：常驻显示最近一次测量结果 + 距上次天数
+    function loadGrowth() {
+        fetch('/api/growth/latest')
             .then(r => r.json())
             .then(data => {
                 const el = document.getElementById('stat-growth');
                 if (!el) return;
+                const sub = document.getElementById('stat-growth-sub');
                 const g = data.growth;
                 if (g && (g.height !== null || g.weight !== null)) {
                     const parts = [];
@@ -1614,13 +1630,42 @@
                     el.innerHTML = parts.join('<br>');
                     el.style.fontSize = '0.9rem';
                     el.style.lineHeight = '1.35';
+                    sub.textContent = g.days_ago > 0 ? '距上次测量 ' + g.days_ago + ' 天' : '今天已测量';
                 } else {
                     el.textContent = '--';
                     el.style.fontSize = '';
                     el.style.lineHeight = '';
+                    sub.textContent = '点击记录';
                 }
             });
     }
+
+    // ========== 今日育儿小知识 ==========
+    function loadDailyTip() {
+        fetch('/api/tips/daily')
+            .then(r => r.json())
+            .then(data => {
+                const t = data.tip;
+                const stageEl = document.getElementById('tipStage');
+                const textEl = document.getElementById('tipText');
+                const specialEl = document.getElementById('tipSpecial');
+                if (!t || !t.available) {
+                    stageEl.textContent = '';
+                    textEl.textContent = (t && t.reason) ? t.reason : '未获取到小知识';
+                    textEl.className = 'tip-text tip-empty';
+                    specialEl.textContent = '';
+                    return;
+                }
+                stageEl.textContent = '📅 宝宝 ' + t.days + ' 天 · ' + t.stage;
+                textEl.textContent = t.tip;
+                textEl.className = 'tip-text';
+                specialEl.textContent = t.special || '';
+            })
+            .catch(() => {
+                document.getElementById('tipText').textContent = '小知识加载失败';
+            });
+    }
+    loadDailyTip();
 
     const growthModal = document.getElementById('growthModal');
 
@@ -1683,9 +1728,7 @@
             if (data.ok) {
                 closeGrowthModal();
                 showToast('身高体重已保存');
-                if (date === getTodayStr()) {
-                    loadGrowth(date);
-                }
+                loadGrowth();
             } else {
                 errDiv.textContent = data.error || '保存失败';
                 errDiv.style.display = 'block';

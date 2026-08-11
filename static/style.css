@@ -396,6 +396,53 @@ input, button {
     color: #7FB4D8;
 }
 
+.growth-sub {
+    font-size: 0.72rem;
+    color: #7FB4D8;
+    margin-top: 2px;
+}
+
+/* --- 今日育儿小知识卡片 --- */
+.tip-card {
+    background: linear-gradient(135deg, #FFF8E1, #FFECB3);
+    border: 2px solid #FFD54F;
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-top: 16px;
+}
+
+.tip-card-header {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #E6A700;
+    margin-bottom: 6px;
+}
+
+.tip-stage {
+    font-size: 0.8rem;
+    color: #B8860B;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.tip-text {
+    font-size: 0.9rem;
+    color: #6D5B2F;
+    line-height: 1.6;
+}
+
+.tip-text.tip-empty {
+    color: #AAA;
+}
+
+.tip-special {
+    margin-top: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #E91E63;
+    text-align: center;
+}
+
 /* --- Records List --- */
 .records-list {
     background: #fff;
