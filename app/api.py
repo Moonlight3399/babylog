@@ -402,8 +402,19 @@ def api_export_csv(user):
 @api_bp.route('/api/import/csv', methods=['POST'])
 @login_required
 def api_import_csv(user):
-    if not user.baby_id:
+    # 目标宝宝：管理员可用 multipart 字段 baby_id 指定；普通用户固定自己宝宝
+    target_baby_id = user.baby_id
+    if user.role == 'admin':
+        baby_arg = (request.form.get('baby_id') or '').strip()
+        if baby_arg:
+            try:
+                target_baby_id = int(baby_arg)
+            except ValueError:
+                return jsonify({'error': '无效的宝宝参数'}), 400
+    if not target_baby_id:
         return jsonify({'error': '请先由管理员绑定宝宝，才能导入'}), 403
+    if not Baby.query.get(target_baby_id):
+        return jsonify({'error': '目标宝宝不存在'}), 400
 
     f = request.files.get('file')
     if not f or not f.filename:
@@ -458,7 +469,7 @@ def api_import_csv(user):
             if type_cn not in type_map:
                 raise ValueError(f'未知事件类型「{type_cn}」')
 
-            rec = Record(user_id=user.id, baby_id=user.baby_id, event_type=type_map[type_cn],
+            rec = Record(user_id=user.id, baby_id=target_baby_id, event_type=type_map[type_cn],
                          event_date=d, event_time=t, formula_amount=None)
             if rec.event_type == 'formula':
                 try:

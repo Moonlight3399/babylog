@@ -201,7 +201,11 @@
 
             <div class="export-card">
                 <h3 class="export-title">导入数据</h3>
-                <div class="export-tip">选择用「详细信息」导出的 CSV，将记录恢复到当前宝宝</div>
+                <div class="form-group" id="importBabyGroup" style="display:none;">
+                    <label class="input-label" for="importBaby">目标宝宝</label>
+                    <select id="importBaby" class="input-md"></select>
+                </div>
+                <div class="export-tip">选择用「详细信息」导出的 CSV（单个宝宝的 5 列格式）</div>
                 <input type="file" id="importFile" accept=".csv" class="import-file" hidden>
                 <button class="btn btn-outline btn-full" id="importBtn">导入 CSV</button>
             </div>
@@ -1404,6 +1408,14 @@
                     eb.value = window.currentBabyId ? String(window.currentBabyId) : 'all';
                     if (!data.babies.some(b => String(b.id) === eb.value)) eb.value = 'all';
                 }
+                // 填充导入目标宝宝下拉框（管理员可导入到任意宝宝）
+                const ib = document.getElementById('importBaby');
+                if (ib) {
+                    document.getElementById('importBabyGroup').style.display = 'block';
+                    ib.innerHTML = data.babies.map(b => `<option value="${b.id}">👶 ${b.name}</option>`).join('');
+                    ib.value = window.currentBabyId ? String(window.currentBabyId)
+                        : (data.babies[0] ? String(data.babies[0].id) : '');
+                }
                 list.querySelectorAll('.admin-baby-del').forEach(btn => {
                     btn.addEventListener('click', () => {
                         showConfirm(`确定删除宝宝「${btn.dataset.name}」？`, () => {
@@ -1682,6 +1694,8 @@
         }
         const fd = new FormData();
         fd.append('file', file);
+        const ib = document.getElementById('importBaby');
+        if (ib && ib.style.display !== 'none') fd.append('baby_id', ib.value);
         const orig = importBtn.textContent;
         importBtn.disabled = true;
         importBtn.textContent = '导入中...';
