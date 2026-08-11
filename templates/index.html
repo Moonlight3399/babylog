@@ -227,6 +227,12 @@
                     <div class="stat-value" id="hist-poop">0</div>
                     <div class="stat-label">拉粑粑</div>
                 </div>
+                <div class="stat-card growth-card" id="histGrowthCard">
+                    <div class="stat-icon">📐</div>
+                    <div class="stat-value growth-value" id="hist-growth">--</div>
+                    <div class="stat-label">身高体重</div>
+                    <div class="growth-sub" id="hist-growth-sub"></div>
+                </div>
                 <div class="stat-card add-card" id="histAddCard">
                     <div class="stat-icon">＋</div>
                     <div class="stat-value" style="font-size:0.85rem;color:#CCC;">手动添加</div>
@@ -1041,6 +1047,33 @@
         const date = getHistoryDate();
         if (!date) return;
         loadStatsFor(date, 'hist-', 'histRecordsContainer');
+        loadHistoryGrowth(date);
+    }
+
+    // 历史记录：所选日期的身高体重
+    function loadHistoryGrowth(date) {
+        fetch('/api/growth?date=' + date)
+            .then(r => r.json())
+            .then(data => {
+                const el = document.getElementById('hist-growth');
+                const sub = document.getElementById('hist-growth-sub');
+                if (!el) return;
+                const g = data.growth;
+                if (g && (g.height !== null || g.weight !== null)) {
+                    const parts = [];
+                    if (g.height !== null) parts.push(+Number(g.height).toFixed(1) + 'cm');
+                    if (g.weight !== null) parts.push(+Number(g.weight).toFixed(1) + 'kg');
+                    el.innerHTML = parts.join('<br>');
+                    el.style.fontSize = '0.9rem';
+                    el.style.lineHeight = '1.35';
+                    sub.textContent = '当日已记录';
+                } else {
+                    el.textContent = '--';
+                    el.style.fontSize = '';
+                    el.style.lineHeight = '';
+                    sub.textContent = '点击记录';
+                }
+            });
     }
 
     // ========== 通用统计/记录加载 ==========
@@ -1482,6 +1515,11 @@
         openAddRecordModal(getHistoryDate());
     });
 
+    // 历史记录：身高体重卡片（记录/修改所选日期）
+    document.getElementById('histGrowthCard').addEventListener('click', () => {
+        openGrowthModal(getHistoryDate());
+    });
+
     function openAddRecordModal(defaultDate) {
         selectedAddType = null;
         document.getElementById('addRecordError').style.display = 'none';
@@ -1728,7 +1766,8 @@
             if (data.ok) {
                 closeGrowthModal();
                 showToast('身高体重已保存');
-                loadGrowth();
+                if (currentContext === 'daily') loadGrowth();
+                else loadHistoryGrowth(getHistoryDate());
             } else {
                 errDiv.textContent = data.error || '保存失败';
                 errDiv.style.display = 'block';
