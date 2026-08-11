@@ -189,8 +189,19 @@ def api_user(user):
         'identity': user.identity,
         'baby': {'id': baby.id, 'name': baby.name,
                  'birth_date': str(baby.birth_date) if baby.birth_date else None} if baby else None,
+        'install_guide_seen': bool(user.install_guide_seen),
         'created_at': user.created_at.isoformat(),
     })
+
+
+@auth_bp.route('/api/user/guide_seen', methods=['POST'])
+@login_required
+def api_guide_seen(user):
+    """标记已看过安装指引（新用户首次登录弹出后调用）"""
+    if not user.install_guide_seen:
+        user.install_guide_seen = True
+        db.session.commit()
+    return jsonify({'ok': True})
 
 
 # ------------------------------------------------------------

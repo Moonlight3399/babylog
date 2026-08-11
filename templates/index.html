@@ -14,7 +14,7 @@
     <link rel="apple-touch-icon" href="/static/icons/192x192.png">
     <link rel="icon" type="image/png" href="/static/icons/192x192.png">
 
-    <link rel="stylesheet" href="/static/style.css?v=7">
+    <link rel="stylesheet" href="/static/style.css?v=8">
 </head>
 <body class="app-body">
     <!-- 内容区 -->
@@ -595,6 +595,26 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" id="adminSetProfileCancel">取消</button>
                 <button class="btn btn-primary" id="adminSetProfileConfirm">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 安装指引弹窗（新用户首次登录弹出） -->
+    <div class="modal-overlay" id="installGuideModal">
+        <div class="modal-box guide-modal">
+            <div class="modal-header">
+                <h3>📲 安装到主屏幕</h3>
+                <button class="modal-close" id="installGuideClose">&times;</button>
+            </div>
+            <div class="modal-body guide-body">
+                <div class="guide-text">
+                    把 BabyLog 添加到手机主屏幕，下次像 App 一样一键打开：
+                    ① 用浏览器打开本页；② 点浏览器菜单 →「添加到主屏幕」；③ 桌面出现图标即可使用。
+                </div>
+                <img src="/static/install.png" class="guide-img" alt="安装指引">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-full" id="installGuideOk">我知道了</button>
             </div>
         </div>
     </div>
@@ -1302,6 +1322,10 @@
                 window.babyAgeDays = (data.baby && data.baby.birth_date)
                     ? daysSinceBirth(data.baby.birth_date) : null;
                 applyAgeGating();
+                // 新用户首次登录：弹出安装指引
+                if (!data.install_guide_seen) {
+                    document.getElementById('installGuideModal').classList.add('show');
+                }
                 if (data.role === 'admin') {
                     document.getElementById('adminPanel').style.display = 'block';
                     loadAdminBabies();
@@ -1311,6 +1335,18 @@
                 }
             });
     }
+
+    // ========== 安装指引弹窗（首次登录弹出，关闭后标记已看） ==========
+    const installGuideModal = document.getElementById('installGuideModal');
+    function closeInstallGuide() {
+        installGuideModal.classList.remove('show');
+        fetch('/api/user/guide_seen', { method: 'POST' });
+    }
+    document.getElementById('installGuideClose').addEventListener('click', closeInstallGuide);
+    document.getElementById('installGuideOk').addEventListener('click', closeInstallGuide);
+    installGuideModal.addEventListener('click', (e) => {
+        if (e.target === installGuideModal) closeInstallGuide();
+    });
 
     // 保存我的身份/宝宝生日（宝宝由管理员绑定，不可改；生日人人可设）
     document.getElementById('saveProfileBtn').addEventListener('click', () => {

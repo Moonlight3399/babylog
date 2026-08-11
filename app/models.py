@@ -16,6 +16,7 @@ class User(db.Model):
     baby_id = db.Column(db.Integer, db.ForeignKey('babies.id'), nullable=True)  # 关联宝宝
     identity = db.Column(db.String(20), nullable=True)  # 爸爸/妈妈/爷爷/奶奶/外公/外婆
     created_by = db.Column(db.Integer, nullable=True)  # 创建者用户ID（仅创建者可删除）
+    install_guide_seen = db.Column(db.Boolean, nullable=False, default=False)  # 是否已看过安装指引
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 

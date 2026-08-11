@@ -485,6 +485,37 @@ input, button {
     transform: scale(0.95);
 }
 
+/* --- 安装指引弹窗 --- */
+.guide-modal .modal-box {
+    max-width: 340px;
+}
+
+.guide-body {
+    max-height: 62vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    text-align: center;
+    padding-top: 6px;
+}
+
+.guide-text {
+    font-size: 0.95rem;
+    color: #6D5B2F;
+    line-height: 1.7;
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+.guide-img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    border-radius: 12px;
+    margin: 0 auto 6px;
+    display: block;
+    box-shadow: 0 4px 16px rgba(255, 105, 180, 0.18);
+}
+
 /* --- Records List --- */
 .records-list {
     background: #fff;

@@ -44,6 +44,11 @@ def migrate_schema(app):
                     "ALTER TABLE users ADD COLUMN created_by INTEGER"
                 ))
                 print('[迁移] users 表已添加 created_by 列')
+            if 'install_guide_seen' not in cols:
+                db.session.execute(text(
+                    "ALTER TABLE users ADD COLUMN install_guide_seen INTEGER NOT NULL DEFAULT 0"
+                ))
+                print('[迁移] users 表已添加 install_guide_seen 列')
             db.session.commit()
         # records 表补充 foods 列（辅食）
         if 'records' in insp.get_table_names():
