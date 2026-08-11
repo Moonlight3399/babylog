@@ -312,22 +312,43 @@ def api_export_csv(user):
     if start_date > end_date:
         return jsonify({'error': '开始日期不能晚于结束日期'}), 400
 
-    records = Record.query.filter(
-        Record.baby_id == user.baby_id,
+    # 宝宝范围：管理员可选指定宝宝(baby_id=数字)或所有宝宝(baby_id=all)；普通用户固定自己宝宝
+    target_baby_id = user.baby_id
+    all_babies = False
+    baby_arg = (request.args.get('baby_id') or '').strip()
+    if user.role == 'admin' and baby_arg:
+        if baby_arg == 'all':
+            target_baby_id = None
+            all_babies = True
+        else:
+            try:
+                target_baby_id = int(baby_arg)
+            except ValueError:
+                return jsonify({'error': '无效的宝宝参数'}), 400
+
+    query = Record.query.filter(
         Record.event_date >= start_date,
         Record.event_date <= end_date
-    ).order_by(Record.event_date.asc(), Record.event_time.asc()).all()
+    )
+    if target_baby_id is not None:
+        query = query.filter(Record.baby_id == target_baby_id)
+    records = query.order_by(Record.event_date.asc(), Record.event_time.asc()).all()
+
+    baby_map = {b.id: b.name for b in Baby.query.all()}
 
     output = io.StringIO()
     writer = csv.writer(output)
 
     if mode == 'summary':
-        writer.writerow(['日期', '喝奶粉次数', '总奶量(ml)', '吃辅食次数', '开始睡次数', '睡醒次数', '拉粑粑次数', '小便次数'])
-        # 按日期分组
+        header = ['日期', '喝奶粉次数', '总奶量(ml)', '吃辅食次数', '开始睡次数', '睡醒次数', '拉粑粑次数', '小便次数']
+        if all_babies:
+            header.insert(1, '宝宝')
+        writer.writerow(header)
+        # 按日期（多宝宝时再加宝宝）分组
         groups = defaultdict(lambda: {'formula_count': 0, 'formula_total': 0, 'solid': 0, 'sleep_start': 0, 'sleep_end': 0, 'poop': 0, 'pee': 0})
         for r in records:
-            d = str(r.event_date)
-            g = groups[d]
+            key = (str(r.event_date), r.baby_id if all_babies else 0)
+            g = groups[key]
             if r.event_type == 'formula':
                 g['formula_count'] += 1
                 g['formula_total'] += (r.formula_amount or 0)
@@ -342,19 +363,32 @@ def api_export_csv(user):
             elif r.event_type == 'pee':
                 g['pee'] += 1
 
-        for d in sorted(groups.keys()):
-            g = groups[d]
-            writer.writerow([d, g['formula_count'], g['formula_total'], g['solid'], g['sleep_start'], g['sleep_end'], g['poop'], g['pee']])
+        for key in sorted(groups.keys()):
+            g = groups[key]
+            row = [key[0], g['formula_count'], g['formula_total'], g['solid'], g['sleep_start'], g['sleep_end'], g['poop'], g['pee']]
+            if all_babies:
+                row.insert(1, baby_map.get(key[1], f'宝宝#{key[1]}'))
+            writer.writerow(row)
     else:
-        writer.writerow(['日期', '时间', '事件类型', '奶粉量(ml)', '辅食'])
+        header = ['日期', '时间', '事件类型', '奶粉量(ml)', '辅食']
+        if all_babies:
+            header.insert(0, '宝宝')
+        writer.writerow(header)
         for r in records:
             foods = r.foods if r.foods else ''
-            writer.writerow([str(r.event_date), str(r.event_time), LABEL_MAP.get(r.event_type, r.event_type), r.formula_amount or '', foods])
+            row = [str(r.event_date), str(r.event_time), LABEL_MAP.get(r.event_type, r.event_type), r.formula_amount or '', foods]
+            if all_babies:
+                row.insert(0, baby_map.get(r.baby_id, f'宝宝#{r.baby_id}'))
+            writer.writerow(row)
 
     csv_content = output.getvalue()
     output.close()
 
-    filename = f'baby_{start_str}_{end_str}_{"汇总" if mode == "summary" else "详细"}.csv'
+    if all_babies:
+        filename = f'baby_全部宝宝_{start_str}_{end_str}_{"汇总" if mode == "summary" else "详细"}.csv'
+    else:
+        bname = baby_map.get(target_baby_id, '')
+        filename = f'baby_{bname + "_" if bname else ""}{start_str}_{end_str}_{"汇总" if mode == "summary" else "详细"}.csv'
 
     response = make_response(csv_content)
     response.headers['Content-Type'] = 'text/csv; charset=utf-8-sig'

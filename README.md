@@ -149,10 +149,13 @@ python register.py admin 123456 --admin    # 创建管理员 admin
 在"用户"页面中，可以导出 CSV 数据：
 
 1. 选择开始日期和结束日期
-2. 选择导出模式：
-   - **详细信息：** 每条记录的日期、时间、事件类型、奶粉量、辅食
+2. （管理员）选择要导出的**宝宝**：当前宝宝 / 其他宝宝 / **所有宝宝**（普通用户固定自己的宝宝）
+3. 选择导出模式：
+   - **详细信息：** 每条记录的日期、时间、事件类型、奶粉量、辅食（导出所有宝宝时带"宝宝"列）
    - **汇总信息：** 按日汇总的喝奶次数、总奶量、吃辅食次数、睡眠次数、拉粑粑次数
-3. 点击"导出 CSV"按钮下载文件
+4. 点击"导出 CSV"按钮下载文件
+
+> 管理员导出**单个宝宝**时格式与导入兼容（可直接导回）；导出**所有宝宝**时 CSV 带"宝宝"列，用于备份/汇总。
 
 **数据导入：** 用户页的"导入数据"可把导出的**详细信息 CSV** 恢复到当前宝宝：
 
@@ -605,7 +608,7 @@ babylog/
 | POST | `/api/record/undo` | 撤回最近一条记录（15 秒内） | 是 |
 | GET | `/api/records?date=YYYY-MM-DD` | 查询某日记录列表（仅本人绑定宝宝） | 是 |
 | GET | `/api/stats?date=YYYY-MM-DD` | 查询某日统计汇总（仅本人绑定宝宝） | 是 |
-| GET | `/api/export/csv?start=&end=&mode=` | 导出 CSV（detail 详细 / summary 汇总，仅本人绑定宝宝） | 是 |
+| GET | `/api/export/csv?start=&end=&mode=&baby_id=` | 导出 CSV（detail/summary；管理员可传 baby_id=数字指定宝宝 或 all 全部，普通用户固定自己宝宝） | 是 |
 | POST | `/api/import/csv` | 导入 CSV（multipart 上传 file，与详细信息导出格式对应，返回 imported/failed） | 是 |
 | GET | `/api/growth?date=YYYY-MM-DD` | 查询某日身高体重（仅本人绑定宝宝，无记录返回 null） | 是 |
 | POST | `/api/growth` | 保存/覆盖身高体重（body: {date?, height?, weight?}；未绑定宝宝返回 403） | 是 |

@@ -178,6 +178,10 @@
 
             <div class="export-card">
                 <h3 class="export-title">导出数据</h3>
+                <div class="form-group" id="exportBabyGroup" style="display:none;">
+                    <label class="input-label" for="exportBaby">宝宝</label>
+                    <select id="exportBaby" class="input-md"></select>
+                </div>
                 <div class="export-row">
                     <div class="export-field">
                         <label class="input-label">开始日期</label>
@@ -1391,6 +1395,15 @@
                     `;
                     list.appendChild(row);
                 });
+                // 填充导出宝宝下拉框（管理员可导出任意宝宝/所有宝宝）
+                const eb = document.getElementById('exportBaby');
+                if (eb) {
+                    document.getElementById('exportBabyGroup').style.display = 'block';
+                    eb.innerHTML = '<option value="all">所有宝宝</option>' +
+                        data.babies.map(b => `<option value="${b.id}">👶 ${b.name}</option>`).join('');
+                    eb.value = window.currentBabyId ? String(window.currentBabyId) : 'all';
+                    if (!data.babies.some(b => String(b.id) === eb.value)) eb.value = 'all';
+                }
                 list.querySelectorAll('.admin-baby-del').forEach(btn => {
                     btn.addEventListener('click', () => {
                         showConfirm(`确定删除宝宝「${btn.dataset.name}」？`, () => {
@@ -1634,7 +1647,9 @@
                 return;
             }
 
-            const url = '/api/export/csv?start=' + start + '&end=' + end + '&mode=' + exportMode;
+            const eb = document.getElementById('exportBaby');
+            const babyArg = (eb && eb.style.display !== 'none') ? '&baby_id=' + encodeURIComponent(eb.value) : '';
+            const url = '/api/export/csv?start=' + start + '&end=' + end + '&mode=' + exportMode + babyArg;
 
             fetch(url)
                 .then(r => {
