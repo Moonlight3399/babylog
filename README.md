@@ -1,6 +1,6 @@
 # BabyLog
 
-> 宝宝日常成长记录工具（PWA 应用）· 支持 x86 / ARM64 双平台 · 开源免费
+> 宝宝日常成长记录工具（PWA 应用）· 支持 x86 / ARM64 双平台 · 开源（禁止商用）
 
 BabyLog 是一款面向宝爸宝妈的宝宝日常成长记录工具，支持快速记录喂养、睡眠、排便等活动。采用 PWA 技术，可安装到手机主屏幕，像原生 App 一样使用，并支持离线模式。
 
@@ -34,7 +34,7 @@ python run.py
 ### 1.3 添加用户（由管理员手动创建）
 
 BabyLog 的账号由**管理员手动创建**，登录页仅保留登录，不再开放自助注册（避免公网垃圾注册）。
-> ⚠️ **初始部署：必须先手动注册第一个管理员**
+> **初始部署：必须先手动注册第一个管理员**
 > 新部署的数据库是空的，**没有任何预置账号**（包括 admin）。请先创建第一个管理员，再启动服务：
 > ```bash
 > python register.py 你的用户名 你的强密码 --admin
@@ -505,14 +505,14 @@ WantedBy=multi-user.target
 
 ---
 
-## 八、平台兼容性要求（开发规范）⚠️
+## 八、平台兼容性要求（开发规范）
 
 ### 8.1 支持平台
 
 | 平台 | 架构 | 支持状态 |
 |------|------|----------|
-| Linux / Windows / macOS | x86_64 | ✅ 完全支持 |
-| Linux（树莓派、高通盒子、ARM 服务器等） | arm64 (aarch64) | ✅ 完全支持 |
+| Linux / Windows / macOS | x86_64 | 完全支持 |
+| Linux（树莓派、高通盒子、ARM 服务器等） | arm64 (aarch64) | 完全支持 |
 
 > BabyLog 全部依赖为纯 Python 或带官方 ARM64 wheel 的包，代码层面无平台特定逻辑，**x86 与 ARM64 双平台可无缝运行**。
 
@@ -638,35 +638,22 @@ A：支持。项目全部为纯 Python + 官方跨平台 wheel 依赖，**x86_64
 
 ---
 
-## 开源许可（MIT License）
+## 开源许可（禁止商用）
 
-BabyLog 基于 **MIT License** 开源发布，允许任何人自由**使用、修改、复制、分发（含商业用途）**，只需保留原始版权声明与许可声明。
+BabyLog 以开源形式发布，**允许个人、家庭、学习等非商业目的免费使用、修改、部署**；**禁止任何形式的商业用途**（包括但不限于售卖、收费服务、商用项目集成）。
 
 本项目基于原项目作者 **https://yuubari.cn/** 的作品开发，保留原作者的版权归属。
 
 ```
-MIT License
+BabyLog 使用许可（禁止商用）
 
 Copyright (c) 2026 zhongyutian
 Original project author: https://yuubari.cn/
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+允许：个人/家庭/学习/非商业目的使用、复制、修改、部署。
+禁止：任何商业用途，包括但不限于售卖、收费服务、商用产品集成。
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+本软件按"现状"提供，不提供任何明示或暗示的担保。
 ```
 
 完整许可文本见项目根目录 `LICENSE` 文件。
