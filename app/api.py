@@ -3,7 +3,7 @@
 # ============================================================
 import csv
 import io
-from collections import defaultdict
+from collections import defaultdict, deque
 from datetime import datetime
 from urllib.parse import quote
 
@@ -85,18 +85,35 @@ def api_create_record(user):
             if meal in ('早餐', '午餐', '晚餐', '加餐'):
                 record.meal = meal
 
-    # 睡眠约束：检查是否存在未配对的睡眠记录（跨所有日期，按宝宝共享）
-    if event_type == 'sleep_start':
-        sleep_start_count = Record.query.filter_by(baby_id=user.baby_id, event_type='sleep_start').count()
-        sleep_end_count = Record.query.filter_by(baby_id=user.baby_id, event_type='sleep_end').count()
-        if sleep_start_count > sleep_end_count:
-            return jsonify({'error': '当前有未结束的睡眠，请先"睡醒了"再开始新的睡眠'}), 400
+    # 睡眠约束：基于"时间顺序"判断是否存在未结束的睡眠（跨所有日期，按宝宝共享）
+    # 旧逻辑只比 sleep_start / sleep_end 的"总条数"，在被手动回填时间或乱序记录时会被绕过；
+    # 新逻辑以新记录自身的时间为基准，检查该时刻之前是否已有尚未被"睡醒了"配对的开始睡。
+    if event_type in ('sleep_start', 'sleep_end'):
+        sleep_records = Record.query.filter(
+            Record.baby_id == user.baby_id,
+            Record.event_type.in_(['sleep_start', 'sleep_end'])
+        ).order_by(Record.event_date.asc(), Record.event_time.asc()).all()
 
-    if event_type == 'sleep_end':
-        sleep_start_count = Record.query.filter_by(baby_id=user.baby_id, event_type='sleep_start').count()
-        sleep_end_count = Record.query.filter_by(baby_id=user.baby_id, event_type='sleep_end').count()
-        if sleep_start_count <= sleep_end_count:
-            return jsonify({'error': '还没有"开始睡"记录，无法"睡醒了"'}), 400
+        def _open_start_before(target_date, target_time):
+            """返回 target 时刻之前、最后一个仍未结束（未被睡醒了配对）的开始睡；无则 None"""
+            pending = None
+            for r in sleep_records:
+                if (r.event_date, r.event_time) >= (target_date, target_time):
+                    break
+                pending = r if r.event_type == 'sleep_start' else None
+            return pending
+
+        if event_type == 'sleep_start':
+            open_start = _open_start_before(event_date, event_time)
+            if open_start is not None:
+                return jsonify({
+                    'error': '当前已有未结束的睡眠（%s），请先"睡醒了"再开始新的睡眠'
+                              % str(open_start.event_time)
+                }), 400
+        else:  # sleep_end：结束时刻之前必须存在未配对的开始睡
+            open_start = _open_start_before(event_date, event_time)
+            if open_start is None:
+                return jsonify({'error': '还没有对应的"开始睡"记录，无法"睡醒了"'}), 400
 
     if event_type == 'formula':
         amount = data.get('formula_amount')
@@ -251,9 +268,11 @@ def api_stats(user):
     count_pee = sum(1 for r in records if r.event_type == 'pee')
 
     # 计算睡眠总时长：按时间顺序配对 sleep_start 和 sleep_end
+    # 用队列维护"未结束的开始睡"，确保每个开始睡都能与最早可用的结束睡配对，
+    # 避免连续多次开始睡时覆盖丢弃前面的记录（鲁棒性）
     total_sleep_minutes = 0
     sleep_count = 0
-    pending_start = None  # 当前未配对的开始睡时间
+    pending_starts = deque()
 
     # 从数据库中获取该宝宝跨所有日期的睡眠记录，以便正确配对（考虑跨天睡眠）
     all_sleep = Record.query.filter(
@@ -264,10 +283,11 @@ def api_stats(user):
 
     for r in all_sleep:
         if r.event_type == 'sleep_start':
-            pending_start = r
-        elif r.event_type == 'sleep_end' and pending_start is not None:
+            pending_starts.append(r)
+        elif r.event_type == 'sleep_end' and pending_starts:
+            start_rec = pending_starts.popleft()
             # 计算时间差（分钟）
-            start_dt = datetime.combine(pending_start.event_date, pending_start.event_time)
+            start_dt = datetime.combine(start_rec.event_date, start_rec.event_time)
             end_dt = datetime.combine(r.event_date, r.event_time)
             delta = (end_dt - start_dt).total_seconds() / 60
             # 只统计结束日期为目标日期的睡眠（跨天睡眠归属到结束日），
@@ -275,7 +295,6 @@ def api_stats(user):
             if r.event_date == date and delta > 0:
                 total_sleep_minutes += int(delta)
                 sleep_count += 1
-            pending_start = None
 
     return jsonify({
         'date': str(date),
