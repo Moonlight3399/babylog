@@ -881,21 +881,22 @@ select.input-md {
 /* --- Global Toast --- */
 .toast-global {
     position: fixed;
-    top: 20px;
+    top: 35%;
     left: 50%;
     transform: translateX(-50%) translateY(-100px);
     background: #333;
     color: #fff;
-    padding: 12px 24px;
-    border-radius: 12px;
-    font-size: 0.9rem;
-    font-weight: 500;
+    padding: 14px 28px;
+    border-radius: 14px;
+    font-size: 0.95rem;
+    font-weight: 600;
     z-index: 9999;
     opacity: 0;
     transition: all 0.3s;
     pointer-events: none;
     white-space: nowrap;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.28);
+    border: 2px solid #FF69B4;
 }
 
 .toast-global.show {
@@ -906,18 +907,24 @@ select.input-md {
 
 .toast-global.error {
     background: #E74C3C;
+    border-color: #E74C3C;
 }
 
 .toast-global .toast-undo {
-    text-decoration: underline;
+    text-decoration: none;
     cursor: pointer;
-    margin-left: 6px;
-    opacity: 0.85;
-    transition: opacity 0.2s;
+    margin-left: 8px;
+    padding: 3px 14px;
+    border-radius: 20px;
+    background: #FF69B4;
+    color: #fff;
+    font-weight: 700;
+    opacity: 1;
+    transition: all 0.2s;
 }
 
 .toast-global .toast-undo:hover {
-    opacity: 1;
+    background: #FF4FA3;
 }
 
 /* --- Login Switch (登录/注册切换) --- */
