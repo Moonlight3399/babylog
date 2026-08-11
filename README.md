@@ -11,7 +11,7 @@ BabyLog 是一款面向宝爸宝妈的宝宝日常成长记录工具，支持快
 ### 1.1 环境要求
 
 - Python 3.9+
-- 操作系统：Windows / macOS / Linux
+- 操作系统：Windows / macOS / Linux / 安卓手机（通过 AidLux）
 
 ### 1.2 安装与启动
 
@@ -30,6 +30,8 @@ python run.py
 ```
 
 启动后，在手机或电脑浏览器中访问 `http://<你的IP>:5001` 即可使用。
+
+> **安卓手机上使用：** 先安装 [AidLux](https://www.aidlux.com/)（在安卓手机上运行 Linux 的环境），打开 AidLux 后在其内置终端里按上面步骤执行即可（AidLux 已内置 Python 3）。整个 BabyLog 就运行在手机本机，局域网内其它设备也能访问。
 
 ### 1.3 添加用户（由管理员手动创建）
 
@@ -513,6 +515,7 @@ WantedBy=multi-user.target
 |------|------|----------|
 | Linux / Windows / macOS | x86_64 | 完全支持 |
 | Linux（树莓派、高通盒子、ARM 服务器等） | arm64 (aarch64) | 完全支持 |
+| 安卓手机（通过 AidLux） | arm64 (aarch64) | 完全支持 |
 
 > BabyLog 全部依赖为纯 Python 或带官方 ARM64 wheel 的包，代码层面无平台特定逻辑，**x86 与 ARM64 双平台可无缝运行**。
 
