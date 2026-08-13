@@ -9,6 +9,7 @@ from functools import wraps
 from flask import (Blueprint, current_app, jsonify, redirect,
                    render_template, request, url_for)
 
+from config import COOKIE_SECURE
 from . import db
 from .models import Baby, LoginAttempt, Record, User
 
@@ -168,7 +169,8 @@ def api_login():
     _clear_fails(key)
     token, expires = make_session_cookie(user.id)
     resp = jsonify({'ok': True, 'username': user.username})
-    resp.set_cookie('session', token, expires=expires, httponly=True, samesite='Lax', secure=False)
+    resp.set_cookie('session', token, expires=expires, httponly=True,
+                    samesite='Lax', secure=COOKIE_SECURE)
     return resp
 
 

@@ -26,6 +26,11 @@ SECRET_KEY = os.environ.get(
     'babylog-dev-default-secret-key-please-replace-in-production-00000000',
 )
 
+# 是否给 session cookie 加 Secure 标志（仅 HTTPS 下应开启）
+# - 服务器启用 HTTPS 后设置环境变量 BABYLOG_COOKIE_SECURE=1（见《部署公网加固清单》第 7 步）
+# - 本地 http 开发环境不要开启，否则登录 cookie 无法保存
+COOKIE_SECURE = os.environ.get('BABYLOG_COOKIE_SECURE', '0') in ('1', 'true', 'yes')
+
 # ============================================================
 # BabyLog - 数据库自动备份配置
 # ============================================================

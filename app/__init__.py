@@ -9,7 +9,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from sqlalchemy import inspect, text
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from config import DATABASE_URL, EMAIL_CONFIG, SECRET_KEY
+from config import DATABASE_URL, EMAIL_CONFIG, SECRET_KEY, COOKIE_SECURE
 
 # 项目根目录（app 包的上一级，即 babylog/）
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -116,6 +116,11 @@ def create_app():
     app.config['SECRET_KEY'] = SECRET_KEY
     app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    # 会话 cookie 安全标志
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+    app.config['SESSION_COOKIE_SECURE'] = COOKIE_SECURE
 
     db.init_app(app)
 
