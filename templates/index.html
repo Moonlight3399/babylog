@@ -2345,7 +2345,15 @@
             if (selectedFoodIng && !f.ingredients.includes(selectedFoodIng)) return false; // 含所选食材
             return true;
         });
-        list.sort((a, b) => a.min_month - b.min_month);
+        // 当前月龄刚解锁的辅食排最前，其余按起始月龄升序排在后面
+        list.sort((a, b) => {
+            if (m !== null) {
+                const aCur = a.min_month === m ? 0 : 1;
+                const bCur = b.min_month === m ? 0 : 1;
+                if (aCur !== bCur) return aCur - bCur;
+            }
+            return a.min_month - b.min_month;
+        });
         document.getElementById('foodCount').textContent = list.length + ' 种';
         const el = document.getElementById('foodList');
         if (!list.length) {
