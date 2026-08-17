@@ -942,7 +942,9 @@
    "ingredient_text": "宝宝面、青菜",
    "method": "面条煮极烂剪短，加青菜碎。",
    "notes": "选无盐宝宝面；剪短防长条噎。",
-   "allergens": []
+   "allergens": [
+    "麸质"
+   ]
   },
   {
    "id": 64,
@@ -957,7 +959,9 @@
    "ingredient_text": "番茄、宝宝面",
    "method": "番茄去皮煮烂成酱，拌烂面。",
    "notes": "天然酸甜开胃；去皮去籽。",
-   "allergens": []
+   "allergens": [
+    "麸质"
+   ]
   },
   {
    "id": 65,
@@ -1087,7 +1091,8 @@
    "method": "南瓜泥混合蛋液面粉，蒸成糕切块。",
    "notes": "无糖无泡打粉；软糕状。",
    "allergens": [
-    "麸质"
+    "麸质",
+    "鸡蛋"
    ]
   },
   {
@@ -1106,7 +1111,8 @@
    "method": "山药泥混合蒸糕。",
    "notes": "健脾软糕；无添加。",
    "allergens": [
-    "麸质"
+    "麸质",
+    "鸡蛋"
    ]
   },
   {
@@ -1124,7 +1130,8 @@
    "method": "小米粉发酵蒸糕。",
    "notes": "松软练抓握；无糖。",
    "allergens": [
-    "麸质"
+    "麸质",
+    "鸡蛋"
    ]
   },
   {
@@ -1161,7 +1168,8 @@
    "method": "燕麦煮烂加苹果丁。",
    "notes": "富纤维；燕麦煮极烂。",
    "allergens": [
-    "麸质"
+    "麸质",
+    "奶制品"
    ]
   },
   {
@@ -1212,7 +1220,9 @@
    "ingredient_text": "番茄、牛肉、面",
    "method": "番茄煮烂，牛肉末炒熟，拌烂面。",
    "notes": "补铁开胃；面剪短。",
-   "allergens": []
+   "allergens": [
+    "麸质"
+   ]
   },
   {
    "id": 80,
@@ -1293,6 +1303,7 @@
    "method": "鳕鱼去刺拌菜碎蛋液煎小饼。",
    "notes": "去刺；煎熟。",
    "allergens": [
+    "鸡蛋",
     "鱼"
    ]
   },
@@ -1450,7 +1461,10 @@
    "ingredient_text": "番茄、蛋、面",
    "method": "番茄煮烂，面疙瘩入汤淋蛋花。",
    "notes": "疙瘩小软；蛋熟。",
-   "allergens": []
+   "allergens": [
+    "麸质",
+    "鸡蛋"
+   ]
   },
   {
    "id": 95,
@@ -1465,7 +1479,9 @@
    "ingredient_text": "土豆、蛋",
    "method": "土豆擦细丝拌蛋液煎软饼。",
    "notes": "丝细软；煎透。",
-   "allergens": []
+   "allergens": [
+    "鸡蛋"
+   ]
   },
   {
    "id": 96,
@@ -1481,7 +1497,10 @@
    "ingredient_text": "胡萝卜、蛋、面",
    "method": "胡萝卜碎拌蛋面液摊小饼。",
    "notes": "无糖；软嫩。",
-   "allergens": []
+   "allergens": [
+    "麸质",
+    "鸡蛋"
+   ]
   },
   {
    "id": 97,
@@ -1514,7 +1533,9 @@
    "ingredient_text": "南瓜、小米粉、蛋",
    "method": "混合蒸糕切块。",
    "notes": "手指食物；无添加。",
-   "allergens": []
+   "allergens": [
+    "鸡蛋"
+   ]
   },
   {
    "id": 99,
@@ -1530,7 +1551,9 @@
    "ingredient_text": "牛肉、蔬菜、面",
    "method": "牛肉蔬菜煮汤下面，剪短。",
    "notes": "汤去油；面软。",
-   "allergens": []
+   "allergens": [
+    "麸质"
+   ]
   },
   {
    "id": 100,
@@ -1547,6 +1570,7 @@
    "method": "豆腐蔬菜碎拌蛋煎小饼。",
    "notes": "嫩软；煎熟。",
    "allergens": [
+    "鸡蛋",
     "豆类"
    ]
   },
@@ -1564,7 +1588,10 @@
    "ingredient_text": "西兰花、蛋、面",
    "method": "西兰花碎拌蛋面摊饼。",
    "notes": "碎匀；软。",
-   "allergens": []
+   "allergens": [
+    "麸质",
+    "鸡蛋"
+   ]
   },
   {
    "id": 102,
@@ -1597,7 +1624,10 @@
    "ingredient_text": "玉米、蛋、面",
    "method": "玉米碎拌蛋面摊饼。",
    "notes": "玉米切细；软嫩。",
-   "allergens": []
+   "allergens": [
+    "麸质",
+    "鸡蛋"
+   ]
   },
   {
    "id": 104,
@@ -1661,7 +1691,9 @@
    "ingredient_text": "蔬菜、蛋",
    "method": "蔬菜碎拌蛋液摊卷。",
    "notes": "蔬菜切碎；软。",
-   "allergens": []
+   "allergens": [
+    "鸡蛋"
+   ]
   },
   {
    "id": 108,
@@ -1723,7 +1755,9 @@
    "ingredient_text": "胡萝卜、蛋",
    "method": "胡萝卜丝炒蛋，软嫩。",
    "notes": "少油；丝细。",
-   "allergens": []
+   "allergens": [
+    "鸡蛋"
+   ]
   },
   {
    "id": 112,
@@ -1861,7 +1895,9 @@
    "ingredient_text": "牛肉、蔬菜、面",
    "method": "牛肉蔬菜炒卤拌软面。",
    "notes": "面剪短；卤无添加。",
-   "allergens": []
+   "allergens": [
+    "麸质"
+   ]
   },
   {
    "id": 121,
@@ -1878,7 +1914,8 @@
    "method": "去边软面包夹蛋菜泥。",
    "notes": "去硬边；馅软。",
    "allergens": [
-    "麸质"
+    "麸质",
+    "鸡蛋"
    ]
   },
   {
@@ -1957,7 +1994,9 @@
    "ingredient_text": "番茄、蛋",
    "method": "番茄炒蛋少油少盐。",
    "notes": "1岁后极少量盐；蛋全熟。",
-   "allergens": []
+   "allergens": [
+    "鸡蛋"
+   ]
   },
   {
    "id": 127,
@@ -1983,7 +2022,9 @@
    "ingredient_text": "蛋、肉馅",
    "method": "蛋皮包肉馅蒸熟。",
    "notes": "肉馅细；全熟。",
-   "allergens": []
+   "allergens": [
+    "鸡蛋"
+   ]
   },
   {
    "id": 129,
@@ -2032,7 +2073,8 @@
    "method": "燕麦煮烂加奶。",
    "notes": "燕麦煮软；奶温不烫。",
    "allergens": [
-    "麸质"
+    "麸质",
+    "奶制品"
    ]
   },
   {
@@ -2063,7 +2105,9 @@
    "ingredient_text": "蛋、蔬菜",
    "method": "蔬菜碎拌蛋液蒸羹。",
    "notes": "嫩滑；菜碎匀。",
-   "allergens": []
+   "allergens": [
+    "鸡蛋"
+   ]
   },
   {
    "id": 134,
@@ -2135,7 +2179,10 @@
    "ingredient_text": "面、蛋、蔬菜",
    "method": "软面与蛋菜少油炒。",
    "notes": "面软剪短；清淡。",
-   "allergens": []
+   "allergens": [
+    "麸质",
+    "鸡蛋"
+   ]
   },
   {
    "id": 139,
@@ -2149,7 +2196,9 @@
    "ingredient_text": "饭、蛋、肉、菜",
    "method": "多种食材切丁炒饭。",
    "notes": "食材小丁；少油盐。",
-   "allergens": []
+   "allergens": [
+    "鸡蛋"
+   ]
   },
   {
    "id": 140,
@@ -2225,7 +2274,10 @@
    "ingredient_text": "多种蔬菜、面、蛋",
    "method": "蔬菜碎拌面蛋摊软饼。",
    "notes": "蔬菜丰富；软嫩。",
-   "allergens": []
+   "allergens": [
+    "麸质",
+    "鸡蛋"
+   ]
   }
  ],
  "allergens": [
