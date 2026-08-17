@@ -2340,7 +2340,8 @@
             return;
         }
         let list = foodsData.foods.filter(f => {
-            if (m !== null && (f.min_month > m || f.max_month < m)) return false; // 按月龄
+            // 达到起始月龄后即可吃（不再限制上界：辅食是"X月起可吃"，之后一直可吃）
+            if (m !== null && f.min_month > m) return false;
             if (foodAllergens.some(a => f.allergens.includes(a))) return false;   // 排除过敏源
             if (selectedFoodIng && !f.ingredients.includes(selectedFoodIng)) return false; // 含所选食材
             return true;
