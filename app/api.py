@@ -88,31 +88,39 @@ def api_create_record(user):
     # 睡眠约束：基于"时间顺序"判断是否存在未结束的睡眠（跨所有日期，按宝宝共享）
     # 旧逻辑只比 sleep_start / sleep_end 的"总条数"，在被手动回填时间或乱序记录时会被绕过；
     # 新逻辑以新记录自身的时间为基准，检查该时刻之前是否已有尚未被"睡醒了"配对的开始睡。
+    # （2026-08-16 修正）睡着了/睡醒了按"括号配对"严格匹配：一个 start 只能被 end 配对一次。
+    #   记录睡醒时，若前方没有未配对的入睡（含跨天——昨晚入睡今早醒），提示"还没有开始睡"。
     if event_type in ('sleep_start', 'sleep_end'):
         sleep_records = Record.query.filter(
             Record.baby_id == user.baby_id,
             Record.event_type.in_(['sleep_start', 'sleep_end'])
-        ).order_by(Record.event_date.asc(), Record.event_time.asc()).all()
+        ).order_by(Record.event_date.asc(), Record.event_time.asc(), Record.id.asc()).all()
 
-        def _open_start_before(target_date, target_time):
-            """返回 target 时刻之前、最后一个仍未结束（未被睡醒了配对）的开始睡；无则 None"""
-            pending = None
+        def _unmatched_starts_before(target_date, target_time):
+            """返回 target 时刻之前、所有尚未被睡醒了配对的开始睡（列表，按时间升序）。
+            用括号匹配思想（FIFO，与统计口径完全一致）：遍历到 target 为止，
+            start 入队、end 弹出最早（最旧）的一个未配对 start。"""
+            stack = deque()  # 未配对的 start（FIFO）
             for r in sleep_records:
-                if (r.event_date, r.event_time) >= (target_date, target_time):
+                if (r.event_date, r.event_time, r.id) >= (target_date, target_time, 0x7fffffff):
                     break
-                pending = r if r.event_type == 'sleep_start' else None
-            return pending
+                if r.event_type == 'sleep_start':
+                    stack.append(r)
+                elif stack:  # sleep_end 配对最早（最旧）的 start
+                    stack.popleft()
+            return list(stack)
 
         if event_type == 'sleep_start':
-            open_start = _open_start_before(event_date, event_time)
-            if open_start is not None:
+            opens = _unmatched_starts_before(event_date, event_time)
+            if opens:  # 存在未结束的睡眠
+                last_open = opens[-1]
                 return jsonify({
                     'error': '当前已有未结束的睡眠（%s），请先"睡醒了"再开始新的睡眠'
-                              % str(open_start.event_time)
+                              % str(last_open.event_time)
                 }), 400
-        else:  # sleep_end：结束时刻之前必须存在未配对的开始睡
-            open_start = _open_start_before(event_date, event_time)
-            if open_start is None:
+        else:  # sleep_end：结束时刻之前必须存在未配对的开始睡；前方无入睡或入睡已配对过则拒绝
+            opens = _unmatched_starts_before(event_date, event_time)
+            if not opens:
                 return jsonify({'error': '还没有对应的"开始睡"记录，无法"睡醒了"'}), 400
 
     if event_type == 'formula':
