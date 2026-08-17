@@ -1392,12 +1392,14 @@
    "stage": "11-12月",
    "ingredients": [
     "虾",
-    "青菜"
+    "青菜",
+    "面皮"
    ],
    "ingredient_text": "虾仁、青菜、皮",
    "method": "虾仁青菜剁碎包小馄饨，煮熟软。",
    "notes": "皮薄馅小；虾已排敏。",
    "allergens": [
+    "麸质",
     "虾蟹"
    ]
   },
@@ -1409,12 +1411,15 @@
    "stage": "11-12月",
    "ingredients": [
     "鸡肉",
-    "蔬菜"
+    "蔬菜",
+    "面皮"
    ],
    "ingredient_text": "鸡肉、蔬菜、皮",
    "method": "鸡肉蔬菜馅包迷你饺煮熟。",
    "notes": "一口大小；全熟。",
-   "allergens": []
+   "allergens": [
+    "麸质"
+   ]
   },
   {
    "id": 92,
@@ -2115,11 +2120,15 @@
    "min_month": 20,
    "max_month": 36,
    "stage": "18-24月",
-   "ingredients": [],
+   "ingredients": [
+    "面皮"
+   ],
    "ingredient_text": "肉/菜、皮",
    "method": "包小饺煮熟。",
    "notes": "一口大小；全熟。",
-   "allergens": []
+   "allergens": [
+    "麸质"
+   ]
   },
   {
    "id": 135,
@@ -2339,6 +2348,7 @@
   "紫菜",
   "香菇",
   "酸奶",
+  "面皮",
   "奶酪",
   "意面",
   "黄瓜",
