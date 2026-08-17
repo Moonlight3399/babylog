@@ -15,7 +15,7 @@
     <link rel="apple-touch-icon" href="/static/icons/192x192.png">
     <link rel="icon" type="image/png" href="/static/icons/192x192.png">
 
-    <link rel="stylesheet" href="/static/style.css?v=15">
+    <link rel="stylesheet" href="/static/style.css?v=16">
 </head>
 <body class="app-body">
     <!-- 下拉刷新指示器 -->
@@ -39,14 +39,6 @@
                 <div class="tip-text" id="tipText"></div>
                 <div class="tip-special" id="tipSpecial"></div>
             </div>
-            <div class="food-entry" onclick="openFoodLookup()">
-                <span class="food-entry-icon">📖</span>
-                <div class="food-entry-text">
-                    <div class="food-entry-title">查辅食</div>
-                    <div class="food-entry-sub">按月龄查做法 · 可排除过敏源</div>
-                </div>
-                <span class="food-entry-arrow">›</span>
-            </div>
             <div class="actions-grid">
                 <button class="action-btn formula-btn" data-event="formula">
                     <span class="action-icon">🍼</span>
@@ -56,6 +48,14 @@
                     <span class="action-icon">🥣</span>
                     <span class="action-label">吃辅食</span>
                 </button>
+                <div class="food-entry" id="foodEntry" onclick="openFoodLookup()">
+                    <span class="food-entry-icon">📖</span>
+                    <div class="food-entry-text">
+                        <div class="food-entry-title">查辅食</div>
+                        <div class="food-entry-sub">按月龄查做法 · 可排除过敏源</div>
+                    </div>
+                    <span class="food-entry-arrow">›</span>
+                </div>
                 <button class="action-btn sleep-btn" data-event="sleep_start">
                     <span class="action-icon">😴</span>
                     <span class="action-label">开始睡</span>
@@ -1345,6 +1345,9 @@
         const peeBtn = document.querySelector('.action-btn[data-event="pee"]');
         if (solidBtn) solidBtn.style.display = under6 ? 'none' : '';
         if (peeBtn) peeBtn.style.display = under6 ? '' : 'none';
+        // 查辅食：6 月龄前不显示，6 月龄后显示（紧跟吃辅食下方）
+        const foodEntry = document.getElementById('foodEntry');
+        if (foodEntry) foodEntry.style.display = under6 ? 'none' : '';
         // 手动添加弹窗：吃辅食 ↔ 小便了
         const addSolid = document.querySelector('#typePicker .type-option[data-type="solid"]');
         const addPee = document.querySelector('#typePicker .type-option[data-type="pee"]');

@@ -1511,8 +1511,8 @@ select.input-md {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 16px;
-    padding: 14px 16px;
+    margin: 0;
+    padding: 12px 16px;
     background: linear-gradient(135deg, #FFF0F5, #FFE9F0);
     border: 2px solid #FDDDE6;
     border-radius: 16px;
