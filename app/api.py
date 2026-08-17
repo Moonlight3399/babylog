@@ -677,3 +677,12 @@ def api_tips_daily(user):
     from .tips import get_daily_tip
     result = get_daily_tip(baby.birth_date)
     return jsonify({'ok': True, 'tip': result})
+
+
+@api_bp.route('/api/foods/library')
+@login_required
+def api_food_library(user):
+    """辅食库查询：返回全部辅食（含过敏源/食材/做法/注意事项），前端按宝宝月龄与选择过滤"""
+    from .foods import load_foods
+    data = load_foods()
+    return jsonify({'ok': True, **data})

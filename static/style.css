@@ -1506,6 +1506,203 @@ select.input-md {
     flex-shrink: 0;
 }
 
+/* --- 查辅食入口卡片 --- */
+.food-entry {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, #FFF0F5, #FFE9F0);
+    border: 2px solid #FDDDE6;
+    border-radius: 16px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: transform 0.15s;
+}
+.food-entry:active {
+    transform: scale(0.98);
+}
+.food-entry-icon {
+    font-size: 1.6rem;
+}
+.food-entry-text {
+    flex: 1;
+    text-align: left;
+}
+.food-entry-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #D4638A;
+}
+.food-entry-sub {
+    font-size: 0.78rem;
+    color: #C495A5;
+    margin-top: 2px;
+}
+.food-entry-arrow {
+    font-size: 1.4rem;
+    color: #D4638A;
+}
+
+/* --- 查辅食弹窗 --- */
+.food-modal-box {
+    max-width: 360px;
+}
+.food-meta {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #D4638A;
+    font-weight: 600;
+    background: #FFF0F5;
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 12px;
+}
+.food-sec-label {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #888;
+    margin: 14px 0 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.allergen-chips,
+.food-ingredients {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.allergen-chip,
+.ing-chip {
+    padding: 7px 14px;
+    border: 2px solid #FDDDE6;
+    border-radius: 20px;
+    background: #FFFBFD;
+    color: #B48696;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: all 0.15s;
+}
+.allergen-chip.active {
+    background: #E74C3C;
+    border-color: #E74C3C;
+    color: #fff;
+}
+.ing-chip.active {
+    background: #FF69B4;
+    border-color: #FF69B4;
+    color: #fff;
+}
+.food-count {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #C495A5;
+}
+.food-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 4px;
+    padding-bottom: 8px;
+}
+.food-item {
+    background: #fff;
+    border: 2px solid #FDDDE6;
+    border-radius: 14px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+.food-item:active {
+    border-color: #FF69B4;
+}
+.food-item-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+.food-item-name {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #333;
+}
+.food-item-stage {
+    font-size: 0.75rem;
+    color: #C495A5;
+    flex-shrink: 0;
+}
+.food-item-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+.food-tag {
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: #FFF0F5;
+    color: #D4638A;
+}
+.food-tag.ing {
+    background: #F0F9F0;
+    color: #5A9A6A;
+}
+.food-tag.allergen {
+    background: #FDECEA;
+    color: #E74C3C;
+}
+.food-empty {
+    text-align: center;
+    color: #B48696;
+    font-size: 0.88rem;
+    padding: 24px 0;
+}
+
+/* --- 辅食详情弹窗 --- */
+.fd-meta {
+    font-size: 0.85rem;
+    color: #D4638A;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+.fd-ing {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+.fd-block {
+    background: #FFFBFD;
+    border: 2px solid #FDDDE6;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+}
+.fd-block-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #D4638A;
+    margin-bottom: 6px;
+}
+.fd-text {
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: #555;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+.fd-notes {
+    color: #B0552A;
+}
+
 /* --- Utility --- */
 .hidden {
     display: none !important;

@@ -15,7 +15,7 @@
     <link rel="apple-touch-icon" href="/static/icons/192x192.png">
     <link rel="icon" type="image/png" href="/static/icons/192x192.png">
 
-    <link rel="stylesheet" href="/static/style.css?v=13">
+    <link rel="stylesheet" href="/static/style.css?v=14">
 </head>
 <body class="app-body">
     <!-- 下拉刷新指示器 -->
@@ -38,6 +38,14 @@
                 <div class="tip-stage" id="tipStage"></div>
                 <div class="tip-text" id="tipText"></div>
                 <div class="tip-special" id="tipSpecial"></div>
+            </div>
+            <div class="food-entry" onclick="openFoodLookup()">
+                <span class="food-entry-icon">📖</span>
+                <div class="food-entry-text">
+                    <div class="food-entry-title">查辅食</div>
+                    <div class="food-entry-sub">按月龄查做法 · 可排除过敏源</div>
+                </div>
+                <span class="food-entry-arrow">›</span>
             </div>
             <div class="actions-grid">
                 <button class="action-btn formula-btn" data-event="formula">
@@ -617,6 +625,50 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" id="adminSetProfileCancel">取消</button>
                 <button class="btn btn-primary" id="adminSetProfileConfirm">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 查辅食弹窗 -->
+    <div class="modal-overlay" id="foodModal">
+        <div class="modal-box food-modal-box">
+            <div class="modal-header">
+                <h3>📖 查辅食</h3>
+                <button class="modal-close" id="foodModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="food-meta" id="foodMeta"></div>
+                <div class="food-sec-label">① 排除过敏源（点选后不再推荐）</div>
+                <div class="allergen-chips" id="allergenChips"></div>
+                <div class="food-sec-label">② 选择食材</div>
+                <div class="food-ingredients" id="foodIngredients"></div>
+                <div class="food-sec-label food-list-label"><span>③ 推荐辅食</span><span class="food-count" id="foodCount"></span></div>
+                <div class="food-list" id="foodList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 辅食详情弹窗 -->
+    <div class="modal-overlay" id="foodDetailModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="fdName">辅食</h3>
+                <button class="modal-close" id="fdClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="fd-meta" id="fdMeta"></div>
+                <div class="fd-ing" id="fdIngredients"></div>
+                <div class="fd-block">
+                    <div class="fd-block-title">🥣 做法</div>
+                    <div class="fd-text" id="fdMethod"></div>
+                </div>
+                <div class="fd-block">
+                    <div class="fd-block-title">⚠️ 注意事项</div>
+                    <div class="fd-text fd-notes" id="fdNotes"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="fdDone">关闭</button>
             </div>
         </div>
     </div>
@@ -1346,6 +1398,7 @@
                 // 年龄分级：6 个月前不显示吃辅食，改为小便了
                 window.babyAgeDays = (data.baby && data.baby.birth_date)
                     ? daysSinceBirth(data.baby.birth_date) : null;
+                window.babyBirthDate = data.baby ? data.baby.birth_date : null;
                 applyAgeGating();
                 // 新用户首次登录：弹出安装指引
                 if (!data.install_guide_seen) {
@@ -2175,6 +2228,140 @@
         if (currentContext === 'user') loadUser();
         if (done) setTimeout(done, 700);
     }
+
+    // ========== 查辅食 ==========
+    let foodsData = null;          // { foods, allergens, ingredients }
+    let selectedFoodIng = null;    // 当前选中食材（null=全部食材）
+    let foodAllergens = [];        // 已排除的过敏源（localStorage 持久化）
+
+    function babyMonths(birthDateStr) {
+        if (!birthDateStr) return null;
+        const b = new Date(birthDateStr + 'T00:00:00');
+        const now = new Date();
+        let m = (now.getFullYear() - b.getFullYear()) * 12 + (now.getMonth() - b.getMonth());
+        if (now.getDate() < b.getDate()) m--;
+        return Math.max(0, m);
+    }
+
+    function openFoodLookup() {
+        if (!foodsData) {
+            fetch('/api/foods/library')
+                .then(r => r.json())
+                .then(d => {
+                    if (d.ok) { foodsData = d; renderFoodLookup(); }
+                    else showToast('加载辅食失败', true);
+                })
+                .catch(() => showToast('加载辅食失败', true));
+        } else {
+            renderFoodLookup();
+        }
+    }
+
+    function renderFoodLookup() {
+        const m = babyMonths(window.babyBirthDate);
+        document.getElementById('foodMeta').textContent =
+            m === null
+                ? '⚠️ 请先在「用户」页设置宝宝生日，才能按月龄推荐'
+                : '👶 宝宝 ' + m + ' 个月 · 共 ' + foodsData.foods.length + ' 种辅食';
+
+        // ① 过敏源排除
+        foodAllergens = JSON.parse(localStorage.getItem('babylog_food_allergens') || '[]');
+        const ac = document.getElementById('allergenChips');
+        ac.innerHTML = foodsData.allergens.map(a =>
+            '<button type="button" class="allergen-chip' + (foodAllergens.includes(a) ? ' active' : '') + '" data-a="' + a + '">' + a + '</button>'
+        ).join('');
+        ac.querySelectorAll('.allergen-chip').forEach(b => {
+            b.addEventListener('click', () => {
+                const a = b.dataset.a;
+                const i = foodAllergens.indexOf(a);
+                if (i >= 0) foodAllergens.splice(i, 1); else foodAllergens.push(a);
+                localStorage.setItem('babylog_food_allergens', JSON.stringify(foodAllergens));
+                b.classList.toggle('active');
+                renderFoodList();
+            });
+        });
+
+        // ② 食材选择
+        const ic = document.getElementById('foodIngredients');
+        ic.innerHTML =
+            '<button type="button" class="ing-chip' + (selectedFoodIng === null ? ' active' : '') + '" data-ing="">全部食材</button>' +
+            foodsData.ingredients.map(i =>
+                '<button type="button" class="ing-chip' + (selectedFoodIng === i ? ' active' : '') + '" data-ing="' + i + '">' + i + '</button>'
+            ).join('');
+        ic.querySelectorAll('.ing-chip').forEach(b => {
+            b.addEventListener('click', () => {
+                selectedFoodIng = b.dataset.ing === '' ? null : b.dataset.ing;
+                ic.querySelectorAll('.ing-chip').forEach(x => x.classList.toggle('active', x === b));
+                renderFoodList();
+            });
+        });
+
+        document.getElementById('foodModal').classList.add('show');
+        renderFoodList();
+    }
+
+    function renderFoodList() {
+        const m = babyMonths(window.babyBirthDate);
+        const el0 = document.getElementById('foodList');
+        if (m !== null && m < 6) {
+            document.getElementById('foodCount').textContent = '0 种';
+            el0.innerHTML = '<div class="food-empty">宝宝还未满 6 个月<br>暂不建议添加辅食</div>';
+            return;
+        }
+        let list = foodsData.foods.filter(f => {
+            if (m !== null && (f.min_month > m || f.max_month < m)) return false; // 按月龄
+            if (foodAllergens.some(a => f.allergens.includes(a))) return false;   // 排除过敏源
+            if (selectedFoodIng && !f.ingredients.includes(selectedFoodIng)) return false; // 含所选食材
+            return true;
+        });
+        list.sort((a, b) => a.min_month - b.min_month);
+        document.getElementById('foodCount').textContent = list.length + ' 种';
+        const el = document.getElementById('foodList');
+        if (!list.length) {
+            el.innerHTML = '<div class="food-empty">没有符合条件的辅食<br>可放宽过敏源或食材选择</div>';
+            return;
+        }
+        el.innerHTML = list.map(f => {
+            const ingTags = f.ingredients.slice(0, 4).map(i => '<span class="food-tag ing">' + i + '</span>').join('');
+            const alTags = f.allergens.map(a => '<span class="food-tag allergen">⚠️' + a + '</span>').join('');
+            return '<div class="food-item" data-id="' + f.id + '">' +
+                '<div class="food-item-top"><span class="food-item-name">' + f.name + '</span>' +
+                '<span class="food-item-stage">' + f.min_month + '月龄起</span></div>' +
+                '<div class="food-item-tags">' + ingTags + alTags + '</div>' +
+                '</div>';
+        }).join('');
+        el.querySelectorAll('.food-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const f = foodsData.foods.find(x => x.id === Number(item.dataset.id));
+                if (f) openFoodDetail(f);
+            });
+        });
+    }
+
+    function openFoodDetail(f) {
+        document.getElementById('fdName').textContent = '🍽️ ' + f.name;
+        document.getElementById('fdMeta').textContent =
+            '适用月龄：' + f.min_month + ' 个月起（' + f.stage + '）' +
+            (f.allergens.length ? ' · 含过敏源：' + f.allergens.join('、') : '');
+        document.getElementById('fdIngredients').innerHTML =
+            f.ingredients.map(i => '<span class="food-tag ing">' + i + '</span>').join('') || '<span class="food-tag">—</span>';
+        document.getElementById('fdMethod').textContent = f.method;
+        document.getElementById('fdNotes').textContent = f.notes;
+        document.getElementById('foodDetailModal').classList.add('show');
+    }
+
+    document.getElementById('foodModalClose').addEventListener('click', () =>
+        document.getElementById('foodModal').classList.remove('show'));
+    document.getElementById('foodModal').addEventListener('click', e => {
+        if (e.target === document.getElementById('foodModal')) document.getElementById('foodModal').classList.remove('show');
+    });
+    document.getElementById('fdClose').addEventListener('click', () =>
+        document.getElementById('foodDetailModal').classList.remove('show'));
+    document.getElementById('fdDone').addEventListener('click', () =>
+        document.getElementById('foodDetailModal').classList.remove('show'));
+    document.getElementById('foodDetailModal').addEventListener('click', e => {
+        if (e.target === document.getElementById('foodDetailModal')) document.getElementById('foodDetailModal').classList.remove('show');
+    });
 
     // ========== 初始加载 ==========
     loadStats();
