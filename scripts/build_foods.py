@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""解析 data/婴幼儿辅食清单100种+.md → data/foods.json
+"""解析辅食 md → data/foods.json（合并两个清单文件，归一化名称去重）
+
+- data/婴幼儿辅食清单100种+.md（基础，分阶段）
+- data/13-24月龄每月辅食清单(食物+做法).md（按月，补充新增 + 更详细做法）
 
 用法: python3 scripts/build_foods.py
 生成的 foods.json 供 /api/foods 使用（前端查辅食模块）。
@@ -10,7 +13,8 @@ import os
 import re
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SRC = os.path.join(BASE, 'data', '婴幼儿辅食清单100种+.md')
+SRC1 = os.path.join(BASE, 'data', '婴幼儿辅食清单100种+.md')
+SRC2 = os.path.join(BASE, 'data', '13-24月龄每月辅食清单(食物+做法).md')
 OUT = os.path.join(BASE, 'data', 'foods.json')
 
 # 过敏源 → 关键词（按食材文本匹配；注意避免误匹配，如"母乳/土豆"）
@@ -31,6 +35,7 @@ IGNORE_WORDS = {
     '无糖', '极少量', '去腥', '姜', '葱花', '生抽', '低钠', '蛋液', '小火',
     '贝贝', '栗面', '干', '鲜', '白心', '苹果等', '多种蔬菜', '应季蔬菜',
     '菜', '饭', '米', '肉', '肉饼', '肉馅', '肉末', '排骨',
+    '对应食材', '手指食物',
 }
 
 # 食材归一化（合并同义）
@@ -44,6 +49,20 @@ NORMALIZE = {
     '强化铁婴儿米粉': '米粉', '多种杂粮': '杂粮', '龙利鱼': '鱼',
     '猪肉末': '猪肉', '面': '面条', '皮': '面皮',
     '瘦猪肉': '猪肉', '鸡蛋黄': '蛋', '宝宝奶酪': '奶酪',
+    '哈密瓜': '蜜瓜', '无麸质可用米粉': '米粉', '无麸质用米粉': '米粉', '多种已排敏软水果': '水果',
+}
+
+# 名称归一化别名（同物不同名）
+NAME_ALIAS = {
+    '大米小米粥': '二米粥',
+}
+
+# 食材为空时，从名称补食材（特殊辅食）
+NAME_HINT = {
+    '茄子丁': ['茄子'],
+    '水果丁拼盘': ['水果'],
+    '彩蔬小炒': ['蔬菜'],
+    '清炒时蔬': ['蔬菜'],
 }
 
 
@@ -62,8 +81,42 @@ def split_ingredients(text):
     return out
 
 
-def parse():
-    with open(SRC, encoding='utf-8') as f:
+def norm_name(n):
+    """名称归一化：去★、去括号内容、别名映射（用于跨文件合并去重）"""
+    n = n.replace('★', '').strip()
+    n = re.sub(r'[（(][^）)]*[）)]', '', n).strip()
+    n = NAME_ALIAS.get(n, n)
+    return n
+
+
+def make_food(min_m, max_m, stage, name, ing_text, method, notes):
+    """构建单条辅食记录（含食材拆分与过敏源匹配）"""
+    ingredients = split_ingredients(ing_text)
+    if not ingredients:
+        ingredients = list(NAME_HINT.get(norm_name(name), []))
+    # 过敏源匹配：只用归一化后的食材（原文可能含'栗面'等品种词会误标'面'，
+    # 归一化已过滤 IGNORE_WORDS 并把'宝宝面→面条'等统一，避免漏标/误标）
+    match_text = '、'.join(ingredients)
+    allergens = []
+    for a, kws in ALLERGEN_MAP.items():
+        if any(kw in match_text for kw in kws):
+            allergens.append(a)
+    return {
+        'name': name.replace('★', '').strip(),
+        'min_month': min_m,
+        'max_month': max_m,
+        'stage': stage,
+        'ingredients': ingredients,
+        'ingredient_text': ing_text,
+        'method': method,
+        'notes': notes,
+        'allergens': allergens,
+    }
+
+
+def parse_base():
+    """解析 婴幼儿辅食清单100种+.md（分阶段）→ food 列表"""
+    with open(SRC1, encoding='utf-8') as f:
         lines = f.read().splitlines()
 
     foods = []
@@ -94,28 +147,59 @@ def parse():
         # max 月龄：阶段上限；18-24 阶段兜底到 36（>24 月仍适用）
         max_m = 36 if stage[1] >= 24 else stage[1]
         max_m = max(max_m, min_m)
+        foods.append(make_food(min_m, max_m, stage_label, name, ing_text, method, notes))
+    return foods
 
-        ingredients = split_ingredients(ing_text)
-        # 过敏源匹配：只用归一化后的食材（原文可能含'栗面'等品种词会误标'面'，
-        # 归一化已过滤 IGNORE_WORDS 并把'宝宝面→面条'等统一，避免漏标/误标）
-        match_text = '、'.join(ingredients)
-        allergens = []
-        for a, kws in ALLERGEN_MAP.items():
-            if any(kw in match_text for kw in kws):
-                allergens.append(a)
 
-        foods.append({
-            'id': len(foods) + 1,
-            'name': name,
-            'min_month': min_m,
-            'max_month': max_m,
-            'stage': stage_label,
-            'ingredients': ingredients,
-            'ingredient_text': ing_text,
-            'method': method,
-            'notes': notes,
-            'allergens': allergens,
-        })
+def parse_monthly():
+    """解析 13-24月龄每月辅食清单(食物+做法).md（按月）→ (min_m, name, ing, method, notes) 列表"""
+    with open(SRC2, encoding='utf-8') as f:
+        lines = f.read().splitlines()
+
+    rows = []
+    row_re = re.compile(
+        r'^\|\s*(\d+)月龄\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|'
+    )
+    for ln in lines:
+        r = row_re.match(ln)
+        if not r:
+            continue
+        rows.append((
+            int(r.group(1)),
+            r.group(2).strip(),
+            r.group(3).strip(),
+            r.group(4).strip(),
+            r.group(5).strip(),
+        ))
+    return rows
+
+
+def merge_and_dump():
+    """合并两个文件：名称归一化去重；已存在则补充更详细做法；新增则保留新文件月龄"""
+    by_key = {}
+    for f in parse_base():
+        by_key[norm_name(f['name'])] = f
+
+    added = 0
+    enriched = 0
+    for (min_m, name, ing_text, method, notes) in parse_monthly():
+        key = norm_name(name)
+        if key in by_key:
+            old = by_key[key]
+            if len(method) > len(old['method']):
+                old['method'] = method
+            if len(notes) > len(old['notes']):
+                old['notes'] = notes
+            enriched += 1
+        else:
+            max_m = 36
+            stage = f'{min_m}月龄'
+            by_key[key] = make_food(min_m, max_m, stage, name, ing_text, method, notes)
+            added += 1
+
+    foods = list(by_key.values())
+    for i, f in enumerate(foods):
+        f['id'] = i + 1
 
     # 可选食材集合（保留出现顺序）
     ing_set = []
@@ -132,11 +216,12 @@ def parse():
     with open(OUT, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=1)
 
-    print(f'解析 {len(foods)} 条辅食，可选食材 {len(ing_set)} 种')
+    print(f'基础文件 {len(parse_base())} 条 + 月龄文件去重后新增 {added} 条 → 共 {len(foods)} 条')
+    print(f'做法补充/比对（新文件与已有匹配）: {enriched} 条')
     print('过敏源分布:', {a: sum(1 for x in foods if a in x['allergens']) for a in ALLERGEN_MAP})
     print('食材:', '、'.join(ing_set))
     return data
 
 
 if __name__ == '__main__':
-    parse()
+    merge_and_dump()

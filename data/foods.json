@@ -1,7 +1,6 @@
 {
  "foods": [
   {
-   "id": 1,
    "name": "强化铁米粉糊",
    "min_month": 6,
    "max_month": 7,
@@ -15,10 +14,10 @@
    "notes": "第一口辅食首选富铁泥糊；1岁内不额外加盐糖；新食物单独试2–3天观察过敏。",
    "allergens": [
     "奶制品"
-   ]
+   ],
+   "id": 1
   },
   {
-   "id": 2,
    "name": "自制大米米糊",
    "min_month": 6,
    "max_month": 7,
@@ -29,10 +28,10 @@
    "ingredient_text": "大米",
    "method": "大米洗净浸泡1小时，加适量水用料理机打成浆，过筛后小火熬煮并不断搅拌至稀糊状。",
    "notes": "家庭自制米糊缺铁，需搭配富铁米粉/肉泥；确保完全熟烂无颗粒。",
-   "allergens": []
+   "allergens": [],
+   "id": 2
   },
   {
-   "id": 3,
    "name": "小米糊",
    "min_month": 6,
    "max_month": 7,
@@ -43,10 +42,10 @@
    "ingredient_text": "小米",
    "method": "小米洗净浸泡后加水打成浆，过滤熬煮成稀糊；可逐步增稠。",
    "notes": "小米易消化、富含B族；初添仍建议以强化铁米粉为主。",
-   "allergens": []
+   "allergens": [],
+   "id": 3
   },
   {
-   "id": 4,
    "name": "土豆泥",
    "min_month": 6,
    "max_month": 7,
@@ -57,10 +56,10 @@
    "ingredient_text": "土豆",
    "method": "土豆去皮切块蒸熟（约15分钟）至筷子可轻松穿透，压成泥过筛，可加少量温水/奶调稠稀。",
    "notes": "选面土豆；现做现吃，放凉易变硬；少量起试。",
-   "allergens": []
+   "allergens": [],
+   "id": 4
   },
   {
-   "id": 5,
    "name": "南瓜泥",
    "min_month": 6,
    "max_month": 7,
@@ -71,10 +70,10 @@
    "ingredient_text": "南瓜（贝贝/栗面）",
    "method": "南瓜去皮去瓤切块蒸熟，压泥过筛；天然甜，无需加糖。",
    "notes": "富含β-胡萝卜素，通便；初次少量，防胀气。",
-   "allergens": []
+   "allergens": [],
+   "id": 5
   },
   {
-   "id": 6,
    "name": "胡萝卜泥",
    "min_month": 6,
    "max_month": 7,
@@ -85,10 +84,10 @@
    "ingredient_text": "胡萝卜",
    "method": "胡萝卜去皮切薄片，蒸或少量油略炒后打成泥（脂溶维生素A更易吸收）。",
    "notes": "建议少量油烹调助吸收；不过量以免皮肤暂时性发黄。",
-   "allergens": []
+   "allergens": [],
+   "id": 6
   },
   {
-   "id": 7,
    "name": "红薯泥",
    "min_month": 6,
    "max_month": 7,
@@ -99,10 +98,10 @@
    "ingredient_text": "红薯",
    "method": "红薯去皮蒸熟压泥过筛。",
    "notes": "通便但易胀气，初次少量；选红心更甜软。",
-   "allergens": []
+   "allergens": [],
+   "id": 7
   },
   {
-   "id": 8,
    "name": "紫薯泥",
    "min_month": 6,
    "max_month": 7,
@@ -113,10 +112,10 @@
    "ingredient_text": "紫薯",
    "method": "紫薯去皮蒸熟压泥，可加少许温水调稀。",
    "notes": "富含花青素；略干，注意调至顺滑防噎。",
-   "allergens": []
+   "allergens": [],
+   "id": 8
   },
   {
-   "id": 9,
    "name": "山药泥",
    "min_month": 6,
    "max_month": 7,
@@ -127,10 +126,10 @@
    "ingredient_text": "铁棍山药",
    "method": "山药去皮蒸熟（防手痒戴手套），压泥过筛；可混入米粉。",
    "notes": "健脾易消化；生山药汁液致痒，处理需防护。",
-   "allergens": []
+   "allergens": [],
+   "id": 9
   },
   {
-   "id": 10,
    "name": "莲藕泥",
    "min_month": 6,
    "max_month": 7,
@@ -141,10 +140,10 @@
    "ingredient_text": "莲藕",
    "method": "莲藕去皮切块煮熟，加少量汤打成细腻泥。",
    "notes": "清热润燥；务必煮透打细，初次少量。",
-   "allergens": []
+   "allergens": [],
+   "id": 10
   },
   {
-   "id": 11,
    "name": "冬瓜泥",
    "min_month": 6,
    "max_month": 7,
@@ -155,10 +154,10 @@
    "ingredient_text": "冬瓜",
    "method": "冬瓜去皮去籽蒸熟打成泥。",
    "notes": "清淡利尿、低敏；几乎无热量，作配菜不宜单吃。",
-   "allergens": []
+   "allergens": [],
+   "id": 11
   },
   {
-   "id": 12,
    "name": "西兰花泥",
    "min_month": 6,
    "max_month": 7,
@@ -169,10 +168,10 @@
    "ingredient_text": "西兰花",
    "method": "西兰花掰小朵，淡盐水浸泡后焯水熟透，打成泥过筛。",
    "notes": "富含维C与叶酸；务必焯熟去农残与草酸。",
-   "allergens": []
+   "allergens": [],
+   "id": 12
   },
   {
-   "id": 13,
    "name": "菠菜泥",
    "min_month": 6,
    "max_month": 7,
@@ -183,10 +182,10 @@
    "ingredient_text": "菠菜",
    "method": "菠菜去根焯水1分钟去草酸，过凉水后打成泥。",
    "notes": "必须焯水去草酸；含一定硝酸盐，1岁内宜少量且现做。",
-   "allergens": []
+   "allergens": [],
+   "id": 13
   },
   {
-   "id": 14,
    "name": "油菜泥",
    "min_month": 6,
    "max_month": 7,
@@ -197,10 +196,10 @@
    "ingredient_text": "油菜（小白菜）",
    "method": "洗净焯水熟透打成泥。",
    "notes": "低敏绿叶菜，补维C与钙；焯水保绿。",
-   "allergens": []
+   "allergens": [],
+   "id": 14
   },
   {
-   "id": 15,
    "name": "豌豆泥",
    "min_month": 6,
    "max_month": 7,
@@ -213,10 +212,10 @@
    "notes": "高蛋白富纤维；去皮减胀气，初次少量。",
    "allergens": [
     "豆类"
-   ]
+   ],
+   "id": 15
   },
   {
-   "id": 16,
    "name": "苹果泥",
    "min_month": 6,
    "max_month": 7,
@@ -227,10 +226,10 @@
    "ingredient_text": "苹果",
    "method": "苹果去皮去核，蒸熟或直接刮泥（熟制更护肠胃）；可隔水蒸5分钟。",
    "notes": "熟苹果泥助消化；生吃刮泥需保证果源新鲜。",
-   "allergens": []
+   "allergens": [],
+   "id": 16
   },
   {
-   "id": 17,
    "name": "香蕉泥",
    "min_month": 6,
    "max_month": 7,
@@ -241,10 +240,10 @@
    "ingredient_text": "香蕉",
    "method": "熟香蕉去皮直接用勺压成泥或刮泥。",
    "notes": "免烹即食、富钾；选熟软香蕉，生香蕉易便秘。",
-   "allergens": []
+   "allergens": [],
+   "id": 17
   },
   {
-   "id": 18,
    "name": "牛油果泥",
    "min_month": 6,
    "max_month": 7,
@@ -255,10 +254,10 @@
    "ingredient_text": "牛油果",
    "method": "熟牛油果对半去核，勺挖果肉压成泥，可混苹果泥。",
    "notes": "优质脂肪；选捏软的熟果，未熟发苦不食。",
-   "allergens": []
+   "allergens": [],
+   "id": 18
   },
   {
-   "id": 19,
    "name": "雪梨泥",
    "min_month": 6,
    "max_month": 7,
@@ -269,10 +268,10 @@
    "ingredient_text": "雪梨",
    "method": "雪梨去皮去核蒸熟打成泥。",
    "notes": "润燥；蒸熟更温和，初次少量。",
-   "allergens": []
+   "allergens": [],
+   "id": 19
   },
   {
-   "id": 20,
    "name": "西梅泥",
    "min_month": 6,
    "max_month": 7,
@@ -283,10 +282,10 @@
    "ingredient_text": "西梅（干/鲜）",
    "method": "西梅去核煮软打成泥，或温水泡发打泥。",
    "notes": "天然通便，便秘宝宝优选；腹泻时停。",
-   "allergens": []
+   "allergens": [],
+   "id": 20
   },
   {
-   "id": 21,
    "name": "蓝莓泥",
    "min_month": 6,
    "max_month": 7,
@@ -297,10 +296,10 @@
    "ingredient_text": "蓝莓",
    "method": "蓝莓洗净蒸熟打泥过筛。",
    "notes": "抗氧化；蒸熟更软，初次少量观察是否过敏。",
-   "allergens": []
+   "allergens": [],
+   "id": 21
   },
   {
-   "id": 22,
    "name": "白心火龙果泥",
    "min_month": 6,
    "max_month": 7,
@@ -311,10 +310,10 @@
    "ingredient_text": "火龙果（白心）",
    "method": "取果肉压泥过筛。",
    "notes": "红心易染便且偏凉，初添选白心；腹泻慎食。",
-   "allergens": []
+   "allergens": [],
+   "id": 22
   },
   {
-   "id": 23,
    "name": "蛋黄泥",
    "min_month": 7,
    "max_month": 8,
@@ -327,10 +326,10 @@
    "notes": "先蛋黄后全蛋；蛋白易过敏建议1岁后；现煮现吃。",
    "allergens": [
     "鸡蛋"
-   ]
+   ],
+   "id": 23
   },
   {
-   "id": 24,
    "name": "鸡肉泥",
    "min_month": 7,
    "max_month": 8,
@@ -341,10 +340,10 @@
    "ingredient_text": "鸡胸肉",
    "method": "鸡胸肉去筋膜切块，姜片水焯去腥，蒸熟后加少量汤打泥过筛。",
    "notes": "优质低脂蛋白；打泥需够细，补铁锌。",
-   "allergens": []
+   "allergens": [],
+   "id": 24
   },
   {
-   "id": 25,
    "name": "猪肉泥（里脊）",
    "min_month": 7,
    "max_month": 8,
@@ -355,10 +354,10 @@
    "ingredient_text": "猪里脊",
    "method": "里脊去筋切小块，焯水后蒸熟，加肉汤打成细泥。",
    "notes": "补铁佳；选瘦里脊去肥，少量起试。",
-   "allergens": []
+   "allergens": [],
+   "id": 25
   },
   {
-   "id": 26,
    "name": "牛肉泥",
    "min_month": 7,
    "max_month": 8,
@@ -369,10 +368,10 @@
    "ingredient_text": "牛里脊",
    "method": "牛里脊去筋切块，焯水蒸熟加汤打泥；可混入土豆泥。",
    "notes": "富铁锌；纤维略粗，务必打细过筛。",
-   "allergens": []
+   "allergens": [],
+   "id": 26
   },
   {
-   "id": 27,
    "name": "鳕鱼泥",
    "min_month": 7,
    "max_month": 8,
@@ -385,10 +384,10 @@
    "notes": "低汞深海鱼、DHA丰富；彻底去刺，初次少量。",
    "allergens": [
     "鱼"
-   ]
+   ],
+   "id": 27
   },
   {
-   "id": 28,
    "name": "三文鱼泥",
    "min_month": 7,
    "max_month": 8,
@@ -401,10 +400,10 @@
    "notes": "富DHA与维D；选新鲜，彻底去刺。",
    "allergens": [
     "鱼"
-   ]
+   ],
+   "id": 28
   },
   {
-   "id": 29,
    "name": "嫩豆腐泥",
    "min_month": 7,
    "max_month": 8,
@@ -417,10 +416,10 @@
    "notes": "植物蛋白与钙；焯水去豆腥，初次少量。",
    "allergens": [
     "豆类"
-   ]
+   ],
+   "id": 29
   },
   {
-   "id": 30,
    "name": "猪肝泥",
    "min_month": 7,
    "max_month": 8,
@@ -431,10 +430,10 @@
    "ingredient_text": "猪肝",
    "method": "猪肝去筋膜切薄片，清水浸泡去血水，焯熟加汤打泥。",
    "notes": "补铁冠军；每周1–2次即可，不宜多。",
-   "allergens": []
+   "allergens": [],
+   "id": 30
   },
   {
-   "id": 31,
    "name": "鸡肝泥",
    "min_month": 7,
    "max_month": 8,
@@ -445,10 +444,10 @@
    "ingredient_text": "鸡肝",
    "method": "鸡肝去胆去筋膜，浸泡去血水焯熟打泥。",
    "notes": "富铁维A；去苦胆，少量，防维A过量。",
-   "allergens": []
+   "allergens": [],
+   "id": 31
   },
   {
-   "id": 32,
    "name": "红枣泥",
    "min_month": 7,
    "max_month": 8,
@@ -459,10 +458,10 @@
    "ingredient_text": "红枣",
    "method": "红枣去核蒸熟去皮打泥。",
    "notes": "天然甜、补铁；去皮去核防噎，少量。",
-   "allergens": []
+   "allergens": [],
+   "id": 32
   },
   {
-   "id": 33,
    "name": "番茄泥",
    "min_month": 7,
    "max_month": 8,
@@ -473,10 +472,10 @@
    "ingredient_text": "番茄",
    "method": "番茄去皮去籽蒸熟打成泥。",
    "notes": "富维C助铁吸收；去皮去籽减酸刺。",
-   "allergens": []
+   "allergens": [],
+   "id": 33
   },
   {
-   "id": 34,
    "name": "娃娃菜泥",
    "min_month": 7,
    "max_month": 8,
@@ -487,10 +486,10 @@
    "ingredient_text": "娃娃菜",
    "method": "娃娃菜叶焯水熟透打泥。",
    "notes": "低敏嫩叶菜；焯水去农残。",
-   "allergens": []
+   "allergens": [],
+   "id": 34
   },
   {
-   "id": 35,
    "name": "南瓜小米粥",
    "min_month": 7,
    "max_month": 8,
@@ -502,10 +501,10 @@
    "ingredient_text": "南瓜、小米",
    "method": "小米熬粥，加入南瓜丁同煮至软烂，可压碎。",
    "notes": "养胃组合；熬至米粒开花，初期可过筛。",
-   "allergens": []
+   "allergens": [],
+   "id": 35
   },
   {
-   "id": 36,
    "name": "山药大米粥",
    "min_month": 7,
    "max_month": 8,
@@ -517,10 +516,10 @@
    "ingredient_text": "山药、大米",
    "method": "大米粥熬好，加蒸熟山药压泥拌匀。",
    "notes": "健脾易消化；山药现处理防痒。",
-   "allergens": []
+   "allergens": [],
+   "id": 36
   },
   {
-   "id": 37,
    "name": "胡萝卜米糊",
    "min_month": 7,
    "max_month": 8,
@@ -532,10 +531,10 @@
    "ingredient_text": "胡萝卜、米粉",
    "method": "胡萝卜蒸熟打泥，拌入冲好的强化铁米粉。",
    "notes": "维A+铁互补；混合食材需各自已排敏。",
-   "allergens": []
+   "allergens": [],
+   "id": 37
   },
   {
-   "id": 38,
    "name": "香蕉米糊",
    "min_month": 7,
    "max_month": 8,
@@ -547,10 +546,10 @@
    "ingredient_text": "香蕉、米粉",
    "method": "香蕉压泥拌入冲好的米粉。",
    "notes": "免烹搭配；选熟香蕉。",
-   "allergens": []
+   "allergens": [],
+   "id": 38
   },
   {
-   "id": 39,
    "name": "苹果米糊",
    "min_month": 7,
    "max_month": 8,
@@ -562,10 +561,10 @@
    "ingredient_text": "苹果、米粉",
    "method": "苹果蒸熟打泥拌入米粉。",
    "notes": "熟苹果更护肠；组合需已排敏。",
-   "allergens": []
+   "allergens": [],
+   "id": 39
   },
   {
-   "id": 40,
    "name": "西梅米糊",
    "min_month": 7,
    "max_month": 8,
@@ -577,10 +576,10 @@
    "ingredient_text": "西梅、米粉",
    "method": "西梅泥拌入米粉。",
    "notes": "便秘搭配；腹泻停。",
-   "allergens": []
+   "allergens": [],
+   "id": 40
   },
   {
-   "id": 41,
    "name": "高铁燕麦糊",
    "min_month": 7,
    "max_month": 8,
@@ -593,10 +592,10 @@
    "notes": "选无糖原味燕麦；富纤维，初期煮极烂。",
    "allergens": [
     "麸质"
-   ]
+   ],
+   "id": 41
   },
   {
-   "id": 42,
    "name": "黑芝麻糊",
    "min_month": 7,
    "max_month": 8,
@@ -609,10 +608,10 @@
    "notes": "补钙补铁；磨细防呛，少量。",
    "allergens": [
     "坚果"
-   ]
+   ],
+   "id": 42
   },
   {
-   "id": 43,
    "name": "核桃黑芝麻糊",
    "min_month": 7,
    "max_month": 8,
@@ -626,10 +625,10 @@
    "notes": "补脑脂肪；磨极细，每日少量。",
    "allergens": [
     "坚果"
-   ]
+   ],
+   "id": 43
   },
   {
-   "id": 44,
    "name": "青菜肉末米糊",
    "min_month": 8,
    "max_month": 8,
@@ -641,10 +640,10 @@
    "ingredient_text": "青菜、猪肉末",
    "method": "猪肉末蒸熟打细，青菜焯水打泥，拌入米粉。",
    "notes": "荤素搭配补铁；肉末需够细。",
-   "allergens": []
+   "allergens": [],
+   "id": 44
   },
   {
-   "id": 45,
    "name": "鸡胸肉青菜粥",
    "min_month": 8,
    "max_month": 9,
@@ -657,10 +656,10 @@
    "ingredient_text": "鸡胸肉、青菜、大米",
    "method": "大米熬粥，鸡肉剁极细末下锅煮熟，临起加青菜碎。",
    "notes": "颗粒由细到粗；肉末大小适配咀嚼力。",
-   "allergens": []
+   "allergens": [],
+   "id": 45
   },
   {
-   "id": 46,
    "name": "猪肉菠菜粥",
    "min_month": 8,
    "max_month": 9,
@@ -673,10 +672,10 @@
    "ingredient_text": "猪肉、菠菜、大米",
    "method": "猪肉剁末煮粥，菠菜焯水切碎后下。",
    "notes": "菠菜务必先焯水；补铁组合。",
-   "allergens": []
+   "allergens": [],
+   "id": 46
   },
   {
-   "id": 47,
    "name": "牛肉土豆粥",
    "min_month": 8,
    "max_month": 9,
@@ -689,10 +688,10 @@
    "ingredient_text": "牛肉、土豆、大米",
    "method": "牛肉末、土豆丁同煮软烂成粥。",
    "notes": "土豆增稠自然甜；牛肉末打细。",
-   "allergens": []
+   "allergens": [],
+   "id": 47
   },
   {
-   "id": 48,
    "name": "鳕鱼蔬菜粥",
    "min_month": 8,
    "max_month": 9,
@@ -707,10 +706,10 @@
    "notes": "彻底去刺；蔬菜切碎。",
    "allergens": [
     "鱼"
-   ]
+   ],
+   "id": 48
   },
   {
-   "id": 49,
    "name": "三文鱼南瓜粥",
    "min_month": 8,
    "max_month": 9,
@@ -725,10 +724,10 @@
    "notes": "DHA搭配；去刺彻底。",
    "allergens": [
     "鱼"
-   ]
+   ],
+   "id": 49
   },
   {
-   "id": 50,
    "name": "豆腐肉末",
    "min_month": 8,
    "max_month": 9,
@@ -742,10 +741,10 @@
    "notes": "动植物蛋白互补；豆腐焯水。",
    "allergens": [
     "豆类"
-   ]
+   ],
+   "id": 50
   },
   {
-   "id": 51,
    "name": "番茄鸡蛋碎",
    "min_month": 8,
    "max_month": 9,
@@ -759,10 +758,10 @@
    "notes": "仍用蛋黄；番茄去皮减酸。",
    "allergens": [
     "鸡蛋"
-   ]
+   ],
+   "id": 51
   },
   {
-   "id": 52,
    "name": "冬瓜肉末",
    "min_month": 8,
    "max_month": 9,
@@ -774,10 +773,10 @@
    "ingredient_text": "冬瓜、猪肉",
    "method": "冬瓜蒸熟切细末，拌熟肉末。",
    "notes": "清淡解腻；肉末细。",
-   "allergens": []
+   "allergens": [],
+   "id": 52
   },
   {
-   "id": 53,
    "name": "西兰花鸡肉末",
    "min_month": 8,
    "max_month": 9,
@@ -789,10 +788,10 @@
    "ingredient_text": "西兰花、鸡肉",
    "method": "西兰花焯碎，鸡肉末蒸熟拌匀。",
    "notes": "维C+蛋白；均切碎。",
-   "allergens": []
+   "allergens": [],
+   "id": 53
   },
   {
-   "id": 54,
    "name": "胡萝卜牛肉末",
    "min_month": 8,
    "max_month": 9,
@@ -804,10 +803,10 @@
    "ingredient_text": "胡萝卜、牛肉",
    "method": "胡萝卜蒸熟切末，牛肉末蒸熟拌入。",
    "notes": "补铁锌；牛肉末够细。",
-   "allergens": []
+   "allergens": [],
+   "id": 54
   },
   {
-   "id": 55,
    "name": "山药排骨汤取肉",
    "min_month": 8,
    "max_month": 9,
@@ -818,10 +817,10 @@
    "ingredient_text": "排骨、山药",
    "method": "排骨焯水慢炖2小时去油，取软烂肉拆细，山药压泥同喂。",
    "notes": "汤去浮油只取肉；1岁内不喝油汤。",
-   "allergens": []
+   "allergens": [],
+   "id": 55
   },
   {
-   "id": 56,
    "name": "蛋黄豆腐羹",
    "min_month": 8,
    "max_month": 9,
@@ -836,10 +835,10 @@
    "allergens": [
     "鸡蛋",
     "豆类"
-   ]
+   ],
+   "id": 56
   },
   {
-   "id": 57,
    "name": "蒸全蛋羹",
    "min_month": 8,
    "max_month": 9,
@@ -848,14 +847,14 @@
     "蛋"
    ],
    "ingredient_text": "鸡蛋",
-   "method": "鸡蛋打散加1.5倍温水、撇泡，小火蒸8分钟焖2分钟。",
-   "notes": "蛋白已排敏后可试全蛋；过嫩防噎。",
+   "method": "鸡蛋打散加1.5倍温水、撇泡，小火蒸8–10分钟至全熟，焖2分钟。",
+   "notes": "蛋白已排敏后可试全蛋；务必全熟防噎。",
    "allergens": [
     "鸡蛋"
-   ]
+   ],
+   "id": 57
   },
   {
-   "id": 58,
    "name": "小米南瓜粥",
    "min_month": 8,
    "max_month": 9,
@@ -867,10 +866,10 @@
    "ingredient_text": "小米、南瓜",
    "method": "小米南瓜同煮软烂。",
    "notes": "养胃甜粥；熬开花。",
-   "allergens": []
+   "allergens": [],
+   "id": 58
   },
   {
-   "id": 59,
    "name": "紫薯粥",
    "min_month": 8,
    "max_month": 9,
@@ -882,10 +881,10 @@
    "ingredient_text": "紫薯、大米",
    "method": "紫薯丁与米同煮软。",
    "notes": "天然色香；略干可加水。",
-   "allergens": []
+   "allergens": [],
+   "id": 59
   },
   {
-   "id": 60,
    "name": "红枣小米粥",
    "min_month": 8,
    "max_month": 9,
@@ -897,10 +896,10 @@
    "ingredient_text": "红枣、小米",
    "method": "红枣去核切碎与小米同煮。",
    "notes": "补铁甜粥；枣去核切碎。",
-   "allergens": []
+   "allergens": [],
+   "id": 60
   },
   {
-   "id": 61,
    "name": "鲜玉米糊",
    "min_month": 8,
    "max_month": 9,
@@ -911,10 +910,10 @@
    "ingredient_text": "鲜玉米",
    "method": "玉米粒煮熟，加少量汤打浆过滤去渣。",
    "notes": "过滤玉米皮防呛；初次少量。",
-   "allergens": []
+   "allergens": [],
+   "id": 61
   },
   {
-   "id": 62,
    "name": "菠菜猪肝粥",
    "min_month": 8,
    "max_month": 9,
@@ -927,10 +926,10 @@
    "ingredient_text": "菠菜、猪肝、大米",
    "method": "猪肝末煮粥，菠菜焯碎后下。",
    "notes": "补铁组合；猪肝每周1–2次。",
-   "allergens": []
+   "allergens": [],
+   "id": 62
   },
   {
-   "id": 63,
    "name": "青菜烂面条",
    "min_month": 8,
    "max_month": 9,
@@ -944,10 +943,10 @@
    "notes": "选无盐宝宝面；剪短防长条噎。",
    "allergens": [
     "麸质"
-   ]
+   ],
+   "id": 63
   },
   {
-   "id": 64,
    "name": "番茄碎碎面",
    "min_month": 8,
    "max_month": 9,
@@ -961,10 +960,10 @@
    "notes": "天然酸甜开胃；去皮去籽。",
    "allergens": [
     "麸质"
-   ]
+   ],
+   "id": 64
   },
   {
-   "id": 65,
    "name": "南瓜浓汤（无糖）",
    "min_month": 8,
    "max_month": 9,
@@ -978,10 +977,10 @@
    "notes": "无糖无盐；顺滑即食。",
    "allergens": [
     "奶制品"
-   ]
+   ],
+   "id": 65
   },
   {
-   "id": 66,
    "name": "土豆牛肉饼",
    "min_month": 9,
    "max_month": 11,
@@ -993,10 +992,10 @@
    "ingredient_text": "土豆、牛肉",
    "method": "土豆泥混合牛肉末，捏小饼少油煎熟。",
    "notes": "软硬适中练咀嚼；煎透中心熟。",
-   "allergens": []
+   "allergens": [],
+   "id": 66
   },
   {
-   "id": 67,
    "name": "胡萝卜鸡肉丸",
    "min_month": 9,
    "max_month": 11,
@@ -1008,10 +1007,10 @@
    "ingredient_text": "胡萝卜、鸡肉",
    "method": "鸡肉胡萝卜剁碎混合，搓小丸水煮/蒸。",
    "notes": "一口大小；全熟。",
-   "allergens": []
+   "allergens": [],
+   "id": 67
   },
   {
-   "id": 68,
    "name": "蔬菜猪肉丸",
    "min_month": 9,
    "max_month": 11,
@@ -1023,10 +1022,10 @@
    "ingredient_text": "猪肉、青菜",
    "method": "肉末加青菜碎搓丸蒸熟。",
    "notes": "荤素丸；去筋细剁。",
-   "allergens": []
+   "allergens": [],
+   "id": 68
   },
   {
-   "id": 69,
    "name": "鱼肉豆腐丸",
    "min_month": 9,
    "max_month": 11,
@@ -1041,10 +1040,10 @@
    "allergens": [
     "鱼",
     "豆类"
-   ]
+   ],
+   "id": 69
   },
   {
-   "id": 70,
    "name": "虾仁蒸蛋",
    "min_month": 9,
    "max_month": 11,
@@ -1059,10 +1058,10 @@
    "allergens": [
     "鸡蛋",
     "虾蟹"
-   ]
+   ],
+   "id": 70
   },
   {
-   "id": 71,
    "name": "西兰花土豆泥",
    "min_month": 9,
    "max_month": 11,
@@ -1074,10 +1073,10 @@
    "ingredient_text": "西兰花、土豆",
    "method": "西兰花焯碎拌土豆泥。",
    "notes": "增加颗粒感；碎匀。",
-   "allergens": []
+   "allergens": [],
+   "id": 71
   },
   {
-   "id": 72,
    "name": "南瓜蒸糕",
    "min_month": 9,
    "max_month": 11,
@@ -1093,10 +1092,10 @@
    "allergens": [
     "麸质",
     "鸡蛋"
-   ]
+   ],
+   "id": 72
   },
   {
-   "id": 73,
    "name": "山药蒸糕",
    "min_month": 9,
    "max_month": 11,
@@ -1113,10 +1112,10 @@
    "allergens": [
     "麸质",
     "鸡蛋"
-   ]
+   ],
+   "id": 73
   },
   {
-   "id": 74,
    "name": "小米发糕",
    "min_month": 9,
    "max_month": 11,
@@ -1127,15 +1126,15 @@
     "蛋"
    ],
    "ingredient_text": "小米粉、面粉、蛋",
-   "method": "小米粉发酵蒸糕。",
-   "notes": "松软练抓握；无糖。",
+   "method": "小米粉与少量粉/蛋液发酵，蒸成糕切块。",
+   "notes": "松软练抓握；无糖、无泡打粉。",
    "allergens": [
     "麸质",
     "鸡蛋"
-   ]
+   ],
+   "id": 74
   },
   {
-   "id": 75,
    "name": "香蕉松饼（无糖）",
    "min_month": 9,
    "max_month": 11,
@@ -1151,10 +1150,10 @@
    "allergens": [
     "麸质",
     "鸡蛋"
-   ]
+   ],
+   "id": 75
   },
   {
-   "id": 76,
    "name": "苹果燕麦粥",
    "min_month": 9,
    "max_month": 11,
@@ -1170,10 +1169,10 @@
    "allergens": [
     "麸质",
     "奶制品"
-   ]
+   ],
+   "id": 76
   },
   {
-   "id": 77,
    "name": "紫薯馒头",
    "min_month": 9,
    "max_month": 11,
@@ -1187,10 +1186,10 @@
    "notes": "手指食物；无糖无盐。",
    "allergens": [
     "麸质"
-   ]
+   ],
+   "id": 77
   },
   {
-   "id": 78,
    "name": "奶香土豆泥",
    "min_month": 9,
    "max_month": 11,
@@ -1204,10 +1203,10 @@
    "notes": "增香不加糖；奶量适度。",
    "allergens": [
     "奶制品"
-   ]
+   ],
+   "id": 78
   },
   {
-   "id": 79,
    "name": "番茄牛肉碎面",
    "min_month": 9,
    "max_month": 11,
@@ -1222,10 +1221,10 @@
    "notes": "补铁开胃；面剪短。",
    "allergens": [
     "麸质"
-   ]
+   ],
+   "id": 79
   },
   {
-   "id": 80,
    "name": "鸡肉蔬菜焖饭",
    "min_month": 9,
    "max_month": 11,
@@ -1238,10 +1237,10 @@
    "ingredient_text": "鸡肉、胡萝卜、米饭",
    "method": "鸡肉蔬菜丁与软饭同焖软烂。",
    "notes": "一口饭粒软；蔬菜切丁。",
-   "allergens": []
+   "allergens": [],
+   "id": 80
   },
   {
-   "id": 81,
    "name": "三文鱼蔬菜饭",
    "min_month": 9,
    "max_month": 11,
@@ -1255,10 +1254,10 @@
    "notes": "去刺彻底；DHA。",
    "allergens": [
     "鱼"
-   ]
+   ],
+   "id": 81
   },
   {
-   "id": 82,
    "name": "紫菜蛋花汤（碎）",
    "min_month": 9,
    "max_month": 11,
@@ -1272,10 +1271,10 @@
    "notes": "补碘；蛋黄碎细。",
    "allergens": [
     "鸡蛋"
-   ]
+   ],
+   "id": 82
   },
   {
-   "id": 83,
    "name": "冬瓜排骨汤（去油）",
    "min_month": 9,
    "max_month": 11,
@@ -1286,10 +1285,10 @@
    "ingredient_text": "排骨、冬瓜",
    "method": "排骨炖烂去油，取肉拆细配冬瓜。",
    "notes": "只取肉不喝油汤；冬瓜软。",
-   "allergens": []
+   "allergens": [],
+   "id": 83
   },
   {
-   "id": 84,
    "name": "鳕鱼蔬菜饼",
    "min_month": 9,
    "max_month": 11,
@@ -1305,10 +1304,10 @@
    "allergens": [
     "鸡蛋",
     "鱼"
-   ]
+   ],
+   "id": 84
   },
   {
-   "id": 85,
    "name": "青菜香菇粥",
    "min_month": 9,
    "max_month": 11,
@@ -1320,10 +1319,10 @@
    "ingredient_text": "青菜、香菇、米",
    "method": "香菇切碎煮粥加青菜。",
    "notes": "香菇切碎熟透；鲜味天然。",
-   "allergens": []
+   "allergens": [],
+   "id": 85
   },
   {
-   "id": 86,
    "name": "玉米胡萝卜粥",
    "min_month": 9,
    "max_month": 11,
@@ -1335,10 +1334,10 @@
    "ingredient_text": "玉米、胡萝卜、米",
    "method": "玉米粒打碎过滤煮粥加胡萝卜丁。",
    "notes": "玉米过滤皮；甜软。",
-   "allergens": []
+   "allergens": [],
+   "id": 86
   },
   {
-   "id": 87,
    "name": "山药红枣粥",
    "min_month": 9,
    "max_month": 11,
@@ -1350,10 +1349,10 @@
    "ingredient_text": "山药、红枣、米",
    "method": "山药红枣切块同煮。",
    "notes": "健脾甜粥；枣去核。",
-   "allergens": []
+   "allergens": [],
+   "id": 87
   },
   {
-   "id": 88,
    "name": "无糖酸奶火龙果",
    "min_month": 10,
    "max_month": 11,
@@ -1367,10 +1366,10 @@
    "notes": "选无糖原味酸奶；1岁后可少量 dairy。",
    "allergens": [
     "奶制品"
-   ]
+   ],
+   "id": 88
   },
   {
-   "id": 89,
    "name": "蓝莓山药泥",
    "min_month": 10,
    "max_month": 11,
@@ -1382,10 +1381,10 @@
    "ingredient_text": "蓝莓、山药",
    "method": "蓝莓蒸熟打泥拌山药泥。",
    "notes": "抗氧化组合；泥细。",
-   "allergens": []
+   "allergens": [],
+   "id": 89
   },
   {
-   "id": 90,
    "name": "鲜虾小馄饨",
    "min_month": 11,
    "max_month": 12,
@@ -1401,10 +1400,10 @@
    "allergens": [
     "麸质",
     "虾蟹"
-   ]
+   ],
+   "id": 90
   },
   {
-   "id": 91,
    "name": "鸡肉小饺子",
    "min_month": 11,
    "max_month": 12,
@@ -1419,10 +1418,10 @@
    "notes": "一口大小；全熟。",
    "allergens": [
     "麸质"
-   ]
+   ],
+   "id": 91
   },
   {
-   "id": 92,
    "name": "蔬菜小包子",
    "min_month": 11,
    "max_month": 12,
@@ -1436,10 +1435,10 @@
    "notes": "无糖盐；软皮。",
    "allergens": [
     "麸质"
-   ]
+   ],
+   "id": 92
   },
   {
-   "id": 93,
    "name": "软米饭",
    "min_month": 11,
    "max_month": 12,
@@ -1450,10 +1449,10 @@
    "ingredient_text": "大米",
    "method": "米饭煮稍软，颗粒分明可嚼。",
    "notes": "逐步替代糊状；水量略多。",
-   "allergens": []
+   "allergens": [],
+   "id": 93
   },
   {
-   "id": 94,
    "name": "番茄鸡蛋疙瘩汤",
    "min_month": 11,
    "max_month": 12,
@@ -1469,10 +1468,10 @@
    "allergens": [
     "麸质",
     "鸡蛋"
-   ]
+   ],
+   "id": 94
   },
   {
-   "id": 95,
    "name": "土豆丝饼",
    "min_month": 11,
    "max_month": 12,
@@ -1486,10 +1485,10 @@
    "notes": "丝细软；煎透。",
    "allergens": [
     "鸡蛋"
-   ]
+   ],
+   "id": 95
   },
   {
-   "id": 96,
    "name": "胡萝卜鸡蛋饼",
    "min_month": 11,
    "max_month": 12,
@@ -1505,10 +1504,10 @@
    "allergens": [
     "麸质",
     "鸡蛋"
-   ]
+   ],
+   "id": 96
   },
   {
-   "id": 97,
    "name": "奶酪土豆泥",
    "min_month": 11,
    "max_month": 12,
@@ -1522,10 +1521,10 @@
    "notes": "选低钠奶酪；补钙适量。",
    "allergens": [
     "奶制品"
-   ]
+   ],
+   "id": 97
   },
   {
-   "id": 98,
    "name": "南瓜小米蒸糕",
    "min_month": 11,
    "max_month": 12,
@@ -1540,10 +1539,10 @@
    "notes": "手指食物；无添加。",
    "allergens": [
     "鸡蛋"
-   ]
+   ],
+   "id": 98
   },
   {
-   "id": 99,
    "name": "牛肉蔬菜汤面",
    "min_month": 11,
    "max_month": 12,
@@ -1558,10 +1557,10 @@
    "notes": "汤去油；面软。",
    "allergens": [
     "麸质"
-   ]
+   ],
+   "id": 99
   },
   {
-   "id": 100,
    "name": "豆腐蔬菜饼",
    "min_month": 11,
    "max_month": 12,
@@ -1577,10 +1576,10 @@
    "allergens": [
     "鸡蛋",
     "豆类"
-   ]
+   ],
+   "id": 100
   },
   {
-   "id": 101,
    "name": "西兰花蛋饼",
    "min_month": 11,
    "max_month": 12,
@@ -1596,10 +1595,10 @@
    "allergens": [
     "麸质",
     "鸡蛋"
-   ]
+   ],
+   "id": 101
   },
   {
-   "id": 102,
    "name": "鱼肉蔬菜粥",
    "min_month": 11,
    "max_month": 12,
@@ -1613,10 +1612,10 @@
    "notes": "去刺彻底；粥软。",
    "allergens": [
     "鱼"
-   ]
+   ],
+   "id": 102
   },
   {
-   "id": 103,
    "name": "玉米鸡蛋饼",
    "min_month": 12,
    "max_month": 12,
@@ -1632,10 +1631,10 @@
    "allergens": [
     "麸质",
     "鸡蛋"
-   ]
+   ],
+   "id": 103
   },
   {
-   "id": 104,
    "name": "番茄牛肉意面",
    "min_month": 12,
    "max_month": 18,
@@ -1650,10 +1649,10 @@
    "notes": "意面煮透；酱无添加糖盐。",
    "allergens": [
     "麸质"
-   ]
+   ],
+   "id": 104
   },
   {
-   "id": 105,
    "name": "鸡肉蔬菜炒饭",
    "min_month": 12,
    "max_month": 18,
@@ -1665,10 +1664,10 @@
    "ingredient_text": "鸡肉、蔬菜、饭",
    "method": "软饭与鸡蔬菜丁少油炒匀。",
    "notes": "少油清淡；饭软。",
-   "allergens": []
+   "allergens": [],
+   "id": 105
   },
   {
-   "id": 106,
    "name": "鸡蛋卷",
    "min_month": 12,
    "max_month": 18,
@@ -1681,10 +1680,10 @@
    "notes": "嫩卷；全熟。",
    "allergens": [
     "鸡蛋"
-   ]
+   ],
+   "id": 106
   },
   {
-   "id": 107,
    "name": "蔬菜鸡蛋卷",
    "min_month": 12,
    "max_month": 18,
@@ -1698,10 +1697,10 @@
    "notes": "蔬菜切碎；软。",
    "allergens": [
     "鸡蛋"
-   ]
+   ],
+   "id": 107
   },
   {
-   "id": 108,
    "name": "土豆炖牛肉",
    "min_month": 12,
    "max_month": 18,
@@ -1713,10 +1712,10 @@
    "ingredient_text": "土豆、牛肉",
    "method": "牛肉土豆炖至软烂脱骨。",
    "notes": "炖透入口即化；去大块筋。",
-   "allergens": []
+   "allergens": [],
+   "id": 108
   },
   {
-   "id": 109,
    "name": "清蒸鱼块",
    "min_month": 12,
    "max_month": 18,
@@ -1730,10 +1729,10 @@
    "notes": "选少刺鱼；去刺彻底。",
    "allergens": [
     "鱼"
-   ]
+   ],
+   "id": 109
   },
   {
-   "id": 110,
    "name": "香菇鸡肉粥",
    "min_month": 12,
    "max_month": 18,
@@ -1745,10 +1744,10 @@
    "ingredient_text": "香菇、鸡肉、米",
    "method": "香菇鸡肉切碎煮粥。",
    "notes": "香菇切碎熟透。",
-   "allergens": []
+   "allergens": [],
+   "id": 110
   },
   {
-   "id": 111,
    "name": "胡萝卜炒鸡蛋",
    "min_month": 12,
    "max_month": 18,
@@ -1762,10 +1761,10 @@
    "notes": "少油；丝细。",
    "allergens": [
     "鸡蛋"
-   ]
+   ],
+   "id": 111
   },
   {
-   "id": 112,
    "name": "熟拌黄瓜",
    "min_month": 12,
    "max_month": 18,
@@ -1776,10 +1775,10 @@
    "ingredient_text": "黄瓜",
    "method": "黄瓜蒸熟/焯熟切条。",
    "notes": "生黄瓜偏凉，建议熟制；条状练抓。",
-   "allergens": []
+   "allergens": [],
+   "id": 112
   },
   {
-   "id": 113,
    "name": "蒸南瓜块",
    "min_month": 12,
    "max_month": 18,
@@ -1790,10 +1789,10 @@
    "ingredient_text": "南瓜",
    "method": "南瓜切小块蒸熟。",
    "notes": "手指食物；软糯。",
-   "allergens": []
+   "allergens": [],
+   "id": 113
   },
   {
-   "id": 114,
    "name": "软水果沙拉",
    "min_month": 12,
    "max_month": 18,
@@ -1804,10 +1803,10 @@
    "ingredient_text": "香蕉、苹果等",
    "method": "多种软水果切小丁拌少许酸奶。",
    "notes": "切小防噎；无糖。",
-   "allergens": []
+   "allergens": [],
+   "id": 114
   },
   {
-   "id": 115,
    "name": "酸奶水果杯",
    "min_month": 12,
    "max_month": 18,
@@ -1821,10 +1820,10 @@
    "notes": "无糖原味酸奶；水果切细。",
    "allergens": [
     "奶制品"
-   ]
+   ],
+   "id": 115
   },
   {
-   "id": 116,
    "name": "全麦小馒头",
    "min_month": 12,
    "max_month": 18,
@@ -1838,10 +1837,10 @@
    "notes": "部分全麦增纤维；软。",
    "allergens": [
     "麸质"
-   ]
+   ],
+   "id": 116
   },
   {
-   "id": 117,
    "name": "豆腐蔬菜汤",
    "min_month": 12,
    "max_month": 18,
@@ -1855,10 +1854,10 @@
    "notes": "清淡；豆腐焯水。",
    "allergens": [
     "豆类"
-   ]
+   ],
+   "id": 117
   },
   {
-   "id": 118,
    "name": "虾皮碎菜粥",
    "min_month": 12,
    "max_month": 18,
@@ -1872,22 +1871,24 @@
    "notes": "虾皮补钙但偏咸，少量且不再加盐。",
    "allergens": [
     "虾蟹"
-   ]
+   ],
+   "id": 118
   },
   {
-   "id": 119,
    "name": "彩蔬小炒",
    "min_month": 12,
    "max_month": 18,
    "stage": "12-18月",
-   "ingredients": [],
+   "ingredients": [
+    "蔬菜"
+   ],
    "ingredient_text": "多种蔬菜",
    "method": "蔬菜丁少油清炒软嫩。",
    "notes": "色彩丰富促食欲；软。",
-   "allergens": []
+   "allergens": [],
+   "id": 119
   },
   {
-   "id": 120,
    "name": "牛肉碎蔬菜面",
    "min_month": 12,
    "max_month": 18,
@@ -1902,10 +1903,10 @@
    "notes": "面剪短；卤无添加。",
    "allergens": [
     "麸质"
-   ]
+   ],
+   "id": 120
   },
   {
-   "id": 121,
    "name": "鸡蛋蔬菜三明治",
    "min_month": 15,
    "max_month": 18,
@@ -1921,10 +1922,10 @@
    "allergens": [
     "麸质",
     "鸡蛋"
-   ]
+   ],
+   "id": 121
   },
   {
-   "id": 122,
    "name": "迷你蔬菜汉堡",
    "min_month": 15,
    "max_month": 18,
@@ -1937,10 +1938,10 @@
    "notes": "自制无添加；切块。",
    "allergens": [
     "麸质"
-   ]
+   ],
+   "id": 122
   },
   {
-   "id": 123,
    "name": "紫菜包饭（软）",
    "min_month": 15,
    "max_month": 18,
@@ -1952,10 +1953,10 @@
    "ingredient_text": "米饭、紫菜、菜",
    "method": "软饭拌料卷紫菜切小段。",
    "notes": "米饭软；段小防噎。",
-   "allergens": []
+   "allergens": [],
+   "id": 123
   },
   {
-   "id": 124,
    "name": "小馄饨汤",
    "min_month": 15,
    "max_month": 18,
@@ -1969,10 +1970,10 @@
    "notes": "汤去油；馄饨小。",
    "allergens": [
     "麸质"
-   ]
+   ],
+   "id": 124
   },
   {
-   "id": 125,
    "name": "二米粥（大米+小米）",
    "min_month": 13,
    "max_month": 18,
@@ -1984,10 +1985,10 @@
    "ingredient_text": "大米、小米",
    "method": "大米小米按1:1淘洗，加水熬至软烂开花，可略稠。",
    "notes": "★崔玉涛13–24月主食；颗粒3–5mm，逐步替代糊状。",
-   "allergens": []
+   "allergens": [],
+   "id": 125
   },
   {
-   "id": 126,
    "name": "冬瓜丁（煮软·手指食物）",
    "min_month": 13,
    "max_month": 18,
@@ -1998,10 +1999,10 @@
    "ingredient_text": "冬瓜",
    "method": "冬瓜去皮去籽切小丁，蒸熟至筷子可透。",
    "notes": "★清淡利尿；作手指食物练抓握，初期软烂。",
-   "allergens": []
+   "allergens": [],
+   "id": 126
   },
   {
-   "id": 127,
    "name": "奶酪条",
    "min_month": 13,
    "max_month": 18,
@@ -2014,10 +2015,10 @@
    "notes": "★补钙优质脂肪；选无添加糖盐的低钠奶酪，适量。",
    "allergens": [
     "奶制品"
-   ]
+   ],
+   "id": 127
   },
   {
-   "id": 128,
    "name": "木瓜泥",
    "min_month": 13,
    "max_month": 18,
@@ -2028,10 +2029,10 @@
    "ingredient_text": "木瓜",
    "method": "木瓜去皮去籽，熟透后刮泥或蒸熟打泥。",
    "notes": "★助消化通便；选熟软木瓜，初次少量。",
-   "allergens": []
+   "allergens": [],
+   "id": 128
   },
   {
-   "id": 129,
    "name": "橙子（去籽压碎）",
    "min_month": 13,
    "max_month": 18,
@@ -2042,10 +2043,10 @@
    "ingredient_text": "橙子",
    "method": "橙子去皮去籽取肉，压碎去膜。",
    "notes": "★富VC；去籽去膜防呛，1岁后适量。",
-   "allergens": []
+   "allergens": [],
+   "id": 129
   },
   {
-   "id": 130,
    "name": "清蒸鲈鱼",
    "min_month": 13,
    "max_month": 18,
@@ -2058,10 +2059,10 @@
    "notes": "★少刺优质鱼；彻底去刺，富蛋白与DHA。",
    "allergens": [
     "鱼"
-   ]
+   ],
+   "id": 130
   },
   {
-   "id": 131,
    "name": "煮软胡萝卜条（手指食物）",
    "min_month": 13,
    "max_month": 18,
@@ -2072,10 +2073,10 @@
    "ingredient_text": "胡萝卜",
    "method": "胡萝卜切粗条蒸熟至软。",
    "notes": "★手指食物练咀嚼；蒸熟更软防噎。",
-   "allergens": []
+   "allergens": [],
+   "id": 131
   },
   {
-   "id": 132,
    "name": "胡萝卜丁（煮软）",
    "min_month": 13,
    "max_month": 18,
@@ -2086,10 +2087,10 @@
    "ingredient_text": "胡萝卜",
    "method": "胡萝卜去皮切小丁蒸熟。",
    "notes": "★富β-胡萝卜素；少量油烹调助吸收。",
-   "allergens": []
+   "allergens": [],
+   "id": 132
   },
   {
-   "id": 133,
    "name": "番茄蛋羹",
    "min_month": 13,
    "max_month": 18,
@@ -2103,10 +2104,10 @@
    "notes": "★开胃补蛋白；番茄去皮减酸，蛋全熟。",
    "allergens": [
     "鸡蛋"
-   ]
+   ],
+   "id": 133
   },
   {
-   "id": 134,
    "name": "番茄豆腐软饭",
    "min_month": 13,
    "max_month": 18,
@@ -2121,10 +2122,10 @@
    "notes": "★植物蛋白+维C；饭软烂。",
    "allergens": [
     "豆类"
-   ]
+   ],
+   "id": 134
   },
   {
-   "id": 135,
    "name": "番茄鸡蛋软饭",
    "min_month": 13,
    "max_month": 18,
@@ -2139,10 +2140,10 @@
    "notes": "★开胃主食；1岁后极少量盐。",
    "allergens": [
     "鸡蛋"
-   ]
+   ],
+   "id": 135
   },
   {
-   "id": 136,
    "name": "瘦肉青菜粥",
    "min_month": 13,
    "max_month": 18,
@@ -2155,10 +2156,10 @@
    "ingredient_text": "瘦猪肉、青菜、大米",
    "method": "瘦肉剁末煮粥，青菜焯水切碎后下。",
    "notes": "★补铁组合；肉末细、菜须焯水。",
-   "allergens": []
+   "allergens": [],
+   "id": 136
   },
   {
-   "id": 137,
    "name": "蒸土豆块（手指食物）",
    "min_month": 13,
    "max_month": 18,
@@ -2169,10 +2170,10 @@
    "ingredient_text": "土豆",
    "method": "土豆去皮切块蒸熟至软。",
    "notes": "★手指食物；软糯防噎。",
-   "allergens": []
+   "allergens": [],
+   "id": 137
   },
   {
-   "id": 138,
    "name": "蒸红薯块",
    "min_month": 13,
    "max_month": 18,
@@ -2183,10 +2184,10 @@
    "ingredient_text": "红薯",
    "method": "红薯去皮切块蒸熟。",
    "notes": "★通便；蒸熟软，初期少量防胀气。",
-   "allergens": []
+   "allergens": [],
+   "id": 138
   },
   {
-   "id": 139,
    "name": "蒸山药块（手指食物）",
    "min_month": 13,
    "max_month": 18,
@@ -2197,10 +2198,10 @@
    "ingredient_text": "山药",
    "method": "山药去皮切块蒸熟。",
    "notes": "★健脾；处理戴手套防痒，软块防噎。",
-   "allergens": []
+   "allergens": [],
+   "id": 139
   },
   {
-   "id": 140,
    "name": "草莓（压碎）",
    "min_month": 13,
    "max_month": 18,
@@ -2211,10 +2212,10 @@
    "ingredient_text": "草莓",
    "method": "草莓洗净去蒂压碎。",
    "notes": "★富VC；彻底清洗去农残，1岁后适量。",
-   "allergens": []
+   "allergens": [],
+   "id": 140
   },
   {
-   "id": 141,
    "name": "菠菜蛋羹",
    "min_month": 13,
    "max_month": 18,
@@ -2228,10 +2229,10 @@
    "notes": "★补铁+蛋白；菠菜必焯水去草酸。",
    "allergens": [
     "鸡蛋"
-   ]
+   ],
+   "id": 141
   },
   {
-   "id": 142,
    "name": "西兰花碎（手指食物）",
    "min_month": 13,
    "max_month": 18,
@@ -2240,12 +2241,12 @@
     "西兰花"
    ],
    "ingredient_text": "西兰花",
-   "method": "西兰花掰小朵焯熟，撕/切细碎。",
+   "method": "西兰花掰小朵，淡盐水浸泡焯熟，切碎。",
    "notes": "★富维C叶酸；作手指食物，软烂。",
-   "allergens": []
+   "allergens": [],
+   "id": 142
   },
   {
-   "id": 143,
    "name": "西葫芦丁",
    "min_month": 13,
    "max_month": 18,
@@ -2256,10 +2257,10 @@
    "ingredient_text": "西葫芦",
    "method": "西葫芦去皮切小丁，蒸熟或少油炒软。",
    "notes": "★清淡低敏；软嫩。",
-   "allergens": []
+   "allergens": [],
+   "id": 143
   },
   {
-   "id": 144,
    "name": "豆腐羹",
    "min_month": 13,
    "max_month": 18,
@@ -2273,10 +2274,10 @@
    "notes": "★植物蛋白；焯水去豆腥。",
    "allergens": [
     "豆类"
-   ]
+   ],
+   "id": 144
   },
   {
-   "id": 145,
    "name": "青菜肉末软饭",
    "min_month": 13,
    "max_month": 18,
@@ -2289,10 +2290,10 @@
    "ingredient_text": "青菜、猪肉末、米饭",
    "method": "肉末炒熟拌青菜碎与软饭。",
    "notes": "★荤素主食；饭软、肉末细。",
-   "allergens": []
+   "allergens": [],
+   "id": 145
   },
   {
-   "id": 146,
    "name": "香菇碎",
    "min_month": 13,
    "max_month": 18,
@@ -2303,10 +2304,10 @@
    "ingredient_text": "香菇",
    "method": "香菇切碎煮熟。",
    "notes": "★提鲜补微量；切碎熟透，初次少量。",
-   "allergens": []
+   "allergens": [],
+   "id": 146
   },
   {
-   "id": 147,
    "name": "蛋黄羹",
    "min_month": 13,
    "max_month": 18,
@@ -2319,10 +2320,10 @@
    "notes": "★蛋黄铁+卵磷脂；由1/4个起，蛋白1岁后。",
    "allergens": [
     "鸡蛋"
-   ]
+   ],
+   "id": 147
   },
   {
-   "id": 148,
    "name": "蔬菜鸡肉粥",
    "min_month": 13,
    "max_month": 18,
@@ -2334,10 +2335,10 @@
    "ingredient_text": "鸡肉、多种蔬菜、大米",
    "method": "鸡肉蔬菜剁末同煮粥软烂。",
    "notes": "★优质蛋白；食材切碎，清淡。",
-   "allergens": []
+   "allergens": [],
+   "id": 148
   },
   {
-   "id": 149,
    "name": "家常软饭",
    "min_month": 18,
    "max_month": 36,
@@ -2349,10 +2350,10 @@
    "ingredient_text": "大米/杂粮",
    "method": "软饭可混少量杂粮，颗粒适中。",
    "notes": "逐步接近成人饭软度；清淡。",
-   "allergens": []
+   "allergens": [],
+   "id": 149
   },
   {
-   "id": 150,
    "name": "番茄炒蛋",
    "min_month": 18,
    "max_month": 36,
@@ -2366,22 +2367,24 @@
    "notes": "1岁后极少量盐；蛋全熟。",
    "allergens": [
     "鸡蛋"
-   ]
+   ],
+   "id": 150
   },
   {
-   "id": 151,
    "name": "清炒时蔬",
    "min_month": 18,
    "max_month": 36,
    "stage": "18-24月",
-   "ingredients": [],
+   "ingredients": [
+    "蔬菜"
+   ],
    "ingredient_text": "应季蔬菜",
    "method": "蔬菜切小段少油清炒软。",
    "notes": "保留营养；软嫩。",
-   "allergens": []
+   "allergens": [],
+   "id": 151
   },
   {
-   "id": 152,
    "name": "蒸蛋饺",
    "min_month": 18,
    "max_month": 36,
@@ -2394,10 +2397,10 @@
    "notes": "肉馅细；全熟。",
    "allergens": [
     "鸡蛋"
-   ]
+   ],
+   "id": 152
   },
   {
-   "id": 153,
    "name": "水果酸奶杯",
    "min_month": 18,
    "max_month": 36,
@@ -2411,10 +2414,10 @@
    "notes": "无糖原味；水果小丁。",
    "allergens": [
     "奶制品"
-   ]
+   ],
+   "id": 153
   },
   {
-   "id": 154,
    "name": "豆腐脑（少盐）",
    "min_month": 18,
    "max_month": 36,
@@ -2427,10 +2430,10 @@
    "notes": "1岁后极少量盐/生抽；嫩。",
    "allergens": [
     "豆类"
-   ]
+   ],
+   "id": 154
   },
   {
-   "id": 155,
    "name": "燕麦牛奶粥",
    "min_month": 18,
    "max_month": 36,
@@ -2445,10 +2448,10 @@
    "allergens": [
     "麸质",
     "奶制品"
-   ]
+   ],
+   "id": 155
   },
   {
-   "id": 156,
    "name": "鸡肉丸子汤",
    "min_month": 18,
    "max_month": 36,
@@ -2460,10 +2463,10 @@
    "ingredient_text": "鸡肉、蔬菜",
    "method": "鸡肉丸煮汤加菜。",
    "notes": "丸子一口大小；汤去油。",
-   "allergens": []
+   "allergens": [],
+   "id": 156
   },
   {
-   "id": 157,
    "name": "蔬菜鸡蛋羹",
    "min_month": 18,
    "max_month": 36,
@@ -2477,10 +2480,10 @@
    "notes": "嫩滑；菜碎匀。",
    "allergens": [
     "鸡蛋"
-   ]
+   ],
+   "id": 157
   },
   {
-   "id": 158,
    "name": "迷你水饺",
    "min_month": 20,
    "max_month": 36,
@@ -2493,10 +2496,10 @@
    "notes": "一口大小；全熟。",
    "allergens": [
     "麸质"
-   ]
+   ],
+   "id": 158
   },
   {
-   "id": 159,
    "name": "杂粮软粥",
    "min_month": 20,
    "max_month": 36,
@@ -2507,10 +2510,10 @@
    "ingredient_text": "多种杂粮",
    "method": "杂粮泡发煮软烂粥。",
    "notes": "杂粮适量易消化；煮透。",
-   "allergens": []
+   "allergens": [],
+   "id": 159
   },
   {
-   "id": 160,
    "name": "清蒸虾",
    "min_month": 20,
    "max_month": 36,
@@ -2523,10 +2526,10 @@
    "notes": "去壳去线；鲜虾现做。",
    "allergens": [
     "虾蟹"
-   ]
+   ],
+   "id": 160
   },
   {
-   "id": 161,
    "name": "肉末蒸茄子",
    "min_month": 20,
    "max_month": 36,
@@ -2537,10 +2540,10 @@
    "ingredient_text": "茄子、肉末",
    "method": "茄子蒸软拌炒肉末。",
    "notes": "茄子软烂；肉末细。",
-   "allergens": []
+   "allergens": [],
+   "id": 161
   },
   {
-   "id": 162,
    "name": "蔬菜鸡蛋炒面",
    "min_month": 20,
    "max_month": 36,
@@ -2556,10 +2559,10 @@
    "allergens": [
     "麸质",
     "鸡蛋"
-   ]
+   ],
+   "id": 162
   },
   {
-   "id": 163,
    "name": "什锦炒饭",
    "min_month": 22,
    "max_month": 36,
@@ -2572,10 +2575,10 @@
    "notes": "食材小丁；少油盐。",
    "allergens": [
     "鸡蛋"
-   ]
+   ],
+   "id": 163
   },
   {
-   "id": 164,
    "name": "番茄菌菇汤",
    "min_month": 22,
    "max_month": 36,
@@ -2587,10 +2590,10 @@
    "ingredient_text": "番茄、菌菇",
    "method": "番茄菌菇煮汤。",
    "notes": "菌菇切碎熟透；清淡。",
-   "allergens": []
+   "allergens": [],
+   "id": 164
   },
   {
-   "id": 165,
    "name": "软煎三文鱼",
    "min_month": 22,
    "max_month": 36,
@@ -2603,10 +2606,10 @@
    "notes": "中心熟透；去刺。",
    "allergens": [
     "鱼"
-   ]
+   ],
+   "id": 165
   },
   {
-   "id": 166,
    "name": "南瓜小米饭",
    "min_month": 22,
    "max_month": 36,
@@ -2618,10 +2621,10 @@
    "ingredient_text": "南瓜、小米、米",
    "method": "南瓜小米与米同煮。",
    "notes": "软饭；南瓜甜软。",
-   "allergens": []
+   "allergens": [],
+   "id": 166
   },
   {
-   "id": 167,
    "name": "蔬菜鸡肉卷",
    "min_month": 24,
    "max_month": 36,
@@ -2633,10 +2636,10 @@
    "ingredient_text": "鸡肉、蔬菜",
    "method": "鸡肉泥裹蔬菜蒸卷切块。",
    "notes": "卷紧切块；全熟。",
-   "allergens": []
+   "allergens": [],
+   "id": 167
   },
   {
-   "id": 168,
    "name": "杂蔬软饼",
    "min_month": 24,
    "max_month": 36,
@@ -2651,7 +2654,704 @@
    "allergens": [
     "麸质",
     "鸡蛋"
-   ]
+   ],
+   "id": 168
+  },
+  {
+   "name": "鸡肉末",
+   "min_month": 13,
+   "max_month": 36,
+   "stage": "13月龄",
+   "ingredients": [
+    "鸡肉"
+   ],
+   "ingredient_text": "鸡胸肉",
+   "method": "鸡胸肉去筋膜，姜片水焯去腥，蒸熟剁极细末。",
+   "notes": "优质低脂蛋白；补铁锌，肉末够细。",
+   "allergens": [],
+   "id": 169
+  },
+  {
+   "name": "番茄碎",
+   "min_month": 13,
+   "max_month": 36,
+   "stage": "13月龄",
+   "ingredients": [
+    "番茄"
+   ],
+   "ingredient_text": "番茄",
+   "method": "番茄去皮去籽煮烂，切碎。",
+   "notes": "富VC助铁吸收；去皮去籽减酸刺。",
+   "allergens": [],
+   "id": 170
+  },
+  {
+   "name": "红薯粥",
+   "min_month": 13,
+   "max_month": 36,
+   "stage": "13月龄",
+   "ingredients": [
+    "红薯",
+    "大米"
+   ],
+   "ingredient_text": "红薯、大米",
+   "method": "红薯去皮切小丁，与大米同煮软烂。",
+   "notes": "通便；初期少量防胀气，选红心更甜软。",
+   "allergens": [],
+   "id": 171
+  },
+  {
+   "name": "牛肉末",
+   "min_month": 13,
+   "max_month": 36,
+   "stage": "13月龄",
+   "ingredients": [
+    "牛肉"
+   ],
+   "ingredient_text": "牛里脊",
+   "method": "牛里脊去筋切小块，焯水蒸熟，剁成极细末。",
+   "notes": "富铁锌；纤维略粗，务必剁细过碎。",
+   "allergens": [],
+   "id": 172
+  },
+  {
+   "name": "土豆块(煮软)",
+   "min_month": 13,
+   "max_month": 36,
+   "stage": "13月龄",
+   "ingredients": [
+    "土豆"
+   ],
+   "ingredient_text": "土豆",
+   "method": "土豆去皮切块蒸熟至软。",
+   "notes": "手指食物；软糯防噎。",
+   "allergens": [],
+   "id": 173
+  },
+  {
+   "name": "菠菜碎",
+   "min_month": 13,
+   "max_month": 36,
+   "stage": "13月龄",
+   "ingredients": [
+    "菠菜"
+   ],
+   "ingredient_text": "菠菜",
+   "method": "菠菜去根焯水1分钟去草酸，过凉切碎。",
+   "notes": "必焯水去草酸；含硝酸盐1岁内宜少量且现做。",
+   "allergens": [],
+   "id": 174
+  },
+  {
+   "name": "梨泥",
+   "min_month": 13,
+   "max_month": 36,
+   "stage": "13月龄",
+   "ingredients": [
+    "梨"
+   ],
+   "ingredient_text": "梨",
+   "method": "梨去皮去核，蒸熟后打泥。",
+   "notes": "润燥；蒸熟更温和，初次少量。",
+   "allergens": [],
+   "id": 175
+  },
+  {
+   "name": "山药小米粥",
+   "min_month": 13,
+   "max_month": 36,
+   "stage": "13月龄",
+   "ingredients": [
+    "山药",
+    "大米",
+    "小米"
+   ],
+   "ingredient_text": "山药、大米、小米",
+   "method": "山药去皮切小丁，与大米小米同煮软烂。",
+   "notes": "健脾易消化；山药处理戴手套防痒。",
+   "allergens": [],
+   "id": 176
+  },
+  {
+   "name": "瘦猪肉末",
+   "min_month": 13,
+   "max_month": 36,
+   "stage": "13月龄",
+   "ingredients": [
+    "猪肉"
+   ],
+   "ingredient_text": "瘦猪肉",
+   "method": "瘦肉去筋切块，焯水蒸熟，剁细末。",
+   "notes": "补铁佳；选瘦里脊去肥，少量起试。",
+   "allergens": [],
+   "id": 177
+  },
+  {
+   "name": "清蒸鳕鱼",
+   "min_month": 13,
+   "max_month": 36,
+   "stage": "13月龄",
+   "ingredients": [
+    "鳕鱼"
+   ],
+   "ingredient_text": "鳕鱼",
+   "method": "鳕鱼段蒸熟，仔细去刺拆肉（可滴柠檬去腥）。",
+   "notes": "低汞深海鱼、DHA丰富；彻底去刺，初次少量。",
+   "allergens": [
+    "鱼"
+   ],
+   "id": 178
+  },
+  {
+   "name": "青菜碎",
+   "min_month": 13,
+   "max_month": 36,
+   "stage": "13月龄",
+   "ingredients": [
+    "青菜",
+    "油菜"
+   ],
+   "ingredient_text": "青菜（小白菜/油菜）",
+   "method": "洗净焯水熟透，切碎。",
+   "notes": "低敏绿叶菜，补VC与钙；焯水保绿。",
+   "allergens": [],
+   "id": 179
+  },
+  {
+   "name": "西兰花蛋羹",
+   "min_month": 13,
+   "max_month": 36,
+   "stage": "13月龄",
+   "ingredients": [
+    "西兰花",
+    "蛋"
+   ],
+   "ingredient_text": "西兰花、鸡蛋",
+   "method": "西兰花焯碎拌蛋液蒸羹。",
+   "notes": "维C+蛋白；碎匀、蛋全熟。",
+   "allergens": [
+    "鸡蛋"
+   ],
+   "id": 180
+  },
+  {
+   "name": "蓝莓(压碎)",
+   "min_month": 13,
+   "max_month": 36,
+   "stage": "13月龄",
+   "ingredients": [
+    "蓝莓"
+   ],
+   "ingredient_text": "蓝莓",
+   "method": "蓝莓洗净，软熟果直接给或压碎防呛。",
+   "notes": "抗氧化；蒸熟更软，初次少量观察。",
+   "allergens": [],
+   "id": 181
+  },
+  {
+   "name": "火龙果丁",
+   "min_month": 13,
+   "max_month": 36,
+   "stage": "13月龄",
+   "ingredients": [
+    "火龙果"
+   ],
+   "ingredient_text": "火龙果（白心）",
+   "method": "取果肉切小丁。",
+   "notes": "白心更温和；红心易染便且偏凉，腹泻慎食。",
+   "allergens": [],
+   "id": 182
+  },
+  {
+   "name": "虾泥",
+   "min_month": 13,
+   "max_month": 36,
+   "stage": "13月龄",
+   "ingredients": [
+    "虾"
+   ],
+   "ingredient_text": "虾仁",
+   "method": "虾仁去虾线，焯熟后压/打泥。",
+   "notes": "虾排敏后试；去虾线、全熟。",
+   "allergens": [
+    "虾蟹"
+   ],
+   "id": 183
+  },
+  {
+   "name": "南瓜二米粥",
+   "min_month": 13,
+   "max_month": 36,
+   "stage": "13月龄",
+   "ingredients": [
+    "南瓜",
+    "大米",
+    "小米"
+   ],
+   "ingredient_text": "南瓜、大米、小米",
+   "method": "南瓜去皮去籽切丁，与大米小米同煮软烂。",
+   "notes": "天然甜软；熬至米粒开花。",
+   "allergens": [],
+   "id": 184
+  },
+  {
+   "name": "蜜瓜丁",
+   "min_month": 13,
+   "max_month": 36,
+   "stage": "13月龄",
+   "ingredients": [
+    "蜜瓜"
+   ],
+   "ingredient_text": "蜜瓜（哈密瓜）",
+   "method": "去皮去籽切小丁。",
+   "notes": "清甜多水；初次少量，防凉。",
+   "allergens": [],
+   "id": 185
+  },
+  {
+   "name": "鸡肉蔬菜小丸",
+   "min_month": 14,
+   "max_month": 36,
+   "stage": "14月龄",
+   "ingredients": [
+    "鸡肉",
+    "蔬菜"
+   ],
+   "ingredient_text": "鸡肉、蔬菜",
+   "method": "鸡肉与蔬菜剁碎混合，搓小丸水煮/蒸。",
+   "notes": "一口大小；全熟，去筋细剁。",
+   "allergens": [],
+   "id": 186
+  },
+  {
+   "name": "番茄牛肉碎",
+   "min_month": 14,
+   "max_month": 36,
+   "stage": "14月龄",
+   "ingredients": [
+    "番茄",
+    "牛肉"
+   ],
+   "ingredient_text": "番茄、牛肉",
+   "method": "番茄去皮煮烂，牛肉末炒熟拌匀。",
+   "notes": "补铁开胃；肉末细、番茄去皮减酸。",
+   "allergens": [],
+   "id": 187
+  },
+  {
+   "name": "奇异果丁(去芯)",
+   "min_month": 14,
+   "max_month": 36,
+   "stage": "14月龄",
+   "ingredients": [
+    "奇异果"
+   ],
+   "ingredient_text": "奇异果",
+   "method": "奇异果去芯去皮，切小丁。",
+   "notes": "偏酸，初次少量防口周刺激；1岁后适量。",
+   "allergens": [],
+   "id": 188
+  },
+  {
+   "name": "牛肉小饼",
+   "min_month": 15,
+   "max_month": 36,
+   "stage": "15月龄",
+   "ingredients": [
+    "牛肉",
+    "土豆",
+    "蛋"
+   ],
+   "ingredient_text": "牛肉、土豆/蛋",
+   "method": "牛肉末混合土豆泥/蛋液，捏小饼少油煎熟。",
+   "notes": "软硬适中练咀嚼；煎透中心熟。",
+   "allergens": [
+    "鸡蛋"
+   ],
+   "id": 189
+  },
+  {
+   "name": "软米饭团",
+   "min_month": 15,
+   "max_month": 36,
+   "stage": "15月龄",
+   "ingredients": [
+    "大米"
+   ],
+   "ingredient_text": "大米",
+   "method": "软米饭捏成一口小饭团（可包少许菜碎）。",
+   "notes": "手指食物；无添加糖盐。",
+   "allergens": [],
+   "id": 190
+  },
+  {
+   "name": "树莓泥",
+   "min_month": 15,
+   "max_month": 36,
+   "stage": "15月龄",
+   "ingredients": [
+    "树莓"
+   ],
+   "ingredient_text": "树莓",
+   "method": "树莓洗净蒸熟，压泥过筛。",
+   "notes": "富抗氧化物；籽多需压细，初次少量。",
+   "allergens": [],
+   "id": 191
+  },
+  {
+   "name": "三文鱼块(去刺)",
+   "min_month": 16,
+   "max_month": 36,
+   "stage": "16月龄",
+   "ingredients": [
+    "三文鱼"
+   ],
+   "ingredient_text": "三文鱼",
+   "method": "三文鱼少油煎/蒸熟，去刺切小块。",
+   "notes": "中心熟透；去刺彻底，富DHA。",
+   "allergens": [
+    "鱼"
+   ],
+   "id": 192
+  },
+  {
+   "name": "芒果丁(熟)",
+   "min_month": 16,
+   "max_month": 36,
+   "stage": "16月龄",
+   "ingredients": [
+    "芒果"
+   ],
+   "ingredient_text": "芒果",
+   "method": "芒果取熟软果肉，切小丁。",
+   "notes": "易致敏，初次少量观察；选熟软芒果。",
+   "allergens": [],
+   "id": 193
+  },
+  {
+   "name": "蒸鱼蔬菜粥",
+   "min_month": 17,
+   "max_month": 36,
+   "stage": "17月龄",
+   "ingredients": [
+    "鱼",
+    "蔬菜"
+   ],
+   "ingredient_text": "鱼肉、蔬菜、米",
+   "method": "去刺鱼肉拆碎，拌蔬菜粥。",
+   "notes": "去刺彻底；粥软烂。",
+   "allergens": [
+    "鱼"
+   ],
+   "id": 194
+  },
+  {
+   "name": "苹果丁",
+   "min_month": 17,
+   "max_month": 36,
+   "stage": "17月龄",
+   "ingredients": [
+    "苹果"
+   ],
+   "ingredient_text": "苹果",
+   "method": "苹果去皮去核，切小丁（1岁后）。",
+   "notes": "切小防噎；1岁后适量。",
+   "allergens": [],
+   "id": 195
+  },
+  {
+   "name": "鸡蛋蔬菜饼",
+   "min_month": 18,
+   "max_month": 36,
+   "stage": "18月龄",
+   "ingredients": [
+    "蛋",
+    "蔬菜",
+    "面粉",
+    "米粉"
+   ],
+   "ingredient_text": "鸡蛋、蔬菜、面粉(无麸质用米粉)",
+   "method": "蔬菜碎拌蛋面液，摊小饼。",
+   "notes": "无糖；软嫩，蔬菜切碎。",
+   "allergens": [
+    "麸质",
+    "鸡蛋"
+   ],
+   "id": 196
+  },
+  {
+   "name": "牛肉碎菜饭",
+   "min_month": 18,
+   "max_month": 36,
+   "stage": "18月龄",
+   "ingredients": [
+    "牛肉",
+    "蔬菜",
+    "米饭"
+   ],
+   "ingredient_text": "牛肉、蔬菜、米饭",
+   "method": "牛肉末与蔬菜炒卤，拌软饭。",
+   "notes": "补铁组合；卤无添加糖盐，饭软。",
+   "allergens": [],
+   "id": 197
+  },
+  {
+   "name": "煮软西兰花条",
+   "min_month": 19,
+   "max_month": 36,
+   "stage": "19月龄",
+   "ingredients": [
+    "西兰花"
+   ],
+   "ingredient_text": "西兰花",
+   "method": "西兰花掰小朵焯熟，撕/切细条。",
+   "notes": "手指食物练抓握；软烂。",
+   "allergens": [],
+   "id": 198
+  },
+  {
+   "name": "紫薯手指条",
+   "min_month": 19,
+   "max_month": 36,
+   "stage": "19月龄",
+   "ingredients": [
+    "紫薯"
+   ],
+   "ingredient_text": "紫薯",
+   "method": "紫薯去皮切条，蒸熟。",
+   "notes": "富花青素；略干可加少许水调软。",
+   "allergens": [],
+   "id": 199
+  },
+  {
+   "name": "水果丁拼盘",
+   "min_month": 19,
+   "max_month": 36,
+   "stage": "19月龄",
+   "ingredients": [
+    "水果"
+   ],
+   "ingredient_text": "多种已排敏软水果",
+   "method": "选已排敏的软水果切小丁拼盘。",
+   "notes": "切小防噎；无糖、种类轮替。",
+   "allergens": [],
+   "id": 200
+  },
+  {
+   "name": "虾丸",
+   "min_month": 20,
+   "max_month": 36,
+   "stage": "20月龄",
+   "ingredients": [
+    "虾",
+    "蔬菜"
+   ],
+   "ingredient_text": "虾仁、蔬菜",
+   "method": "虾仁与蔬菜剁碎，搓小丸蒸熟。",
+   "notes": "虾已排敏；去虾线、全熟。",
+   "allergens": [
+    "虾蟹"
+   ],
+   "id": 201
+  },
+  {
+   "name": "蒸胡萝卜手指",
+   "min_month": 20,
+   "max_month": 36,
+   "stage": "20月龄",
+   "ingredients": [
+    "胡萝卜"
+   ],
+   "ingredient_text": "胡萝卜",
+   "method": "胡萝卜切粗条，蒸熟至软。",
+   "notes": "手指食物练咀嚼；蒸熟更软防噎。",
+   "allergens": [],
+   "id": 202
+  },
+  {
+   "name": "蔬菜饭团",
+   "min_month": 20,
+   "max_month": 36,
+   "stage": "20月龄",
+   "ingredients": [
+    "米饭",
+    "蔬菜"
+   ],
+   "ingredient_text": "米饭、蔬菜",
+   "method": "软饭拌蔬菜碎，捏成小饭团。",
+   "notes": "手指食物；饭软、蔬菜切碎。",
+   "allergens": [],
+   "id": 203
+  },
+  {
+   "name": "茄子丁(煮软)",
+   "min_month": 21,
+   "max_month": 36,
+   "stage": "21月龄",
+   "ingredients": [
+    "茄子"
+   ],
+   "ingredient_text": "对应食材",
+   "method": "蒸熟/煮软至易吞咽，按质地阶段处理。",
+   "notes": "清淡无添加；成人看护防呛噎。",
+   "allergens": [],
+   "id": 204
+  },
+  {
+   "name": "杂蔬鸡肉软饭",
+   "min_month": 21,
+   "max_month": 36,
+   "stage": "21月龄",
+   "ingredients": [
+    "鸡肉",
+    "米饭"
+   ],
+   "ingredient_text": "鸡肉、多种蔬菜、米饭",
+   "method": "鸡肉与蔬菜丁同焖/炒软烂，拌软饭。",
+   "notes": "一口饭粒软；蔬菜切丁，少油。",
+   "allergens": [],
+   "id": 205
+  },
+  {
+   "name": "清蒸龙利鱼块",
+   "min_month": 21,
+   "max_month": 36,
+   "stage": "21月龄",
+   "ingredients": [
+    "鱼"
+   ],
+   "ingredient_text": "龙利鱼",
+   "method": "龙利鱼块蒸熟，仔细去刺。",
+   "notes": "少刺优质鱼；去刺彻底，富蛋白。",
+   "allergens": [
+    "鱼"
+   ],
+   "id": 206
+  },
+  {
+   "name": "牛油果块",
+   "min_month": 22,
+   "max_month": 36,
+   "stage": "22月龄",
+   "ingredients": [
+    "牛油果"
+   ],
+   "ingredient_text": "牛油果",
+   "method": "熟牛油果对半去核，取果肉切小块。",
+   "notes": "优质脂肪；选捏软的熟果，未熟发苦不食。",
+   "allergens": [],
+   "id": 207
+  },
+  {
+   "name": "番茄牛肉碎饭",
+   "min_month": 22,
+   "max_month": 36,
+   "stage": "22月龄",
+   "ingredients": [
+    "番茄",
+    "牛肉",
+    "米饭"
+   ],
+   "ingredient_text": "番茄、牛肉、米饭",
+   "method": "番茄煮烂，牛肉末炒熟，拌软饭。",
+   "notes": "补铁开胃；饭软、牛肉末细。",
+   "allergens": [],
+   "id": 208
+  },
+  {
+   "name": "山药手指条",
+   "min_month": 23,
+   "max_month": 36,
+   "stage": "23月龄",
+   "ingredients": [
+    "山药"
+   ],
+   "ingredient_text": "铁棍山药",
+   "method": "山药去皮切条，蒸熟。",
+   "notes": "健脾；处理戴手套防痒，软条防噎。",
+   "allergens": [],
+   "id": 209
+  },
+  {
+   "name": "三文鱼蔬菜粥",
+   "min_month": 23,
+   "max_month": 36,
+   "stage": "23月龄",
+   "ingredients": [
+    "三文鱼",
+    "蔬菜"
+   ],
+   "ingredient_text": "三文鱼、蔬菜、米",
+   "method": "三文鱼去刺拆碎，拌蔬菜粥。",
+   "notes": "DHA搭配；去刺彻底。",
+   "allergens": [
+    "鱼"
+   ],
+   "id": 210
+  },
+  {
+   "name": "鸡蛋小饼",
+   "min_month": 23,
+   "max_month": 36,
+   "stage": "23月龄",
+   "ingredients": [
+    "蛋",
+    "面粉",
+    "米粉"
+   ],
+   "ingredient_text": "鸡蛋、面粉(无麸质用米粉)",
+   "method": "蛋液加少量粉，摊小软饼。",
+   "notes": "软嫩练抓；无糖无油版。",
+   "allergens": [
+    "麸质",
+    "鸡蛋"
+   ],
+   "id": 211
+  },
+  {
+   "name": "杂蔬鸡肉饭",
+   "min_month": 24,
+   "max_month": 36,
+   "stage": "24月龄",
+   "ingredients": [
+    "鸡肉",
+    "米饭"
+   ],
+   "ingredient_text": "鸡肉、多种蔬菜、米饭",
+   "method": "鸡肉蔬菜丁与软饭同炒/焖至家庭软饭。",
+   "notes": "碎末或软烂家庭饭；食材小丁。",
+   "allergens": [],
+   "id": 212
+  },
+  {
+   "name": "豆腐手指块",
+   "min_month": 24,
+   "max_month": 36,
+   "stage": "24月龄",
+   "ingredients": [
+    "豆腐"
+   ],
+   "ingredient_text": "嫩豆腐",
+   "method": "嫩豆腐沸水焯1分钟，切小方块。",
+   "notes": "植物蛋白与钙；焯水去豆腥，嫩软。",
+   "allergens": [
+    "豆类"
+   ],
+   "id": 213
+  },
+  {
+   "name": "自主进食拼盘",
+   "min_month": 24,
+   "max_month": 36,
+   "stage": "24月龄",
+   "ingredients": [
+    "米饭"
+   ],
+   "ingredient_text": "米饭/菜/肉/手指食物",
+   "method": "将已排敏食物切成适合手抓的小块拼盘。",
+   "notes": "鼓励自主进食；成人全程看护防呛噎。",
+   "allergens": [],
+   "id": 214
   }
  ],
  "allergens": [
@@ -2728,6 +3428,11 @@
   "西葫芦",
   "杂粮",
   "茄子",
-  "菌菇"
+  "菌菇",
+  "梨",
+  "蜜瓜",
+  "奇异果",
+  "树莓",
+  "芒果"
  ]
 }
