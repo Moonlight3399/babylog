@@ -71,6 +71,12 @@ def migrate_schema(app):
                 ))
                 db.session.commit()
                 print('[迁移] records 表已添加 meal 列')
+            if 'poop_attrs' not in rcols:
+                db.session.execute(text(
+                    "ALTER TABLE records ADD COLUMN poop_attrs VARCHAR(20)"
+                ))
+                db.session.commit()
+                print('[迁移] records 表已添加 poop_attrs 列')
         # babies 表补充 created_by 列（创建者，仅创建者可删除）
         if 'babies' in insp.get_table_names():
             bcols = [c['name'] for c in insp.get_columns('babies')]

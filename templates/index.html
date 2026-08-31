@@ -15,7 +15,7 @@
     <link rel="apple-touch-icon" href="/static/icons/192x192.png">
     <link rel="icon" type="image/png" href="/static/icons/192x192.png">
 
-    <link rel="stylesheet" href="/static/style.css?v=19">
+    <link rel="stylesheet" href="/static/style.css?v=20">
 </head>
 <body class="app-body">
     <!-- 下拉刷新指示器 -->
@@ -421,6 +421,17 @@
                     <label class="input-label" for="addSolidInput">辅食名称（多个用逗号分隔）</label>
                     <input type="text" id="addSolidInput" class="input-md" placeholder="如：大米、南瓜、鸡肉" maxlength="50">
                 </div>
+                <div id="addRecordPoop" class="confirm-poop hidden">
+                    <label class="input-label">大便性状（可多选）</label>
+                    <div class="poop-picker" id="addPoopPicker">
+                        <span class="poop-group-label">量</span>
+                        <button type="button" class="poop-opt" data-attr="多">多</button>
+                        <button type="button" class="poop-opt" data-attr="少">少</button>
+                        <span class="poop-group-label">质地</span>
+                        <button type="button" class="poop-opt" data-attr="干">干</button>
+                        <button type="button" class="poop-opt" data-attr="稀">稀</button>
+                    </div>
+                </div>
                 <div class="add-datetime">
                     <div class="datetime-field">
                         <label class="input-label" for="addDate">日期</label>
@@ -565,6 +576,17 @@
                     <div class="solid-input-row">
                         <input type="text" id="solidInput" class="input-md" placeholder="输入辅食名称" maxlength="20">
                         <button type="button" class="btn btn-secondary solid-save-btn" id="solidSaveBtn">保存为常用</button>
+                    </div>
+                </div>
+                <div id="confirmPoop" class="confirm-poop hidden">
+                    <label class="input-label">大便性状（可多选）</label>
+                    <div class="poop-picker" id="confirmPoopPicker">
+                        <span class="poop-group-label">量</span>
+                        <button type="button" class="poop-opt" data-attr="多">多</button>
+                        <button type="button" class="poop-opt" data-attr="少">少</button>
+                        <span class="poop-group-label">质地</span>
+                        <button type="button" class="poop-opt" data-attr="干">干</button>
+                        <button type="button" class="poop-opt" data-attr="稀">稀</button>
                     </div>
                 </div>
                 <div id="confirmError" class="form-error" style="display:none;"></div>
@@ -800,7 +822,7 @@
         solid: { label: '吃辅食', icon: '🥣', needAmount: false, needFood: true },
         sleep_start: { label: '开始睡', icon: '😴', needAmount: false },
         sleep_end: { label: '睡醒了', icon: '🌞', needAmount: false },
-        poop: { label: '拉粑粑', icon: '💩', needAmount: false },
+        poop: { label: '拉粑粑', icon: '💩', needAmount: false, needPoop: true },
         pee: { label: '小便了', icon: '💧', needAmount: false },
     };
 
@@ -852,6 +874,14 @@
         } else {
             fs.classList.add('hidden');
         }
+        // 是否需要选择大便性状
+        const pp = document.getElementById('confirmPoop');
+        if (info.needPoop) {
+            pp.classList.remove('hidden');
+            resetPoopPicker(document.getElementById('confirmPoopPicker'));
+        } else {
+            pp.classList.add('hidden');
+        }
         document.getElementById('confirmError').style.display = 'none';
         confirmModal.classList.add('show');
         // 默认显示弹窗顶部（餐次标签可见），避免被下方输入框的 focus 带到最底部
@@ -885,6 +915,43 @@
             btn.classList.add('active');
         });
     });
+
+    // ========== 大便性状选择（多/少/干/稀，可多选；多少互斥、干稀互斥） ==========
+    let selectedPoopAttrs = [];
+    // 互斥分组：量（多/少）、质地（干/稀）
+    const POOP_GROUPS = { 多: '量', 少: '量', 干: '质地', 稀: '质地' };
+
+    function resetPoopPicker(container) {
+        selectedPoopAttrs = [];
+        container.querySelectorAll('.poop-opt').forEach(b => b.classList.remove('active'));
+    }
+
+    function bindPoopPicker(container) {
+        container.querySelectorAll('.poop-opt').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const a = btn.dataset.attr;
+                if (btn.classList.contains('active')) {
+                    // 取消选择
+                    btn.classList.remove('active');
+                    selectedPoopAttrs = selectedPoopAttrs.filter(x => x !== a);
+                } else {
+                    // 同组互斥（多/少、干/稀）：取消同组其他已选项
+                    const g = POOP_GROUPS[a];
+                    container.querySelectorAll('.poop-opt').forEach(b => {
+                        if (b !== btn && b.classList.contains('active') && POOP_GROUPS[b.dataset.attr] === g) {
+                            b.classList.remove('active');
+                            selectedPoopAttrs = selectedPoopAttrs.filter(x => x !== b.dataset.attr);
+                        }
+                    });
+                    btn.classList.add('active');
+                    selectedPoopAttrs.push(a);
+                }
+            });
+        });
+    }
+
+    bindPoopPicker(document.getElementById('confirmPoopPicker'));
+    bindPoopPicker(document.getElementById('addPoopPicker'));
 
     // ========== 辅食选择（分类多选 + 常用 + 手动保存） ==========
     let selectedFoods = [];
@@ -1017,6 +1084,10 @@
         if (info.needFood) {
             foods = selectedFoods.slice();
         }
+        let poopAttrs = null;
+        if (info.needPoop) {
+            poopAttrs = selectedPoopAttrs.slice();
+        }
         const body = {
             event_type: confirmEventType,
             event_date: getTodayStr(),
@@ -1024,6 +1095,7 @@
         };
         if (amount !== null) body.formula_amount = amount;
         if (foods !== null) { body.foods = foods; body.meal = selectedMeal; }
+        if (poopAttrs !== null) body.poop_attrs = poopAttrs;
         fetch('/api/record', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -1277,6 +1349,9 @@
                             if (r.meal) mealParts.push('[' + r.meal + ']');
                             if (r.foods && r.foods.length) mealParts.push(r.foods.join('、'));
                             detail = ' <span class="record-detail">' + mealParts.join(' ') + '</span>';
+                        }
+                        if (r.event_type === 'poop' && r.poop_attrs && r.poop_attrs.length) {
+                            detail = ' <span class="record-detail">' + r.poop_attrs.join('/') + '</span>';
                         }
                         return '<div class="record-item">' +
                             '<span class="record-icon">' + getEventIcon(r.event_type) + '</span>' +
@@ -1804,6 +1879,8 @@
         document.getElementById('addRecordFormula').classList.add('hidden');
         document.getElementById('addFormulaAmount').value = '';
         document.getElementById('addRecordSolid').classList.add('hidden');
+        document.getElementById('addRecordPoop').classList.add('hidden');
+        resetPoopPicker(document.getElementById('addPoopPicker'));
 
         const now = new Date();
         const today = getTodayStr();
@@ -1836,16 +1913,25 @@
 
             const formulaGroup = document.getElementById('addRecordFormula');
             const solidGroup = document.getElementById('addRecordSolid');
+            const poopGroup = document.getElementById('addRecordPoop');
             if (selectedAddType === 'formula') {
                 formulaGroup.classList.remove('hidden');
                 solidGroup.classList.add('hidden');
+                poopGroup.classList.add('hidden');
             } else if (selectedAddType === 'solid') {
                 formulaGroup.classList.add('hidden');
                 solidGroup.classList.remove('hidden');
+                poopGroup.classList.add('hidden');
                 document.getElementById('addSolidInput').value = '';
+            } else if (selectedAddType === 'poop') {
+                formulaGroup.classList.add('hidden');
+                solidGroup.classList.add('hidden');
+                poopGroup.classList.remove('hidden');
+                resetPoopPicker(document.getElementById('addPoopPicker'));
             } else {
                 formulaGroup.classList.add('hidden');
                 solidGroup.classList.add('hidden');
+                poopGroup.classList.add('hidden');
             }
         });
     });
@@ -1885,6 +1971,9 @@
                 return;
             }
             body.foods = foods;
+        }
+        if (selectedAddType === 'poop') {
+            body.poop_attrs = selectedPoopAttrs.slice();
         }
 
         // 不能添加未来时间

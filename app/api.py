@@ -68,6 +68,20 @@ def api_create_record(user):
         formula_amount=None,
     )
 
+    # 大便性状：多/少/干/稀（可多选，逗号分隔存储）
+    if event_type == 'poop':
+        attrs = data.get('poop_attrs')
+        if attrs is not None:
+            if not isinstance(attrs, list):
+                return jsonify({'error': '大便性状参数格式错误'}), 400
+            valid = {'多', '少', '干', '稀'}
+            cleaned = []
+            for a in attrs[:4]:
+                a = str(a).strip()
+                if a in valid and a not in cleaned:
+                    cleaned.append(a)
+            record.poop_attrs = ','.join(cleaned)
+
     # 辅食：食物列表（逗号分隔存储）
     if event_type == 'solid':
         foods = data.get('foods')
@@ -150,6 +164,7 @@ def api_create_record(user):
             'formula_amount': record.formula_amount,
             'foods': record.foods.split(',') if record.foods else [],
             'meal': record.meal,
+            'poop_attrs': record.poop_attrs.split(',') if record.poop_attrs else [],
         }
     })
 
@@ -186,6 +201,7 @@ def api_update_record(user, record_id):
             'formula_amount': record.formula_amount,
             'foods': record.foods.split(',') if record.foods else [],
             'meal': record.meal,
+            'poop_attrs': record.poop_attrs.split(',') if record.poop_attrs else [],
         }
     })
 
@@ -249,6 +265,7 @@ def api_records(user):
                 'formula_amount': r.formula_amount,
                 'foods': r.foods.split(',') if r.foods else [],
                 'meal': r.meal,
+                'poop_attrs': r.poop_attrs.split(',') if r.poop_attrs else [],
             }
             for r in records
         ]

@@ -1478,6 +1478,53 @@ select.input-md {
     transform: scale(0.96);
 }
 
+/* --- 大便性状选择（多/少/干/稀） --- */
+.confirm-poop {
+    margin-top: 14px;
+}
+
+.poop-picker {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.poop-group-label {
+    font-size: 0.8rem;
+    color: #B8860B;
+    font-weight: 600;
+    margin-right: 2px;
+}
+
+.poop-opt {
+    flex: 0 0 auto;
+    min-width: 52px;
+    padding: 8px 14px;
+    border: 2px solid #F0E0E8;
+    border-radius: 20px;
+    background: #FFFBFD;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.poop-opt.active {
+    border-color: #FF69B4;
+    background: linear-gradient(135deg, #FF69B4, #FF85C2);
+    color: #fff;
+    font-weight: 700;
+}
+
+.poop-opt:active {
+    transform: scale(0.96);
+}
+
 .solid-common {
     margin-top: 12px;
     padding-top: 10px;

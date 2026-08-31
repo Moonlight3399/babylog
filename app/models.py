@@ -40,6 +40,7 @@ class Record(db.Model):
     formula_amount = db.Column(db.Integer, nullable=True)
     foods = db.Column(db.String(200), nullable=True)  # 辅食食物列表（逗号分隔）
     meal = db.Column(db.String(10), nullable=True)  # 辅食餐次：早餐/午餐/晚餐/加餐
+    poop_attrs = db.Column(db.String(20), nullable=True)  # 大便性状：多/少/干/稀（逗号分隔，多选）
     baby_id = db.Column(db.Integer, db.ForeignKey('babies.id'), nullable=True)  # 所属宝宝
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
