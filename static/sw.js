@@ -1,5 +1,5 @@
 // BabyLog Service Worker
-const CACHE_NAME = 'babylog-v3';
+const CACHE_NAME = 'babylog-v4';
 
 // 预缓存的静态资源（App Shell）
 const PRECACHE_URLS = [

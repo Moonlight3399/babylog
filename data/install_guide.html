@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>安装到主屏幕</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 666px;
+    background: linear-gradient(180deg, #FFF5F7 0%, #FFF0F5 60%, #FFF5F7 100%);
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    padding: 36px 32px 44px;
+    color: #555;
+  }
+
+  /* ---------- 标题 ---------- */
+  .head { text-align: center; margin-bottom: 30px; }
+  .head .t { font-size: 42px; font-weight: 800; color: #FF69B4; letter-spacing: 1px; }
+  .head .s { font-size: 23px; color: #B8860B; margin-top: 12px; line-height: 1.55; }
+
+  /* ---------- 步骤卡 ---------- */
+  .step {
+    background: #fff;
+    border-radius: 28px;
+    border: 2px solid #FFE4EF;
+    padding: 22px 22px 26px;
+    box-shadow: 0 6px 22px rgba(255, 105, 180, 0.10);
+  }
+  .step-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+  .badge {
+    flex: 0 0 auto;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, #FF69B4, #FF85C2);
+    color: #fff; font-size: 27px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(255, 105, 180, 0.38);
+  }
+  .caption { font-size: 27px; font-weight: 700; color: #444; line-height: 1.35; }
+  .caption em { font-style: normal; color: #FF69B4; }
+
+  .arrow {
+    text-align: center; font-size: 34px; color: #FFB6D0;
+    padding: 14px 0; line-height: 1; font-weight: 700;
+  }
+
+  /* ---------- iPhone 框 ---------- */
+  .phone {
+    position: relative;
+    width: 430px; margin: 0 auto;
+    background: #fff; border-radius: 46px;
+    border: 6px solid #FFD9E8;
+    overflow: hidden;
+    box-shadow: 0 8px 26px rgba(255, 105, 180, 0.16);
+  }
+  .phone.short { height: 300px; }
+  .statusbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 26px 8px; font-size: 19px; font-weight: 700; color: #222;
+  }
+  .statusbar .right { letter-spacing: 2px; font-size: 16px; }
+
+  /* 网页界面 */
+  .web { background: #FFF5F7; min-height: 250px; }
+  .web-header {
+    background: linear-gradient(135deg, #FF69B4, #FF8DC0);
+    color: #fff; font-size: 24px; font-weight: 700;
+    padding: 16px 22px;
+  }
+  .web-tip {
+    margin: 14px 20px 4px; padding: 12px 16px;
+    background: #FFF0F5; border-radius: 14px;
+    font-size: 17px; color: #B8860B; line-height: 1.5;
+  }
+  .web-grid { display: flex; gap: 12px; padding: 12px 20px 18px; }
+  .web-card {
+    flex: 1; background: #fff; border-radius: 16px; padding: 16px 8px;
+    text-align: center; font-size: 16px; color: #777;
+    border: 2px solid #FFE4EF; line-height: 1.5;
+  }
+  .web-card .ic { font-size: 28px; display: block; margin-bottom: 6px; }
+
+  /* Safari 底栏 */
+  .safari {
+    display: flex; align-items: center; justify-content: space-around;
+    background: #F7F7F9; border-top: 1px solid #E5E5EA;
+    padding: 14px 10px 16px;
+  }
+  .safari .ico { opacity: .55; font-size: 24px; line-height: 1; color: #333; }
+  .safari .ico.on { opacity: 1; }
+  .share-wrap { position: relative; padding: 4px 10px; }
+
+  /* 高亮圈 */
+  .ring {
+    position: absolute; border-radius: 50%;
+    border: 5px solid #FF69B4;
+    box-shadow: 0 0 0 9px rgba(255, 105, 180, 0.22), 0 0 22px rgba(255, 105, 180, 0.55);
+    pointer-events: none;
+  }
+
+  /* 分享菜单 */
+  .sheet-mask { position: absolute; inset: 0; background: rgba(0, 0, 0, .28); }
+  .sheet {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    background: #fff; border-radius: 26px 26px 0 0; padding: 20px 18px 26px;
+  }
+  .sheet-title { text-align: center; font-size: 17px; color: #999; margin-bottom: 12px; }
+  .sheet-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 13px 14px; font-size: 21px; color: #333; border-radius: 12px;
+  }
+  .sheet-row .ri { font-size: 22px; width: 28px; text-align: center; }
+  .sheet-row.active {
+    background: #FFEDF5; color: #FF69B4; font-weight: 800;
+    border-left: 9px solid #FF69B4; padding-left: 10px;
+  }
+
+  /* 确认弹窗 */
+  .dialog-wrap { position: absolute; inset: 0; background: rgba(0, 0, 0, .30); display: flex; align-items: center; justify-content: center; }
+  .dialog {
+    width: 320px; background: #F2F2F7; border-radius: 22px; overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+  }
+  .dialog-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 20px; background: #F9F9FB; border-bottom: 1px solid #DDD;
+  }
+  .dialog-head .dt { font-size: 21px; font-weight: 700; color: #222; }
+  .dialog-head .add {
+    font-size: 21px; font-weight: 800; color: #fff; background: #FF69B4;
+    padding: 7px 18px; border-radius: 12px;
+    box-shadow: 0 0 0 6px rgba(255, 105, 180, .22);
+  }
+  .dialog-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 22px; background: #fff; font-size: 20px; color: #333;
+  }
+  .dialog-row .app {
+    width: 46px; height: 46px; border-radius: 12px;
+    background: linear-gradient(135deg, #FF69B4, #FF8DC0);
+    display: flex; align-items: center; justify-content: center; font-size: 26px;
+  }
+  .dialog-url {
+    padding: 14px 22px 20px; background: #fff; font-size: 16px; color: #888;
+    border-top: 1px solid #EEE;
+  }
+
+  /* 桌面 */
+  .home { background: linear-gradient(160deg, #FFE9F2 0%, #FFF5F7 55%, #EDE7F6 100%); }
+  .home-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 18px 12px; padding: 18px 22px 26px;
+  }
+  .app { text-align: center; font-size: 14px; color: #555; }
+  .app .ai {
+    width: 66px; height: 66px; border-radius: 17px; margin: 0 auto 7px;
+    display: flex; align-items: center; justify-content: center; font-size: 32px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, .10);
+  }
+  .app .ai.baby {
+    background: linear-gradient(135deg, #FF69B4, #FF9BCB);
+    position: relative; font-size: 34px;
+    box-shadow: 0 0 0 5px rgba(255, 105, 180, .35), 0 4px 14px rgba(255, 105, 180, .5);
+  }
+  .app .ai.g1 { background: #4CD964; } .app .ai.g2 { background: #5AC8FA; }
+  .app .ai.g3 { background: #FF9500; } .app .ai.g4 { background: #AF52DE; }
+  .app .ai.g5 { background: #FF3B30; } .app .ai.g6 { background: #34C759; }
+  .app .ai.g7 { background: #8E8E93; }
+  .new-tag {
+    position: absolute; top: -12px; right: -14px;
+    background: #FF3B30; color: #fff; font-size: 13px; font-weight: 800;
+    padding: 3px 9px; border-radius: 10px; border: 2px solid #fff;
+  }
+  .home-dots { text-align: center; padding-bottom: 14px; font-size: 16px; color: #FF69B4; letter-spacing: 6px; }
+</style>
+</head>
+<body>
+
+  <div class="head">
+    <div class="t">📲 安装到主屏幕</div>
+    <div class="s">把 BabyLog 添加到手机主屏幕<br>下次像 App 一样一键打开</div>
+  </div>
+
+  <!-- 步骤 1 -->
+  <div class="step">
+    <div class="step-head">
+      <div class="badge">1</div>
+      <div class="caption">用浏览器<em>打开本页</em></div>
+    </div>
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span class="right">●●● ▮</span></div>
+      <div class="web">
+        <div class="web-header">BabyLog</div>
+        <div class="web-tip">🍼 宝宝成长记录</div>
+        <div class="web-grid">
+          <div class="web-card"><span class="ic">🍼</span>喝奶粉</div>
+          <div class="web-card"><span class="ic">🥣</span>吃辅食</div>
+          <div class="web-card"><span class="ic">💩</span>拉粑粑</div>
+        </div>
+      </div>
+      <div class="safari">
+        <span class="ico">◀</span>
+        <span class="ico">▶</span>
+        <span class="ico on">⬆</span>
+        <span class="ico">📖</span>
+        <span class="ico">⧉</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">▼</div>
+
+  <!-- 步骤 2 -->
+  <div class="step">
+    <div class="step-head">
+      <div class="badge">2</div>
+      <div class="caption">点底部<em>「分享」按钮</em></div>
+    </div>
+    <div class="phone short">
+      <div class="web" style="min-height:190px;opacity:.55;">
+        <div class="web-header">BabyLog</div>
+        <div class="web-tip">🍼 宝宝成长记录</div>
+      </div>
+      <div class="safari" style="padding:20px 10px;">
+        <span class="ico">◀</span>
+        <span class="ico">▶</span>
+        <span class="share-wrap">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2.6v11.4" stroke="#007AFF" stroke-width="2.3" stroke-linecap="round"/>
+            <path d="M7.4 7.2 12 2.6l4.6 4.6" stroke="#007AFF" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M6 11.2v9.2h12v-9.2" stroke="#007AFF" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="ring" style="left:-8px;top:-6px;width:52px;height:52px;"></span>
+        </span>
+        <span class="ico">📖</span>
+        <span class="ico">⧉</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">▼</div>
+
+  <!-- 步骤 3 -->
+  <div class="step">
+    <div class="step-head">
+      <div class="badge">3</div>
+      <div class="caption">选择<em>「添加到主屏幕」</em></div>
+    </div>
+    <div class="phone short">
+      <div class="sheet-mask"></div>
+      <div class="sheet">
+        <div class="sheet-title">分享</div>
+        <div class="sheet-row"><span class="ri">📋</span>拷贝</div>
+        <div class="sheet-row"><span class="ri">🔖</span>添加书签</div>
+        <div class="sheet-row active"><span class="ri">➕</span>添加到主屏幕</div>
+        <div class="sheet-row"><span class="ri">🖨️</span>打印</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">▼</div>
+
+  <!-- 步骤 4 -->
+  <div class="step">
+    <div class="step-head">
+      <div class="badge">4</div>
+      <div class="caption">点右上角<em>「添加」</em></div>
+    </div>
+    <div class="phone short">
+      <div class="dialog-wrap">
+        <div class="dialog">
+          <div class="dialog-head">
+            <span class="dt">添加到主屏幕</span>
+            <span class="add">添加</span>
+          </div>
+          <div class="dialog-row">
+            <span class="app">👶</span>
+            <span>BabyLog</span>
+          </div>
+          <div class="dialog-url">https://babylog.julianaa.icu</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">▼</div>
+
+  <!-- 步骤 5 -->
+  <div class="step">
+    <div class="step-head">
+      <div class="badge">5</div>
+      <div class="caption">桌面出现图标，<em>一键打开</em></div>
+    </div>
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span class="right">●●● ▮</span></div>
+      <div class="home">
+        <div class="home-grid">
+          <div class="app"><div class="ai g1">💬</div>信息</div>
+          <div class="app"><div class="ai g2">📷</div>相机</div>
+          <div class="app"><div class="ai g3">🗓️</div>日历</div>
+          <div class="app"><div class="ai g4">🎵</div>音乐</div>
+          <div class="app"><div class="ai baby">👶<span class="new-tag">NEW</span></div>BabyLog</div>
+          <div class="app"><div class="ai g5">📮</div>邮件</div>
+          <div class="app"><div class="ai g6">🛒</div>商店</div>
+          <div class="app"><div class="ai g7">⚙️</div>设置</div>
+        </div>
+        <div class="home-dots">● ○</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
